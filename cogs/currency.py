@@ -18,13 +18,15 @@ class Currency(commands.Cog):
         snow_details = command_details["snow_top"]
         snow2_details = command_details["snow"]
 
-    class LBGroup(app_commands.Group):
-        pass
-
-    group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
 
     def __init__(self, client):
+        global group
         self.client = client
+
+        class LBGroup(app_commands.Group):
+            pass
+
+        group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
         self.client.add_command(group)
 
     @app_commands.command(name="add-currency")
