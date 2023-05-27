@@ -84,7 +84,7 @@ class Currency(commands.Cog):
         return await ctx.response.send_message(embed=profile_embed)
 
     @group.command(name="currency", description="Shows the leaderboard of the currency!")
-    @app_commands.choices(
+    @group.choices(
         currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"),
                   app_commands.Choice(name="Snow", value="snow")])
     async def lb(self, ctx: discord.Interaction, currency: app_commands.Choice[str], places: int = 10):
