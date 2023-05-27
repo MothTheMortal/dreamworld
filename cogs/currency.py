@@ -21,15 +21,16 @@ class Currency(commands.Cog):
     class LBGroup(app_commands.Group):
         pass
 
+    group = self.LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
+
     def __init__(self, client):
         self.client = client
-        self.group = self.LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
         self.client.add_command(group)
 
-
-
     @app_commands.command(name="add-currency")
-    @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
+    @app_commands.choices(
+        currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"),
+                  app_commands.Choice(name="Snow", value="snow")])
     @app_commands.describe(
         members="Input the User IDs with space separating them."
     )
@@ -39,9 +40,6 @@ class Currency(commands.Cog):
         member_ids = list(map(int, members.split(" ")))
         user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {currency.value: amount}})
         await ctx.response.send_message(f"Successfully added {amount} {emoji} to {len(member_ids)} member(s)")
-
-
-
 
     @app_commands.command(
         name="bal",
@@ -69,7 +67,6 @@ class Currency(commands.Cog):
             candy = config.emoji_field['dcandy']
             snow = config.emoji_field['dsnow']
 
-
         profile_embed.add_field(
             name="Stars", value=f"{user_profile['star']} {star}",
             inline=True
@@ -84,8 +81,10 @@ class Currency(commands.Cog):
         )
         return await ctx.response.send_message(embed=profile_embed)
 
-    @self.group.command(name="currency", description="Shows the leaderboard of the currency!")
-    @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
+    @group.command(name="currency", description="Shows the leaderboard of the currency!")
+    @app_commands.choices(
+        currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"),
+                  app_commands.Choice(name="Snow", value="snow")])
     async def lb(self, ctx: discord.Interaction, currency: app_commands.Choice[str], places: int = 10):
 
         emoji = config.emoji_field[currency.value]
@@ -125,8 +124,6 @@ class Currency(commands.Cog):
                 leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
 
         return await ctx.response.send_message(embed=leaderboard_embed)
-
-
 
     @app_commands.command(
         name="shop",
@@ -258,7 +255,6 @@ class Currency(commands.Cog):
 
                     user_collection.update_one({"_id": ctx.user.id}, {"$inc": {"star": -1 * shop_item["price"]}})
 
-
                     if item_type == "transaction":
                         transaction_embed = self.client.create_embed(
                             "Transaction Made",
@@ -322,7 +318,6 @@ class Currency(commands.Cog):
 
                     user_collection.update_one({"_id": ctx.user.id}, {"$inc": {"candy": -1 * shop_item["price"]}})
 
-
                     if item_type == "transaction":
                         transaction_embed = self.client.create_embed(
                             "Transaction Made",
@@ -367,7 +362,8 @@ class Currency(commands.Cog):
                         data[str(ctx.user.id)] = time()
                     with open("data/buy_period.json", "w") as file:
                         json.dump(data, file)
-                    await self.client.role_period(ctx.user, shop_item["time_period"], shop_item["time"], shop_item["role_id"])
+                    await self.client.role_period(ctx.user, shop_item["time_period"], shop_item["time"],
+                                                  shop_item["role_id"])
                     return await shop_message.edit(embed=purchased_embed)
 
 
