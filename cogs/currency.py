@@ -25,10 +25,9 @@ class Currency(commands.Cog):
         snow_details = command_details["snow_top"]
         snow2_details = command_details["snow"]
 
-
     def __init__(self, client):
         self.client = client
-        self.client.add_command(group)
+        self.client.tree.add_command(group)
 
     @app_commands.command(name="add-currency")
     @app_commands.choices(
