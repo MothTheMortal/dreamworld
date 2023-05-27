@@ -24,12 +24,15 @@ class Currency(commands.Cog):
 
     @app_commands.command(name="add-currency")
     @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
-    async def star(self, ctx: discord.Interaction, currency: app_commands.Choice[str], amount: int, *members: discord.Member):
+    @app_commands.describe(
+        members="Input the User IDs with space separating them."
+    )
+    async def star(self, ctx: discord.Interaction, currency: app_commands.Choice[str], amount: int, members: str):
         user_collection = self.client.get_database_collection("users")
         emoji = config.emoji_field[currency.value]
-        member_ids = [member.id for member in members]
+        member_ids = list(map(int, members.split(" ")))
         user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {currency.value: amount}})
-        await ctx.response.send_message(f"Successfully added {amount} {emoji} to {len(members)} member(s)")
+        await ctx.response.send_message(f"Successfully added {amount} {emoji} to {len(member_ids)} member(s)")
 
 
 
