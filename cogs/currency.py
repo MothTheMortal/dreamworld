@@ -21,7 +21,7 @@ class Currency(commands.Cog):
     class LBGroup(app_commands.Group):
         pass
 
-    group = self.LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
+    group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
 
     def __init__(self, client):
         self.client = client
