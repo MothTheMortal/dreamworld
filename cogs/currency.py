@@ -285,28 +285,24 @@ class Currency(commands.Cog):
         )
         return await ctx.response.send_message(embed=profile_embed)
 
-    @app_commands.command(
-        name="starlb",
-        description=lb_details["description"])
-    @commands.cooldown(lb_details["cooldown_rate"], lb_details["cooldown_per"])
-    async def starlb(self, ctx: discord.Interaction, places: int = 10):
+    @app_commands.command(name="currency leaderboard", description="Shows the leaderboard of the currency!")
+    @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
+    async def lb(self, ctx: discord.Interaction, currency: app_commands.Choice[str], places: int = 10):
 
-        star = config.emoji_field['star']
-        if ctx.guild.premium_subscription_count <= 14:
-            star = config.emoji_field['dstar']
+        emoji = config.emoji_field[currency.value]
 
         class LeaderBoardPosition:
-            def __init__(self, id, coins):
+            def __init__(self, id, coins, name):
                 self.id = id
                 self.coins = coins
+                self.name = name
 
         leaderboard = []
 
         user_collection = self.client.get_database_collection("users")
 
         for user in user_collection.find():
-            leaderboard.append(LeaderBoardPosition(user["_id"], user["star"]))
-
+            leaderboard.append(LeaderBoardPosition(user["_id"], user[currency.value], user["name"]))
 
         top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
 
@@ -320,10 +316,10 @@ class Currency(commands.Cog):
             try:
                 value_one = top[i - 1].id
                 value_two = top[i - 1].coins
-
+                value_three = top[i - 1].name
                 leaderboard_embed.add_field(
-                    name=f"{i}. {star} {value_two}",
-                    value=f"<@!{value_one}>",
+                    name=f"{i}. {value_two} {emoji}",
+                    value=f"<@{value_one}> - {value_three}",
                     inline=False
                 )
             except IndexError:
@@ -331,96 +327,7 @@ class Currency(commands.Cog):
 
         return await ctx.response.send_message(embed=leaderboard_embed)
 
-    @app_commands.command(
-        name="snowlb",
-        description=snow_details["description"])
-    @commands.cooldown(snow_details["cooldown_rate"], snow_details["cooldown_per"])
-    async def snowlb(self, ctx: discord.Interaction, places: int = 10):
 
-        snow = config.emoji_field['snow']
-        if ctx.guild.premium_subscription_count <= 14:
-            snow = config.emoji_field['dsnow']
-
-        class LeaderBoardPosition:
-            def __init__(self, id, coins):
-                self.id = id
-                self.coins = coins
-
-        leaderboard = []
-
-        user_collection = self.client.get_database_collection("users")
-
-        for user in user_collection.find():
-            leaderboard.append(LeaderBoardPosition(user["_id"], user["snow"]))
-
-        top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
-
-        leaderboard_embed = self.client.create_embed(
-            "Dreamworld Leaderboard",
-            f"The top {places} coldest people in all of Dreamworld!",
-            config.embed_info_color
-        )
-
-        for i in range(1, places + 1, 1):
-            try:
-                value_one = top[i - 1].id
-                value_two = top[i - 1].coins
-
-                leaderboard_embed.add_field(
-                    name=f"{i}. {snow} {value_two}",
-                    value=f"<@!{value_one}>",
-                    inline=False
-                )
-            except IndexError:
-                leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
-
-        return await ctx.response.send_message(embed=leaderboard_embed)
-
-    @app_commands.command(
-        name="candylb",
-        description=candy_details["description"])
-    @commands.cooldown(candy_details["cooldown_rate"], candy_details["cooldown_per"])
-    async def candylb(self, ctx, places: int = 10):
-
-
-        candy = config.emoji_field['candy']
-        if ctx.guild.premium_subscription_count <= 14:
-            candy = config.emoji_field['dcandy']
-
-        class LeaderBoardPosition:
-            def __init__(self, id, coins):
-                self.id = id
-                self.coins = coins
-
-        leaderboard = []
-
-        user_collection = self.client.get_database_collection("users")
-
-        for user in user_collection.find():
-            leaderboard.append(LeaderBoardPosition(user["_id"], user["candy"]))
-
-        top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
-
-        leaderboard_embed = self.client.create_embed(
-            "Dreamworld Leaderboard",
-            f"The top {places} sweetest people in all of Dreamworld!",
-            config.embed_info_color
-        )
-
-        for i in range(1, places + 1, 1):
-            try:
-                value_one = top[i - 1].id
-                value_two = top[i - 1].coins
-
-                leaderboard_embed.add_field(
-                    name=f"{i}. {candy} {value_two}",
-                    value=f"<@!{value_one}>",
-                    inline=False
-                )
-            except IndexError:
-                leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
-
-        return await ctx.response.send_message(embed=leaderboard_embed)
 
     @app_commands.command(
         name="shop",
