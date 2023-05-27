@@ -18,9 +18,15 @@ class Currency(commands.Cog):
         snow_details = command_details["snow_top"]
         snow2_details = command_details["snow"]
 
+    class LBGroup(app_commands.Group):
+        pass
 
     def __init__(self, client):
         self.client = client
+        self.group = self.LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
+        self.client.add_command(group)
+
+
 
     @app_commands.command(name="add-currency")
     @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
@@ -78,7 +84,7 @@ class Currency(commands.Cog):
         )
         return await ctx.response.send_message(embed=profile_embed)
 
-    @app_commands.command(name="currency-leaderboard", description="Shows the leaderboard of the currency!")
+    @self.group.command(name="currency", description="Shows the leaderboard of the currency!")
     @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
     async def lb(self, ctx: discord.Interaction, currency: app_commands.Choice[str], places: int = 10):
 
