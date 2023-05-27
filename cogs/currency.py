@@ -7,7 +7,33 @@ from discord import app_commands
 
 
 class LBGroup(app_commands.Group):
-    @app_commands.command(name="currency", description="Shows the leaderboard of the currency!")
+    pass
+
+
+group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
+
+
+class Currency(commands.Cog):
+    with open("data/command_details.json", "r") as json_file:
+        command_details = json.load(json_file)
+        balance_details = command_details["balance"]
+        star_details = command_details["star"]
+        lb_details = command_details["stars_top"]
+        candy2_details = command_details["candy"]
+        candy_details = command_details["candy_top"]
+        shop_details = command_details["shop"]
+        snow_details = command_details["snow_top"]
+        snow2_details = command_details["snow"]
+
+    def __init__(self, client):
+        self.client = client
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.client.tree.add_command(group)
+        await self.client.tree.sync()
+
+    @group.command(name="currency", description="Shows the leaderboard of the currency!")
     @app_commands.choices(
         currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"),
                   app_commands.Choice(name="Snow", value="snow")])
@@ -50,30 +76,6 @@ class LBGroup(app_commands.Group):
                 leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
 
         return await ctx.response.send_message(embed=leaderboard_embed)
-
-
-group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
-
-
-class Currency(commands.Cog):
-    with open("data/command_details.json", "r") as json_file:
-        command_details = json.load(json_file)
-        balance_details = command_details["balance"]
-        star_details = command_details["star"]
-        lb_details = command_details["stars_top"]
-        candy2_details = command_details["candy"]
-        candy_details = command_details["candy_top"]
-        shop_details = command_details["shop"]
-        snow_details = command_details["snow_top"]
-        snow2_details = command_details["snow"]
-
-    def __init__(self, client):
-        self.client = client
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        self.client.tree.add_command(group)
-        await self.client.tree.sync()
 
     @app_commands.command(name="add-currency")
     @app_commands.choices(
