@@ -30,7 +30,7 @@ class Currency(commands.Cog):
     async def star(self, ctx: discord.Interaction, currency: app_commands.Choice[str], amount: int, members: str):
         user_collection = self.client.get_database_collection("users")
         emoji = config.emoji_field[currency.value]
-        member_ids = list(map(int, members.split(" ")))
+        member_ids = list(map(int, [i[2:-1] for i in members.split(" ")]))
         user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {currency.value: amount}})
         await ctx.response.send_message(f"Successfully added {amount} {emoji} to {len(member_ids)} member(s)")
 
