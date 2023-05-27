@@ -7,7 +7,49 @@ from discord import app_commands
 
 
 class LBGroup(app_commands.Group):
-    pass
+    @app_commands.command(name="currency", description="Shows the leaderboard of the currency!")
+    @app_commands.choices(
+        currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"),
+                  app_commands.Choice(name="Snow", value="snow")])
+    async def lb(self, ctx: discord.Interaction, currency: app_commands.Choice[str], places: int = 10):
+
+        emoji = config.emoji_field[currency.value]
+
+        class LeaderBoardPosition:
+            def __init__(self, id, coins, name):
+                self.id = id
+                self.coins = coins
+                self.name = name
+
+        leaderboard = []
+
+        user_collection = self.client.get_database_collection("users")
+
+        for user in user_collection.find():
+            leaderboard.append(LeaderBoardPosition(user["_id"], user[currency.value], user["name"]))
+
+        top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+
+        leaderboard_embed = self.client.create_embed(
+            "Dreamworld Leaderboard",
+            f"The top {places} wealthiest people in all of Dreamworld!",
+            config.embed_info_color
+        )
+
+        for i in range(1, places + 1, 1):
+            try:
+                value_one = top[i - 1].id
+                value_two = top[i - 1].coins
+                value_three = top[i - 1].name
+                leaderboard_embed.add_field(
+                    name=f"{i}. {value_two} {emoji}",
+                    value=f"<@{value_one}> - {value_three}",
+                    inline=False
+                )
+            except IndexError:
+                leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+
+        return await ctx.response.send_message(embed=leaderboard_embed)
 
 
 group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
@@ -27,8 +69,11 @@ class Currency(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+
+    @commands.Cog.listener()
+    async def on_ready(self):
         self.client.tree.add_command(group)
-        synced = await self.client.tree.sync()
+        await self.client.tree.sync()
 
     @app_commands.command(name="add-currency")
     @app_commands.choices(
@@ -84,49 +129,6 @@ class Currency(commands.Cog):
         )
         return await ctx.response.send_message(embed=profile_embed)
 
-    @group.command(name="currency", description="Shows the leaderboard of the currency!")
-    @app_commands.choices(
-        currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"),
-                  app_commands.Choice(name="Snow", value="snow")])
-    async def lb(self, ctx: discord.Interaction, currency: app_commands.Choice[str], places: int = 10):
-
-        emoji = config.emoji_field[currency.value]
-
-        class LeaderBoardPosition:
-            def __init__(self, id, coins, name):
-                self.id = id
-                self.coins = coins
-                self.name = name
-
-        leaderboard = []
-
-        user_collection = self.client.get_database_collection("users")
-
-        for user in user_collection.find():
-            leaderboard.append(LeaderBoardPosition(user["_id"], user[currency.value], user["name"]))
-
-        top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
-
-        leaderboard_embed = self.client.create_embed(
-            "Dreamworld Leaderboard",
-            f"The top {places} wealthiest people in all of Dreamworld!",
-            config.embed_info_color
-        )
-
-        for i in range(1, places + 1, 1):
-            try:
-                value_one = top[i - 1].id
-                value_two = top[i - 1].coins
-                value_three = top[i - 1].name
-                leaderboard_embed.add_field(
-                    name=f"{i}. {value_two} {emoji}",
-                    value=f"<@{value_one}> - {value_three}",
-                    inline=False
-                )
-            except IndexError:
-                leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
-
-        return await ctx.response.send_message(embed=leaderboard_embed)
 
     @app_commands.command(
         name="shop",

@@ -952,7 +952,7 @@ class CommandTree(Generic[ClientT]):
 
         return decorator
 
-    async def sync(self, *, guild: Optional[Snowflake] = None) -> List[AppCommand]:
+    async def   sync(self, *, guild: Optional[Snowflake] = None) -> List[AppCommand]:
         """|coro|
 
         Syncs the application commands to Discord.
