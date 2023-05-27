@@ -29,7 +29,7 @@ class Currency(commands.Cog):
         emoji = config.emoji_field[currency.value]
         member_ids = [member.id for member in members]
         user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {currency.value: amount}})
-        await ctx.response.send_message(f"Successfully added {amount} {emoji} to {len(members)} member(s)")")
+        await ctx.response.send_message(f"Successfully added {amount} {emoji} to {len(members)} member(s)")
 
 
 
