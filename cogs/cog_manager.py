@@ -25,6 +25,7 @@ class Cog_Manager(commands.Cog):
         except Exception as e:
             print(e)
         await self.client.change_presence(activity=discord.Game(name="Moth Simulator"))
+
     @commands.Cog.listener()
     async def on_message(self, ctx):
         if ctx.guild is not None:
