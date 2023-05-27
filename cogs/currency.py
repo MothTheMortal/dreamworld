@@ -6,6 +6,13 @@ from time import time
 from discord import app_commands
 
 
+class LBGroup(app_commands.Group):
+    pass
+
+
+group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
+
+
 class Currency(commands.Cog):
     with open("data/command_details.json", "r") as json_file:
         command_details = json.load(json_file)
@@ -20,13 +27,7 @@ class Currency(commands.Cog):
 
 
     def __init__(self, client):
-        global group
         self.client = client
-
-        class LBGroup(app_commands.Group):
-            pass
-
-        group = LBGroup(name="leaderboard", description="Shows the leaderboard for something.")
         self.client.add_command(group)
 
     @app_commands.command(name="add-currency")
