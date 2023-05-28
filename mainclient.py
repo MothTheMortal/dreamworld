@@ -8,7 +8,6 @@ import time
 import pymongo
 
 
-
 class DreamBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -47,13 +46,29 @@ class DreamBot(commands.Bot):
         if database_count == 0:
             self.insert_database_user(user)
 
-
     def get_database_collection(self, collection):
         return self.discord_database[collection]
+
+    class VerifyView(discord.ui.View):
+        def __init__(self):
+            super().__init__(timeout=None)
+
+        @discord.ui.button(label="Verify!", style=discord.ButtonStyle.green, emoji="✅", custom_id="verify")
+        async def button_callback(self, interaction: discord.Interaction, button: discord.ui.Button):
+            if interaction.guild is not None:
+                role = interaction.guild.get_role(987389964486578236)
+                for roles in interaction.user.roles:
+                    if roles.id == role.id:
+                        await interaction.response.send_message(f"You are already verified.", ephemeral=True)
+                        return
+                await interaction.user.add_roles(role, reason="Verification")
+                await interaction.response.send_message(f"You have been verified.", ephemeral=True)
 
     async def setup_hook(self):
         for cog in config.cogs:
             await self.load_extension(f"cogs.{cog}")
+        await self.add_cog(self.VerifyView())
+
     async def fetch_member(self, user_id):
         guild = await self.fetch_guild(987352212017676408)
         member = await guild.fetch_member(user_id)
@@ -73,7 +88,6 @@ class DreamBot(commands.Bot):
                 with open("data/buy_period.json", "w") as file:
                     json.dump(data, file, indent=4)
                 return [False]
-
 
     async def role_period(self, member: discord.Member, time_state: bool, length: str, role_bet: int):
         role = member.guild.get_role(role_bet)
@@ -99,8 +113,6 @@ class DreamBot(commands.Bot):
         upload_data["users"].append(data_list)
         with open("data/role_period.json", "w") as file:
             json.dump(upload_data, file, indent=4)
-
-
 
     async def message_reaction(self, message, member, timeout):
         def check_reaction(reaction, user):

@@ -602,53 +602,17 @@ class Miscellaneous(commands.Cog):
 
         await ctx.response.send_message("Re-rolled!", ephemeral=True)
 
-    async def verifymsg(self, ctx):
-        button = Button(label="Verify!", style=discord.ButtonStyle.green, emoji="✅", custom_id="verify")
 
-        async def button_callback(interaction):
-            if interaction.guild is not None:
-                role = interaction.guild.get_role(987389964486578236)
-                for roles in interaction.user.roles:
-                    if roles.id == role.id:
-                        await interaction.response.send_message(f"You are already verified.", ephemeral=True)
-                        return
-                await interaction.user.add_roles(role, reason="Verification")
-                await interaction.response.send_message(f"You have been verified.", ephemeral=True)
 
-        embed = discord.Embed()
+
+    @app_commands.command(name="verifymsg")
+    @app_commands.default_permissions(administrator=True)
+    async def verifymsg(self, ctx: discord.Interaction):
+        embed = self.client.create_embed("", "". config.embed_purple)
         embed.set_image(
             url="https://cdn.discordapp.com/attachments/987411993088655421/1051827621740158976/Verify_2.png")
-        button.callback = button_callback
-        view = View()
-        view.add_item(button)
-        await ctx.send(embed=embed, view=view)
+        await ctx.send(embed=embed, view=self.client.VerifyView())
 
-    # async def verifymsg2(self, ctx):
-    #     await ctx.purge()
-    #
-    #     button = Button(label="Verify!", style=discord.ButtonStyle.green, emoji="✅")
-    #
-    #     async def button_callback(interaction):
-    #         if interaction.guild is not None:
-    #             role = interaction.guild.get_role(1042478120093110333)
-    #             for roles in interaction.user.roles:
-    #                 if roles.id == role.id:
-    #                     print(interaction.user.id)
-    #                     try:
-    #                         await interaction.response.send_message(f"You are already verified.", ephemeral=True)
-    #                     except Exception as err:
-    #                         print(err)
-    #                     return
-    #             await interaction.user.add_roles(role, reason="Verification")
-    #             await interaction.response.send_message(f"You have been verified.", ephemeral=True)
-    #
-    #     embed = discord.Embed()
-    #     embed.set_image(
-    #         url="https://cdn.discordapp.com/attachments/987411993088655421/1051827621740158976/Verify_2.png")
-    #     button.callback = button_callback
-    #     view = View()
-    #     view.add_item(button)
-    #     await ctx.send(embed=embed, view=view)
 
     @tasks.loop(hours=1)
     async def msg_task(self):
