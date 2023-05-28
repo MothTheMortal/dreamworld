@@ -67,7 +67,7 @@ class DreamBot(commands.Bot):
     async def setup_hook(self):
         for cog in config.cogs:
             await self.load_extension(f"cogs.{cog}")
-        await self.add_view(self.VerifyView())
+        self.add_view(self.VerifyView())
 
     async def fetch_member(self, user_id):
         guild = await self.fetch_guild(987352212017676408)
