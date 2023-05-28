@@ -419,6 +419,8 @@ class Miscellaneous(commands.Cog):
                 await user.add_roles(role, reason="Automatic Safe Role Given")
         print("Done.")
 
+
+    # Hi
     @app_commands.command(
         name="start_giveaway",
         description="Starts a giveaway."
