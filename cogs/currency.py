@@ -28,12 +28,16 @@ class Currency(commands.Cog):
     @app_commands.describe(
         members="Input the User IDs with space separating them."
     )
-    async def star(self, ctx: discord.Interaction, currency: app_commands.Choice[str], amount: int, members: str):
+    async def add_currency(self, ctx: discord.Interaction, currency: app_commands.Choice[str], amount: int, members: str):
         user_collection = self.client.get_database_collection("users")
         emoji = config.emoji_field[currency.value]
         member_ids = list(map(int, members.split(" ")))
         user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {currency.value: amount}})
-        await ctx.response.send_message(f"Successfully added {amount} {emoji} to {len(member_ids)} member(s)")
+        description = ""
+        for i in members_ids:
+            description += f"<@!{i}>: {amount} {emoji}\n"
+        em = self.client.create_embed(f"Currency Added by {ctx.user.mention}", description, config.embed_success_color)
+        await ctx.response.send_message(embed=em)
 
 
 
