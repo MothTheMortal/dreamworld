@@ -36,7 +36,7 @@ class Currency(commands.Cog):
         description = ""
         for i in member_ids:
             description += f"<@!{i}>: {amount} {emoji}\n"
-        em = self.client.create_embed(f"Currency Added by {ctx.user.mention}", description, config.embed_success_color)
+        em = self.client.create_embed(f"Currency Added by {ctx.user.name}", description, config.embed_success_color)
         await ctx.response.send_message(embed=em)
 
 
