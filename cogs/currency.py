@@ -34,7 +34,7 @@ class Currency(commands.Cog):
         member_ids = list(map(int, members.split(" ")))
         user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {currency.value: amount}})
         description = ""
-        for i in members_ids:
+        for i in member_ids:
             description += f"<@!{i}>: {amount} {emoji}\n"
         em = self.client.create_embed(f"Currency Added by {ctx.user.mention}", description, config.embed_success_color)
         await ctx.response.send_message(embed=em)
