@@ -865,7 +865,6 @@ class Miscellaneous(commands.Cog):
 
         dreamworld = self.client.get_channel(1013919292489744435)
 
-        await self.verifymsg(dreamworld)
         while True:
 
 
