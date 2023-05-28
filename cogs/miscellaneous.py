@@ -608,7 +608,7 @@ class Miscellaneous(commands.Cog):
     @app_commands.command(name="verifymsg")
     @app_commands.default_permissions(administrator=True)
     async def verifymsg(self, ctx: discord.Interaction):
-        embed = self.client.create_embed("", "". config.embed_purple)
+        embed = self.client.create_embed("", "", config.embed_purple)
         embed.set_image(
             url="https://cdn.discordapp.com/attachments/987411993088655421/1051827621740158976/Verify_2.png")
         await ctx.send(embed=embed, view=self.client.VerifyView())
