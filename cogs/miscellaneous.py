@@ -609,7 +609,7 @@ class Miscellaneous(commands.Cog):
     @app_commands.default_permissions(administrator=True)
     async def verifymsg(self, ctx: discord.Interaction):
         dreamworld = self.client.get_channel(1013919292489744435)
-        embed = self.client.create_embed("", "", config.embed_purple)
+        embed = discord.Embed()
         embed.set_image(
             url="https://cdn.discordapp.com/attachments/987411993088655421/1051827621740158976/Verify_2.png")
         await dreamworld.send(embed=embed, view=self.client.VerifyView())
