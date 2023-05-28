@@ -603,9 +603,7 @@ class Miscellaneous(commands.Cog):
         await ctx.response.send_message("Re-rolled!", ephemeral=True)
 
     async def verifymsg(self, ctx):
-        await ctx.purge()
-
-        button = Button(label="Verify!", style=discord.ButtonStyle.green, emoji="✅")
+        button = Button(label="Verify!", style=discord.ButtonStyle.green, emoji="✅", custom_id="verify")
 
         async def button_callback(interaction):
             if interaction.guild is not None:
@@ -625,32 +623,32 @@ class Miscellaneous(commands.Cog):
         view.add_item(button)
         await ctx.send(embed=embed, view=view)
 
-    async def verifymsg2(self, ctx):
-        await ctx.purge()
-
-        button = Button(label="Verify!", style=discord.ButtonStyle.green, emoji="✅")
-
-        async def button_callback(interaction):
-            if interaction.guild is not None:
-                role = interaction.guild.get_role(1042478120093110333)
-                for roles in interaction.user.roles:
-                    if roles.id == role.id:
-                        print(interaction.user.id)
-                        try:
-                            await interaction.response.send_message(f"You are already verified.", ephemeral=True)
-                        except Exception as err:
-                            print(err)
-                        return
-                await interaction.user.add_roles(role, reason="Verification")
-                await interaction.response.send_message(f"You have been verified.", ephemeral=True)
-
-        embed = discord.Embed()
-        embed.set_image(
-            url="https://cdn.discordapp.com/attachments/987411993088655421/1051827621740158976/Verify_2.png")
-        button.callback = button_callback
-        view = View()
-        view.add_item(button)
-        await ctx.send(embed=embed, view=view)
+    # async def verifymsg2(self, ctx):
+    #     await ctx.purge()
+    #
+    #     button = Button(label="Verify!", style=discord.ButtonStyle.green, emoji="✅")
+    #
+    #     async def button_callback(interaction):
+    #         if interaction.guild is not None:
+    #             role = interaction.guild.get_role(1042478120093110333)
+    #             for roles in interaction.user.roles:
+    #                 if roles.id == role.id:
+    #                     print(interaction.user.id)
+    #                     try:
+    #                         await interaction.response.send_message(f"You are already verified.", ephemeral=True)
+    #                     except Exception as err:
+    #                         print(err)
+    #                     return
+    #             await interaction.user.add_roles(role, reason="Verification")
+    #             await interaction.response.send_message(f"You have been verified.", ephemeral=True)
+    #
+    #     embed = discord.Embed()
+    #     embed.set_image(
+    #         url="https://cdn.discordapp.com/attachments/987411993088655421/1051827621740158976/Verify_2.png")
+    #     button.callback = button_callback
+    #     view = View()
+    #     view.add_item(button)
+    #     await ctx.send(embed=embed, view=view)
 
     @tasks.loop(hours=1)
     async def msg_task(self):
@@ -901,12 +899,11 @@ class Miscellaneous(commands.Cog):
         if channel.guild.premium_subscription_count >= 14:
             self.client.boost = True
 
-        channel_2 = self.client.get_channel(1042450717174149294)
-        channel_1 = self.client.get_channel(1013919292489744435)
+        dreamworld = self.client.get_channel(1013919292489744435)
 
+        await self.verifymsg(dreamworld)
         while True:
-            await self.verifymsg2(channel_2)
-            await self.verifymsg(channel_1)
+
 
             current = time.time()
 
@@ -949,7 +946,6 @@ class Miscellaneous(commands.Cog):
         if user.id == 1035103134441287762:
             return
         if reaction.message.channel.id != Channel.id:
-            print("Wrong channel")
             return
         if reaction.emoji == "📢":
             print("Loudspeaker given")
