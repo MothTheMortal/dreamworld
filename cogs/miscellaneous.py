@@ -14,6 +14,7 @@ from random import choice, sample
 from pytube import YouTube
 from os import remove
 
+
 class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -30,7 +31,7 @@ class Miscellaneous(commands.Cog):
         pong_embed = self.client.create_embed("🏓 Pong!", "Response Processed!", config.embed_info_color)
         pong_embed.add_field(name="Response Time", value=f"Response took {ping} ms")
         await pong_message.edit(embed=pong_embed)
-        
+
     @app_commands.command(name="downloadaudio")
     async def downloadaudio(self, ctx: discord.Interaction, link: str):
         await ctx.response.send_message("Downloading Audio.")
@@ -426,16 +427,14 @@ class Miscellaneous(commands.Cog):
         host="User who's hosting the giveaway",
         channel="Channel where the giveaway will be hosted.",
         winners="Number of winners.",
-        duration="How long the giveaway will last. Format: HH:MM:SS",
-        roleinfluence="Let the participant's role decide their chances of winning"
     )
     @app_commands.default_permissions(manage_messages=True)
     async def giveaway(self, ctx: discord.Interaction, host: discord.Member, channel: discord.TextChannel, winners: int,
-                       duration: str, prize: str, roleinfluence: bool = True):
+                       days: float, hours: float, minutes: float, prize: str, thumbnail_url: str = None):
+        roleInfluence = True
+        duration_secs = days * 86400 + hours * 3600 + minutes * 60
 
-        duration_list = [int(i) for i in duration.split(":")]
-        duration_secs = duration_list[0] * 3600 + duration_list[1] * 60 + duration_list[2]
-        delta_time = timedelta(hours=duration_list[0], minutes=duration_list[1], seconds=duration_list[2])
+        delta_time = timedelta(days=days, hours=hours, minutes=minutes)
         unix_end_datetime = int((datetime.now() + delta_time).timestamp())
 
         format_time = f"<t:{unix_end_datetime}>"
@@ -443,13 +442,20 @@ class Miscellaneous(commands.Cog):
         title = "🎉 " + prize + " 🎉"
 
         description = f"""
-        Hosted by: {host.mention}
         Number of Winners: {winners}
         Ends: {format_time}
         """
         giveaway_embed = Embed(title=title, description=description, color=0xa22aaf, timestamp=datetime.now())
+        giveaway_embed.set_footer(text="React to join giveaway.")
+        giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
 
-        await ctx.response.send_message("Giveaway started!")
+        if thumbnail_url is not None:
+            try:
+                giveaway_embed.set_thumbnail(url=thumbnail_url)
+            except Exception:
+                pass
+
+        await ctx.response.send_message(f"Giveaway started for {prize}!", ephemeral=True)
 
         msg = await channel.send(embed=giveaway_embed)
 
@@ -474,7 +480,7 @@ class Miscellaneous(commands.Cog):
                     pass
                 else:
 
-                    if roleinfluence is True:
+                    if roleInfluence is True:
                         if nobles in user.roles:
                             [users.append(user.id) for _ in range(3)]
                         elif traveler in user.roles:
@@ -497,29 +503,26 @@ class Miscellaneous(commands.Cog):
 
             winners_list = [ctx.guild.get_member(i).mention for i in winners_list]
             description = f"""
-                    Hosted by: {host.mention}
-                    Winner(s): {", ".join(winners_list)}
-                    Ended at: {format_time}
-                    """
+                                    Winner(s): {", ".join(winners_list)}\nEnded at: {format_time}
+                                    """
 
-            await channel.send(f"GIVEAWAY: 🎉🎉🎉{', '.join(winners_list)} WON {prize}🎉🎉🎉!!!")
+            await channel.send(
+                f"🎉 **GIVEAWAY** 🎉 -> {giveaway_msg.jump_url}\n**Prize**: {prize}\n**Winner(s)**: {', '.join(winners_list)}")
 
             giveaway_embed = Embed(title=title, description=description, color=0xa22aaf, timestamp=datetime.now())
+            giveaway_embed.set_footer(text="Giveaway Ended.")
+            giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
+
+            if thumbnail_url is not None:
+                try:
+                    giveaway_embed.set_thumbnail(url=thumbnail_url)
+                except Exception:
+                    pass
+
             await giveaway_msg.edit(embed=giveaway_embed)
-            print(users, winners_list)
 
         else:
-
-            description = f"""
-                               Hosted by: {host.mention}
-                               Winner(s): None
-                               Ended at: {format_time}
-                               """
-
-            await channel.send(f"GIVEAWAY: NO ONE WON {prize} ;(")
-
-            giveaway_embed = Embed(title=title, description=description, color=0xa22aaf, timestamp=datetime.now())
-            await giveaway_msg.edit(embed=giveaway_embed)
+            await ctx.channel.send(f"🎉 **GIVEAWAY** 🎉\n**Prize**: {prize}\n**Winner(s)**: No one")
 
     @app_commands.command(
         name="reroll_giveaway",
