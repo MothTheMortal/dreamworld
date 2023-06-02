@@ -613,6 +613,7 @@ class Miscellaneous(commands.Cog):
         em.add_field(name="Humor:", value=humor, inline=True)
         em.add_field(name="Cleverness:", value=cleverness, inline=True)
         em.add_field(name="Effectiveness:", value=effectiveness, inline=True)
+        em.add_field(name="Total score:", value=f"{originality+humor+cleverness+effectiveness}/40", inline=False)
         em.add_field(name="Comment:", value=comment, inline=False)
 
         em.set_author(name=user.name, icon_url=user.avatar.url)
