@@ -125,13 +125,11 @@ class Currency(commands.Cog):
 
         return await ctx.response.send_message(embed=leaderboard_embed)
 
-    shop_categories = ["mlbb", "genshin", "roblox", "valorant", "discord", "roles"]
-
     @app_commands.command(
         name="shop",
         description=shop_details["description"])
     @app_commands.choices(
-        category=[app_commands.Choice(name="MLBB",  value="mlbb"), app_commands.Choice(name="Genshin Impact", value="genshin"), app_commands.Choice(name="Roblox", value="roblox"), app_commands.Choice(name="Valorant", value="valorant"), app_commands.choice(name="Discord", value="discord"), app_commands.Choice(name="Roles", value="roles")]
+        category=[app_commands.Choice(name="MLBB",  value="mlbb"), app_commands.Choice(name="Genshin Impact", value="genshin"), app_commands.Choice(name="Roblox", value="roblox"), app_commands.Choice(name="Valorant", value="valorant"), app_commands.Choice(name="Discord", value="discord"), app_commands.Choice(name="Roles", value="roles")]
     )
     async def shop(self, ctx: discord.Interaction, category: app_commands.Choice[str]):
 
