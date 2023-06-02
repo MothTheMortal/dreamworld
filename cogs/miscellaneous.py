@@ -606,6 +606,20 @@ class Miscellaneous(commands.Cog):
 
 
 
+    @app_commands.command(name="pickupline")
+    async def pickupline(self, ctx: discord.Interaction, channel: discord.TextChannel, user: discord.Member, pickupLine: str, originality: int, humor: int, cleverness: int, effectiveness: int, comment: str=""):
+        em = discord.Embed(title=f"{user.name}'s Pickup Line", description=pickupLine, color=discord.Colour.green())
+        em.add_field(name="Originality:", value=originality, inline=True)
+        em.add_field(name="Humor:", value=humor, inline=True)
+        em.add_field(name="Cleverness:", value=cleverness, inline=True)
+        em.add_field(name="Effectiveness:", value=effectiveness, inline=True)
+        em.add_field(name="Comment:", value=comment, inline=False)
+
+        em.set_author(name=user.name, icon_url=user.avatar.url)
+
+        await channel.send(embed=em)
+
+
 
     @app_commands.command(name="verifymsg")
     @app_commands.default_permissions(administrator=True)
