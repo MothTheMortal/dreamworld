@@ -637,10 +637,11 @@ class Miscellaneous(commands.Cog):
     async def teamfinder(self, ctx: discord.Interaction, current_rank: app_commands.Choice[str], country: str, teamsize: app_commands.Choice[int], gamemode: app_commands.Choice[str],message:str=""):
         channel = self.client.get_channel(1099065897454415945)
 
-        em = discord.Embed(title=f"{ctx.user.name} looking for {gamemode.name} {teamsize.name}", color=discord.Colour.green(), description=f"Message: {message}")
+        em = discord.Embed(title=f"{ctx.user.name} is looking for {teamsize.name} - {gamemode.name}", color=discord.Colour.green(), description=f"{message}")
         em.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
         em.add_field(name="User's Rank:", value=current_rank.name, inline=True)
         em.add_field(name="Server:", value=country, inline=True)
+        em.set_footer(text="Dm this person to join.")
         await channel.send(embed=em)
 
 
