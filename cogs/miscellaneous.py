@@ -620,7 +620,7 @@ class Miscellaneous(commands.Cog):
         em.set_author(name=user.name, icon_url=user.avatar.url)
 
         await channel.send(embed=em)
-    ranks = [Elite, Master, Grandmaster, Epic, Legend, Mythic, Mythical Honor, Mythical Glory]
+
     @app_commands.command(name="teamfinder",description="Looking for a team.")
     @app_commands.choices(
         current_rank=[app_commands.Choice(name="Mythical Glory", value="MG"), app_commands.Choice(name="Mythical Honor", value="MH"), app_commands.Choice(name="Mythic", value="M"), app_commands.Choice(name="Legend", value="L"), app_commands.Choice(name="Epic", value="E"), app_commands.Choice(name="Grandmaster", value="GM"), app_commands.Choice(name="Masterr", value="m"), app_commands.Choice(name="Elite", value="e")],
