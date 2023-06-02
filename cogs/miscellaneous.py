@@ -660,27 +660,7 @@ class Miscellaneous(commands.Cog):
     @tasks.loop(hours=1)
     async def msg_task(self):
 
-        # collection = self.client.get_database_collection("users")
-        # result = collection.find({}, {"_id": 1})
-        # now = datetime.now(timezone.utc)
-        # one_week_ago = now - timedelta(days=7)
-        #
-        # user = await self.client.fetch_member(940570942332092486)
-        # async for message in user.history(limit=10, before=now):
-        #     print(message.created_at)
-        # for i in result:
-        #     id = i["_id"]
-        #     try:
-        #         user = await self.client.fetch_member(id)
-        #
-        #         if not user.history(limit=1):
-        #             print(user.name, "has never sent a single mf message")
-        #         async for message in user.history(limit=1):
-        #             created_at_utc = message.created_at.replace(tzinfo=timezone.utc)
-        #             if created_at_utc > one_week_ago:
-        #                 print("USER last message more thanb a week agfo tstsk", user.name)
-        #     except Exception as err:
-        #         print(err)
+
         collection = self.client.get_database_collection("data")
         profile = collection.find_one({"_id": 0})
         name_monthly = profile["monthly_time"]
@@ -742,6 +722,8 @@ class Miscellaneous(commands.Cog):
             await record.send(embed=leaderboard_embed)
 
             collection.update_one({"_id": 0}, {"$set": {"monthly_time": month_name}})
+            with open("data/msg_monthly.json", "w") as file:
+                file.truncate()
 
         if (time_weekly + 604800) < current_time:
             places = 3
@@ -796,6 +778,8 @@ class Miscellaneous(commands.Cog):
             record = await self.client.fetch_channel(1021391202756595712)
             await record.send(embed=leaderboard_embed)
             collection.update_one({"_id": 0}, {"$set": {"weekly_time": time.time()}})
+            with open("data/msg_weekly.json", "w") as file:
+                file.truncate()
 
         with open("data/role_period.json", "r") as file:
             current_time = time.time()
