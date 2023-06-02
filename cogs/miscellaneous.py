@@ -607,6 +607,7 @@ class Miscellaneous(commands.Cog):
 
 
     @app_commands.command(name="pickupline")
+    @app_commands.default_permissions(manage_messages=True)
     async def pickupline(self, ctx: discord.Interaction, channel: discord.TextChannel, user: discord.Member, pickup_line: str, originality: int, humor: int, cleverness: int, effectiveness: int, comment: str=""):
         em = discord.Embed(title=f"{user.name}'s Pickup Line", description=pickup_line, color=discord.Colour.green())
         em.add_field(name="Originality:", value=originality, inline=True)
@@ -619,7 +620,27 @@ class Miscellaneous(commands.Cog):
         em.set_author(name=user.name, icon_url=user.avatar.url)
 
         await channel.send(embed=em)
+    ranks = [Elite, Master, Grandmaster, Epic, Legend, Mythic, Mythical Honor, Mythical Glory]
+    @app_commands.command(name="teamfinder",description="Looking for a team.")
+    @app_commands.choices(
+        current_rank=[app_commands.Choice(name="Mythical Glory", value="MG"), app_commands.Choice(name="Mythical Honor", value="MH"), app_commands.Choice(name="Mythic", value="M"), app_commands.Choice(name="Legend", value="L"), app_commands.Choice(name="Epic", value="E"), app_commands.Choice(name="Grandmaster", value="GM"), app_commands.Choice(name="Masterr", value="m"), app_commands.Choice(name="Elite", value="e")],
+        teamsize=[app_commands.Choice(name="Duo", value=2), app_commands.Choice(name="Trio", value=3), app_commands.Choice(name="5-men", value=5)],
+        gamemode=[app_commands.Choice(name="Ranked", value="ranked"), app_commands.Choice(name="Classic", value="classic"), app_commands.Choice(name="Brawl", value="brawl"), app_commands.Choice(name="Custom", value="custom")]
+    )
+    @app_commands.describe(
+        current_rank="Current rank of the user.",
+        country="Country of Residence (MLBB Server Purposes).",
+        teamsize="Size of the team (Duo, Trio, 5-men).",
+        gamemode="MLBB Gamemode.",
+        message="Leave a message/note for ppl."
+    )
+    async def teamfinder(self, ctx: discord.Interaction, current_rank: app_commands.Choice[str], country: str, teamsize: app_commands.Choice[int], gamemode: app_commands.Choice[str],message:str=""):
+        channel = self.client.get_channel(1099065897454415945)
 
+        em = discord.Embed(title=f"{current_rank.name} - {ctx.user.name} looking for {gamemode.name} {teamsize.name}", color=discord.Colour.green(), description=f"Message: {message}")
+        em.add_field(name="Server:", value=country, inline=True)
+        em.set_thumbnail(url="https://berita-tular.com/wp-content/uploads/2020/08/Graphic-Assets-Banners-WC-Website-Revamp-Category-MLBB.png")
+        await channel.send(embed=em)
 
 
     @app_commands.command(name="verifymsg")
