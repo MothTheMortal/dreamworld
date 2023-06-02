@@ -125,49 +125,27 @@ class Currency(commands.Cog):
 
         return await ctx.response.send_message(embed=leaderboard_embed)
 
-
+    shop_categories = ["mlbb", "genshin", "roblox", "valorant", "discord", "roles"]
 
     @app_commands.command(
         name="shop",
         description=shop_details["description"])
-    @commands.cooldown(shop_details["cooldown_rate"], shop_details["cooldown_per"])
-    async def shop(self, ctx: discord.Interaction, category: str = None):
+    @app_commands.choices(
+        category=[app_commands.Choice(name="MLBB",  value="mlbb"), app_commands.Choice(name="Genshin Impact", value="genshin"), app_commands.Choice(name="Roblox", value="roblox"), app_commands.Choice(name="Valorant", value="valorant"), app_commands.choice(name="Discord", value="discord"), app_commands.Choice(name="Roles", value="roles")]
+    )
+    async def shop(self, ctx: discord.Interaction, category: app_commands.Choice[str]):
 
         star = config.emoji_field['star']
         candy = config.emoji_field['candy']
         snow = config.emoji_field['snow']
-        if ctx.guild.premium_subscription_count <= 14:
-            star = config.emoji_field['dstar']
-            candy = config.emoji_field['dcandy']
-            snow = config.emoji_field['dsnow']
 
         user_collection = self.client.get_database_collection("users")
 
-        if category is None:
-            category_embed = self.client.create_embed(
-                "Dreamworld Shop Categories",
-                "A list of every shop category that you can buy from!",
-                config.embed_info_color
-            )
-            for shop_category in config.shop_categories:
-                formal_category = config.formal_shop_categories[shop_category]
-                category_embed.add_field(name=formal_category, value=f"`/shop {shop_category}`", inline=False)
 
-            category_embed.set_footer(text="No Refunds! (Only One Purchase Per Month)")
-            return await ctx.response.send_message(embed=category_embed)
-
-        category = category.lower()
-        if category not in config.shop_categories:
-            category_embed = self.client.create_embed(
-                "Invalid Shop Category",
-                "There is no shop category by that name.",
-                config.embed_error_color
-            )
-
-            return await ctx.response.send_message(embed=category_embed)
 
         await self.client.database_user_preload(ctx.user)
 
+        category = category.value
         user_profile = user_collection.find_one({"_id": ctx.user.id})
 
         shop_embed = self.client.create_embed("Dreamworld Shop", "Loading Shop Items...", config.embed_info_color)

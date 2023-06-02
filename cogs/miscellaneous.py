@@ -643,6 +643,7 @@ class Miscellaneous(commands.Cog):
         em.add_field(name="Server:", value=country, inline=True)
         em.set_footer(text="Dm this person to join.")
         await channel.send(embed=em)
+        await ctx.response.send_message(f"Message Sent!", ephemeral=True)
 
 
     @app_commands.command(name="verifymsg")
