@@ -607,8 +607,8 @@ class Miscellaneous(commands.Cog):
 
 
     @app_commands.command(name="pickupline")
-    async def pickupline(self, ctx: discord.Interaction, channel: discord.TextChannel, user: discord.Member, pickupLine: str, originality: int, humor: int, cleverness: int, effectiveness: int, comment: str=""):
-        em = discord.Embed(title=f"{user.name}'s Pickup Line", description=pickupLine, color=discord.Colour.green())
+    async def pickupline(self, ctx: discord.Interaction, channel: discord.TextChannel, user: discord.Member, pickup_Line: str, originality: int, humor: int, cleverness: int, effectiveness: int, comment: str=""):
+        em = discord.Embed(title=f"{user.name}'s Pickup Line", description=pickup_Line, color=discord.Colour.green())
         em.add_field(name="Originality:", value=originality, inline=True)
         em.add_field(name="Humor:", value=humor, inline=True)
         em.add_field(name="Cleverness:", value=cleverness, inline=True)
