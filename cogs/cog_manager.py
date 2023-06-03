@@ -5,6 +5,12 @@ from json import *
 from traceback import format_exception
 from discord.utils import get
 from discord import app_commands
+import asyncio
+import json
+import time
+from random import choice
+from discord import Embed
+from datetime import datetime, timedelta
 
 
 class Cog_Manager(commands.Cog):
@@ -25,6 +31,234 @@ class Cog_Manager(commands.Cog):
         except Exception as e:
             print(e)
         await self.client.change_presence(activity=discord.Game(name="Moth Simulator"))
+        await self.giveaway_handler()
+
+    async def giveaway_handler(self):
+        while True:
+            with open("data/giveaways.json", "r") as f:
+                data = json.load(f)
+            giveaways_list = [i for i in data.keys()]
+            for msg_id in giveaways_list:
+                if int(data[msg_id]["end_time"]) < time.time():
+                    await self.giveaway_finish(str(msg_id))
+            await asyncio.sleep(5)
+
+    async def giveaway_finish(self, message_id: str):
+        with open("data/giveaways.json", "r") as f:
+            giveaway_data = json.load(f)[message_id]
+
+        try:
+            winners = giveaway_data["winners"]
+            guild: discord.Guild = self.bot.get_guild(int(giveaway_data["guild_id"]))
+            format_time = giveaway_data["format_time"]
+            prize = giveaway_data["prize"]
+            title = giveaway_data["title"]
+            host = guild.get_member(int(giveaway_data["host_id"]))
+            thumbnail_url = giveaway_data["thumbnail_url"]
+            channel = guild.get_channel(int(giveaway_data["channel_id"]))
+
+            giveaway_msg = await channel.fetch_message(int(message_id))
+
+            reactions = giveaway_msg.reactions[0]
+
+            users = []
+
+            nobles = ctx.guild.get_role(996191436406018098)
+            traveler = ctx.guild.get_role(1023914137895587970)
+            treason = ctx.guild.get_role(1090184365566333009)
+            safe = ctx.guild.get_role(1090185036688531466)
+
+            async for user in reactions.users():
+                try:
+                    if user.bot or user.id == host.id or treason in user.roles or not safe in user.roles:
+                        pass
+                    else:
+                        if nobles in user.roles:
+                            [users.append(user.id) for _ in range(3)]
+                        elif traveler in user.roles:
+                            [users.append(user.id) for _ in range(2)]
+                        else:
+                            [users.append(user.id) for _ in range(1)]
+                except Exception:
+                    pass
+
+            if len(users) >= winners:
+
+                winners_list = []
+                while len(winners_list) < winners:
+                    winner = choice(users)
+                    if winner not in winners_list:
+                        winners_list.append(winner)
+
+                win = []
+
+                for i in winners_list:
+                    if guild.get_member(i) is not None:
+                        win.append(f"<@{i}>")
+
+                description = f"""
+                                        Winner(s): {", ".join(win)}\nEnded at: {format_time}
+                                        """
+
+                await channel.send(
+                    f"🎉 **GIVEAWAY** 🎉 -> {giveaway_msg.jump_url}\n**Prize**: {prize}\n**Winner(s)**: {', '.join(win)}")
+
+
+                giveaway_embed = Embed(title=title, description=description, color=0xa22aaf, timestamp=datetime.now())
+                giveaway_embed.set_footer(text="Giveaway Ended.")
+                giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
+                if thumbnail_url != "":
+                    try:
+                        giveaway_embed.set_thumbnail(url=thumbnail_url)
+                    except Exception:
+                        pass
+
+                await giveaway_msg.edit(embed=giveaway_embed)
+            else:
+                await channel.send(f"🎉 **GIVEAWAY** 🎉\n**Prize**: {prize}\n**Winner(s)**: No one")
+
+                description = f"""
+                                                    Winner(s): None\nEnded at: {format_time}
+                                                    """
+
+                giveaway_embed = Embed(title=title, description=description, color=discord.Color.red(), timestamp=datetime.now())
+                giveaway_embed.set_footer(text="Giveaway Ended.")
+                giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
+                if thumbnail_url != "":
+                    try:
+                        giveaway_embed.set_thumbnail(url=thumbnail_url)
+                    except Exception:
+                        pass
+                await giveaway_msg.edit(embed=giveaway_embed)
+
+        except Exception:
+            pass
+
+        with open("data/giveaways.json", "r") as f:
+            data = json.load(f)
+            del data[message_id]
+        with open("data/giveaways.json", "w") as f:
+            json.dump(data, f, indent=4)
+
+    @app_commands.command(
+        name="start_giveaway",
+        description="Starts a giveaway."
+    )
+    @app_commands.describe(
+        host="User who's hosting the giveaway",
+        channel="Channel where the giveaway will be hosted.",
+        winners="Number of winners.",
+    )
+    @app_commands.default_permissions(manage_messages=True)
+    async def giveaway(self, ctx: discord.Interaction, host: discord.Member, channel: discord.TextChannel, winners: int,
+                       days: float, hours: float, minutes: float, prize: str, thumbnail_url: str = ""):
+
+        duration_secs = days * 86400 + hours * 3600 + minutes * 60
+        delta_time = timedelta(days=days, hours=hours, minutes=minutes)
+        unix_end_datetime = int((datetime.now() + delta_time).timestamp())
+
+        format_time = f"<t:{unix_end_datetime}>"
+
+        title = "🎉 " + prize + " 🎉"
+
+        description = f"""
+                    Number of Winners: {winners}
+                    Ends: {format_time}
+                    """
+
+        giveaway_embed = Embed(title=title, description=description, color=0xa22aaf, timestamp=datetime.now())
+        giveaway_embed.set_footer(text="React to join giveaway.")
+        giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
+
+        if thumbnail_url != "":
+            try:
+                giveaway_embed.set_thumbnail(url=thumbnail_url)
+            except Exception:
+                pass
+
+        await ctx.response.send_message(f"Giveaway started for {prize}!", ephemeral=True)
+
+        msg = await channel.send(embed=giveaway_embed)
+
+        await msg.add_reaction("🎉")
+        with open("data/giveaways.json", "r") as f:
+            data = json.load(f)
+        with open("data/giveaways.json", "w") as f:
+            data[str(msg.id)] = {
+                "guild_id": str(ctx.guild.id),
+                "host_id": str(host.id),
+                "winners": winners,
+                "format_time": format_time,
+                "prize": prize,
+                "end_time": str(unix_end_datetime),
+                "title": title,
+                "thumbnail_url": thumbnail_url,
+                "channel_id": str(channel.id),
+                "message_id": str(msg.id)
+            }
+            json.dump(data, f, indent=4)
+
+    @app_commands.command(
+        name="reroll_giveaway",
+        description="Re-rolls a giveaway."
+    )
+    @app_commands.describe(
+        giveaway_msg="ID of the giveaway message which will be re-rolled.",
+        host="User who's hosting the giveaway",
+        channel="Channel where the giveaway will be hosted.",
+        winners="Number of winners."
+    )
+    @app_commands.default_permissions(manage_messages=True)
+    async def reroll_giveaway(self, ctx: discord.Interaction, giveaway_msg: str, host: discord.Member,
+                              winners: int, channel: discord.TextChannel, prize: str):
+        giveaway_msg = await channel.fetch_message(int(giveaway_msg))
+        title = "🎉 " + prize + " 🎉"
+        reactions = giveaway_msg.reactions[0]
+
+        users = []
+        nobles = ctx.guild.get_role(996191436406018098)
+        traveler = ctx.guild.get_role(1023914137895587970)
+        treason = ctx.guild.get_role(1090184365566333009)
+        safe = ctx.guild.get_role(1090185036688531466)
+
+        async for user in reactions.users():
+            try:
+                if user.bot or user.id == host.id or treason in user.roles or not safe in user.roles:
+                    pass
+                else:
+                    if nobles in user.roles:
+                        [users.append(user.id) for _ in range(3)]
+                    elif traveler in user.roles:
+                        [users.append(user.id) for _ in range(2)]
+                    else:
+                        [users.append(user.id) for _ in range(1)]
+            except Exception:
+                pass
+
+        winners_list = []
+        while len(winners_list) < winners:
+            winner = choice(users)
+            if winner not in winners_list:
+                winners_list.append(winner)
+        win = []
+
+        for i in winners_list:
+            if ctx.guild.get_member(i) is not None:
+                win.append(f"<@{i}>")
+
+        description = f"""
+                                    Re-Rolled Winner(s): {", ".join(win)}
+                                    """
+        await channel.send(
+            f"🎉 **GIVEAWAY** 🎉 -> {giveaway_msg.jump_url}\n**Prize**: {prize}\n**Re-Rolled Winner(s)**: {', '.join(win)}")
+
+        giveaway_embed = Embed(title=title, description=description, color=0xa22aaf, timestamp=datetime.now())
+        giveaway_embed.set_footer(text="Giveaway Ended.")
+        giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
+        await giveaway_msg.edit(embed=giveaway_embed)
+        await ctx.response.send_message("Re-rolled!", ephemeral=True)
+
+
 
     @commands.Cog.listener()
     async def on_message(self, ctx):
