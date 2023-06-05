@@ -540,7 +540,9 @@ class Miscellaneous(commands.Cog):
 
             collection.update_one({"_id": 0}, {"$set": {"monthly_time": month_name}})
             with open("data/msg_monthly.json", "w") as file:
-                file.truncate()
+                data = dict()
+                data["users"] = dict()
+                json.dump(data, file, indent=4)
 
         if (time_weekly + 604800) < current_time:
             places = 3
