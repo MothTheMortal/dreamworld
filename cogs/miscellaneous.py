@@ -596,7 +596,9 @@ class Miscellaneous(commands.Cog):
             await record.send(embed=leaderboard_embed)
             collection.update_one({"_id": 0}, {"$set": {"weekly_time": time.time()}})
             with open("data/msg_weekly.json", "w") as file:
-                file.truncate()
+                data = dict()
+                data["users"] = dict()
+                json.dump(data, file, indent=4)
 
         with open("data/role_period.json", "r") as file:
             current_time = time.time()
