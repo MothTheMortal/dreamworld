@@ -37,7 +37,7 @@ class Miscellaneous(commands.Cog):
         await ctx.response.send_message("Downloading Audio.")
         yt = YouTube(link)
         audio_stream = yt.streams.filter(only_audio=True).first()
-        title = ''.join(yt.title.split(' '))
+        title = ''.join(yt.title.split(' '))[0:12]
         audio_stream.download(output_path="./pics/", filename=f"{title}.mp3")
         channel: discord.TextChannel = ctx.channel
         file = discord.File(f"pics/{title}.mp3")
