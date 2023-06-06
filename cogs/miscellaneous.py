@@ -50,7 +50,7 @@ class Miscellaneous(commands.Cog):
 
     @app_commands.command(name="downloadvideo")
     async def downloadvideo(self, ctx: discord.Interaction, link: str):
-        await ctx.response.send_message("Downloading Video.")
+        await ctx.response.send_message("Downloading Video. Please wait one minute.")
         yt = YouTube(link)
 
         video_stream = yt.streams.get_highest_resolution()
