@@ -37,11 +37,12 @@ class Miscellaneous(commands.Cog):
         await ctx.response.send_message("Downloading Audio.")
         yt = YouTube(link)
         audio_stream = yt.streams.filter(only_audio=True).first()
-        audio_stream.download(output_path="./pics/", filename=f"test.mp3")
+        title = ''.join(yt.title.split(' '))
+        audio_stream.download(output_path="./pics/", filename=f"{title}.mp3")
         channel: discord.TextChannel = ctx.channel
-        file = discord.File(f"pics/test.mp3")
+        file = discord.File(f"pics/{title}.mp3")
         await channel.send(file=file, reference=ctx.message)
-        remove(f"pics/test.mp3")
+        remove(f"pics/{title}.mp3")
 
     @app_commands.command(name="kill",
                           description="Kill a user!")
