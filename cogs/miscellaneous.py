@@ -48,6 +48,23 @@ class Miscellaneous(commands.Cog):
         channel: discord.TextChannel = ctx.channel
         await channel.send(file=file, reference=ctx.message)
 
+    @app_commands.command(name="downloadvideo")
+    async def downloadvideo(self, ctx: discord.Interaction, link: str):
+        await ctx.response.send_message("Downloading Video.")
+        yt = YouTube(link)
+
+        video_stream = yt.streams.get_highest_resolution()
+
+        video_data = io.BytesIO()
+        video_stream.stream_to_buffer(video_data)
+        video_data.seek(0)
+
+        title = '_'.join(yt.title.split(' '))[0:18]
+        file = discord.File(video_data, filename=f"{title}.mp4")
+
+        channel: discord.TextChannel = ctx.channel
+        await channel.send(file=file, reference=ctx.message)
+
     @app_commands.command(name="kill",
                           description="Kill a user!")
     async def kill(self, ctx: discord.Interaction, user: discord.Member):
