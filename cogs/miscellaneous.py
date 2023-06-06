@@ -13,7 +13,7 @@ from discord.ui import Button, View
 from random import choice, sample
 from pytube import YouTube
 from os import remove
-
+import io
 
 class Miscellaneous(commands.Cog):
     def __init__(self, client):
@@ -37,12 +37,16 @@ class Miscellaneous(commands.Cog):
         await ctx.response.send_message("Downloading Audio.")
         yt = YouTube(link)
         audio_stream = yt.streams.filter(only_audio=True).first()
-        title = ''.join(yt.title.split(' '))[0:12]
-        audio_stream.download(output_path="./pics/", filename=f"{title}.mp3")
+
+        audio_data = io.BytesIO()
+        audio_stream.stream_to_buffer(audio_data)
+        audio_data.seek(0)
+
+        title = '_'.join(yt.title.split(' '))[0:18]
+        file = discord.File(audio_data, filename=f"{title}.mp3")
+
         channel: discord.TextChannel = ctx.channel
-        file = discord.File(f"pics/{title}.mp3")
         await channel.send(file=file, reference=ctx.message)
-        remove(f"pics/{title}.mp3")
 
     @app_commands.command(name="kill",
                           description="Kill a user!")
