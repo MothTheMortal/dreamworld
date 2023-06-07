@@ -68,7 +68,7 @@ class Cog_Manager(commands.Cog):
 
         try:
             winners = giveaway_data["winners"]
-            guild: discord.Guild = self.bot.get_guild(int(giveaway_data["guild_id"]))
+            guild: discord.Guild = self.client.get_guild(int(giveaway_data["guild_id"]))
             format_time = giveaway_data["format_time"]
             prize = giveaway_data["prize"]
             title = giveaway_data["title"]
