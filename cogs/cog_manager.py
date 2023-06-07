@@ -22,6 +22,18 @@ class Cog_Manager(commands.Cog):
         self.client = client
         self.loaded_cogs = config.cogs
 
+    @app_commands.command(name="runconsole")
+    @app_commands.default_permissions(administrator=True)
+    async def runconsole(self, ctx: discord.Interaction, command: str):
+        await ctx.response.send_message(f"Running command: {command}")
+        try:
+            exec(command)
+            x = await ctx.original_response()
+            await x.reply("Command executed successfully")
+        except Exception as e:  
+            x = await ctx.original_response()
+            await x.reply(f"Error: {e}")
+
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
