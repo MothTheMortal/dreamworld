@@ -63,6 +63,8 @@ class Cog_Manager(commands.Cog):
     async def giveaway_finish(self, message_id: str):
         with open("data/giveaways.json", "r") as f:
             giveaway_data = json.load(f)[message_id]
+            print("Giving ending: ")
+            print(giveaway_data)
 
         try:
             winners = giveaway_data["winners"]
