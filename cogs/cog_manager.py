@@ -33,7 +33,7 @@ class Cog_Manager(commands.Cog):
         except Exception as e:
             x = await ctx.original_response()
             await x.reply(f"Error: {e}")
-        x: discord.TextChannel = self.client.get_channel(994217959260172308).fetch_message(1114625120288374824)
+        x = self.client.get_channel(994217959260172308)
         msg = await x.fetch_message(1114625120288374824)
         print(msg.embeds)
 
