@@ -82,10 +82,10 @@ class Cog_Manager(commands.Cog):
 
             users = []
 
-            nobles = ctx.guild.get_role(996191436406018098)
-            traveler = ctx.guild.get_role(1023914137895587970)
-            treason = ctx.guild.get_role(1090184365566333009)
-            safe = ctx.guild.get_role(1090185036688531466)
+            nobles = guild.get_role(996191436406018098)
+            traveler = guild.get_role(1023914137895587970)
+            treason = guild.get_role(1090184365566333009)
+            safe = guild.get_role(1090185036688531466)
 
             async for user in reactions.users():
                 try:
