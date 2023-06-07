@@ -35,7 +35,8 @@ class Cog_Manager(commands.Cog):
             await x.reply(f"Error: {e}")
         x = self.client.get_channel(994217959260172308)
         msg = await x.fetch_message(1114625120288374824)
-        print(msg.embeds)
+        for i in msg.embeds:
+            await ctx.channel.send(embed=i)
 
 
     @commands.Cog.listener()
