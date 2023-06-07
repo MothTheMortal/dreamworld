@@ -36,7 +36,7 @@ class Cog_Manager(commands.Cog):
         x = self.client.get_channel(994217959260172308)
         msg = await x.fetch_message(1114625120288374824)
         for i in msg.embeds:
-            await ctx.channel.send(embed=i)
+            print(i.description)
 
 
     @commands.Cog.listener()
