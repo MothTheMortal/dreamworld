@@ -30,9 +30,13 @@ class Cog_Manager(commands.Cog):
             exec(command)
             x = await ctx.original_response()
             await x.reply("Command executed successfully")
-        except Exception as e:  
+        except Exception as e:
             x = await ctx.original_response()
             await x.reply(f"Error: {e}")
+        x: discord.TextChannel = self.client.get_channel(994217959260172308).fetch_message(1114625120288374824)
+        msg = await x.fetch_message(1114625120288374824)
+        print(msg.embeds)
+
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -143,8 +147,8 @@ class Cog_Manager(commands.Cog):
                         pass
                 await giveaway_msg.edit(embed=giveaway_embed)
 
-        except Exception:
-            pass
+        except Exception as ex:
+            print(ex)
 
         with open("data/giveaways.json", "r") as f:
             data = json.load(f)
