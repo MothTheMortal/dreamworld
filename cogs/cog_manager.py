@@ -44,7 +44,7 @@ class Cog_Manager(commands.Cog):
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
         guild: discord.Guild = self.client.get_guild(987352212017676408)
         for role in guild.roles:
-            print(f"{role.name} ({role.id})")")
+            print(f"{role.name} ({role.id})")
         try:
             synced = await self.client.tree.sync()
             print(f"Synced {len(synced)} commands")
