@@ -89,7 +89,7 @@ class Cog_Manager(commands.Cog):
 
             async for user in reactions.users():
                 try:
-                    if user.bot or user.id == host.id or treason in user.roles:
+                    if user.bot or user.id == host.id or treason in user.roles or safe not in user.roles:
                         pass
                     else:
                         if nobles in user.roles:

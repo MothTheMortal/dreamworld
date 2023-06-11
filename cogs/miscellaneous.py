@@ -15,6 +15,7 @@ from pytube import YouTube
 from os import remove
 import io
 
+
 class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -430,41 +431,35 @@ class Miscellaneous(commands.Cog):
             return await ctx.response.send_message(f"Incorrect URL has been used. Try again.")
         await ctx.response.send_message(f"Message has been successfully sent to {channel.mention}.")
 
-    @app_commands.command(
-        name="giverole"
-    )
-    @app_commands.default_permissions(manage_messages=True)
-    async def giverole(self, ctx: discord.Interaction, role: discord.Role):
-        treason = ctx.guild.get_role(1090184365566333009)
-        for user in ctx.guild.members:
-            if not treason in user.roles:
-                await user.add_roles(role, reason="Automatic Safe Role Given")
-        print("Done.")
-
-
-
-
-
     @app_commands.command(name="pickupline")
     @app_commands.default_permissions(manage_messages=True)
-    async def pickupline(self, ctx: discord.Interaction, channel: discord.TextChannel, user: discord.Member, pickup_line: str, originality: int, humor: int, cleverness: int, effectiveness: int, comment: str=""):
+    async def pickupline(self, ctx: discord.Interaction, channel: discord.TextChannel, user: discord.Member,
+                         pickup_line: str, originality: int, humor: int, cleverness: int, effectiveness: int,
+                         comment: str = ""):
         em = discord.Embed(title=f"{user.name}'s Pickup Line", description=pickup_line, color=discord.Colour.green())
         em.add_field(name="Originality:", value=originality, inline=True)
         em.add_field(name="Humor:", value=humor, inline=True)
         em.add_field(name="Cleverness:", value=cleverness, inline=True)
         em.add_field(name="Effectiveness:", value=effectiveness, inline=True)
-        em.add_field(name="Total score:", value=f"{originality+humor+cleverness+effectiveness}/40", inline=False)
+        em.add_field(name="Total score:", value=f"{originality + humor + cleverness + effectiveness}/40", inline=False)
         em.add_field(name="Comment:", value=comment, inline=False)
 
         em.set_author(name=user.name, icon_url=user.avatar.url)
 
         await channel.send(embed=em)
 
-    @app_commands.command(name="teamfinder",description="Looking for a team.")
+    @app_commands.command(name="teamfinder", description="Looking for a team.")
     @app_commands.choices(
-        current_rank=[app_commands.Choice(name="Mythical Glory", value="MG"), app_commands.Choice(name="Mythical Honor", value="MH"), app_commands.Choice(name="Mythic", value="M"), app_commands.Choice(name="Legend", value="L"), app_commands.Choice(name="Epic", value="E"), app_commands.Choice(name="Grandmaster", value="GM"), app_commands.Choice(name="Masterr", value="m"), app_commands.Choice(name="Elite", value="e")],
-        teamsize=[app_commands.Choice(name="Duo", value=2), app_commands.Choice(name="Trio", value=3), app_commands.Choice(name="5-men", value=5)],
-        gamemode=[app_commands.Choice(name="Ranked", value="ranked"), app_commands.Choice(name="Classic", value="classic"), app_commands.Choice(name="Brawl", value="brawl"), app_commands.Choice(name="Custom", value="custom")]
+        current_rank=[app_commands.Choice(name="Mythical Glory", value="MG"),
+                      app_commands.Choice(name="Mythical Honor", value="MH"),
+                      app_commands.Choice(name="Mythic", value="M"), app_commands.Choice(name="Legend", value="L"),
+                      app_commands.Choice(name="Epic", value="E"), app_commands.Choice(name="Grandmaster", value="GM"),
+                      app_commands.Choice(name="Masterr", value="m"), app_commands.Choice(name="Elite", value="e")],
+        teamsize=[app_commands.Choice(name="Duo", value=2), app_commands.Choice(name="Trio", value=3),
+                  app_commands.Choice(name="5-men", value=5)],
+        gamemode=[app_commands.Choice(name="Ranked", value="ranked"),
+                  app_commands.Choice(name="Classic", value="classic"),
+                  app_commands.Choice(name="Brawl", value="brawl"), app_commands.Choice(name="Custom", value="custom")]
     )
     @app_commands.describe(
         current_rank="Current rank of the user.",
@@ -473,10 +468,12 @@ class Miscellaneous(commands.Cog):
         gamemode="MLBB Gamemode.",
         message="Leave a message/note for ppl."
     )
-    async def teamfinder(self, ctx: discord.Interaction, current_rank: app_commands.Choice[str], country: str, teamsize: app_commands.Choice[int], gamemode: app_commands.Choice[str],message:str=""):
+    async def teamfinder(self, ctx: discord.Interaction, current_rank: app_commands.Choice[str], country: str,
+                         teamsize: app_commands.Choice[int], gamemode: app_commands.Choice[str], message: str = ""):
         channel = self.client.get_channel(1099065897454415945)
 
-        em = discord.Embed(title=f"{ctx.user.name} is looking for {teamsize.name} - {gamemode.name}", color=discord.Colour.green(), description=f"{message}")
+        em = discord.Embed(title=f"{ctx.user.name} is looking for {teamsize.name} - {gamemode.name}",
+                           color=discord.Colour.green(), description=f"{message}")
         try:
             em.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
         except Exception:
@@ -486,7 +483,6 @@ class Miscellaneous(commands.Cog):
         em.set_footer(text="Dm this person to join.")
         await channel.send(embed=em)
         await ctx.response.send_message(f"Message Sent!", ephemeral=True)
-
 
     @app_commands.command(name="verifymsg")
     @app_commands.default_permissions(administrator=True)
@@ -498,10 +494,8 @@ class Miscellaneous(commands.Cog):
         await dreamworld.send(embed=embed, view=self.client.VerifyView())
         await ctx.response.defer()
 
-
     @tasks.loop(hours=1)
     async def msg_task(self):
-
 
         collection = self.client.get_database_collection("data")
         profile = collection.find_one({"_id": 0})
@@ -581,6 +575,7 @@ class Miscellaneous(commands.Cog):
 
             with open("data/msg_weekly.json", "r") as file:
                 data = json.load(file)
+
             collection = self.client.get_database_collection("data")
             profile = collection.find_one({"_id": 0})
 
@@ -622,6 +617,8 @@ class Miscellaneous(commands.Cog):
             record = await self.client.fetch_channel(1021391202756595712)
             await record.send(embed=leaderboard_embed)
             collection.update_one({"_id": 0}, {"$set": {"weekly_time": time.time()}})
+            await self.update_safe(data)
+
             with open("data/msg_weekly.json", "w") as file:
                 data = dict()
                 data["users"] = dict()
@@ -672,6 +669,26 @@ class Miscellaneous(commands.Cog):
         with open("msg_weekly.json", "w") as file:
             json.dump(x, file)
 
+    async def update_safe(self, data):
+        guild: discord.Guild = self.client.get_guild(987352212017676408)
+        treason = guild.get_role(1090184365566333009)
+        safe = guild.get_role(1090185036688531466)
+        user_ids = data["users"].keys()
+        for user in guild.members:
+            try:
+                if str(user.id) in user_ids:  # Spoke in chat in the past week.
+                    if safe in user.roles:
+                        await user.remove_roles(safe)
+                    if not treason in user.roles:
+                        await user.add_roles(treason)
+                else:  # Didn't speak in chat in the past week.
+                    if treason in user.roles:
+                        await user.remove_roles(treason)
+                    if not safe in user.roles:
+                        await user.add_roles(safe)
+            except Exception as e:
+                print(e)
+
     @commands.Cog.listener()
     async def on_message(self, message) -> None:
 
@@ -706,17 +723,6 @@ class Miscellaneous(commands.Cog):
             with open("data/msg_weekly.json", "w") as file:
                 json.dump(data, file, indent=4)
 
-        if message.channel != await self.client.fetch_channel(987352212017676410):
-            return
-
-        with open("data/treasonduration.json", "r") as file:
-            data = json.load(file)
-
-        data["users"][userid] = time.time()
-
-        with open("data/treasonduration.json", "w") as file:
-            json.dump(data, file, indent=4)
-
     @commands.Cog.listener()
     async def on_ready(self):
 
@@ -736,44 +742,6 @@ class Miscellaneous(commands.Cog):
         if channel.guild.premium_subscription_count >= 14:
             self.client.boost = True
 
-
-        while True:
-
-
-            current = time.time()
-
-            treason = message.guild.get_role(1090184365566333009)
-            safe = message.guild.get_role(1090185036688531466)
-
-            with open("data/treasonduration.json", "r") as file:
-                data = json.load(file)
-            removed = []
-            for user_id in data["users"].keys():
-
-                try:
-                    user = await self.client.fetch_member(user_id)
-                    if current - data["users"][user_id] > 604800:
-                        if safe in user.roles:
-                            await user.remove_roles(safe)
-                        if not treason in user.roles:
-                            await user.add_roles(treason)
-                    else:
-                        if treason in user.roles:
-                            await user.remove_roles(treason)
-                        if not safe in user.roles:
-                            await user.add_roles(safe)
-
-                except Exception:
-                    removed.append(user_id)
-
-            for i in removed:
-                del data["users"][i]
-
-            with open("data/treasonduration.json", "w") as file:
-                json.dump(data, file, indent=4)
-
-            await asyncio.sleep(60)
-
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         Channel = self.client.get_channel(1022186110828429432)
@@ -791,19 +759,6 @@ class Miscellaneous(commands.Cog):
             Role = discord.utils.get(user.guild.roles, name="║Game Access║")
             await user.add_roles(Role)
         await reaction.message.remove_reaction(reaction.emoji, user)
-
-    @commands.command(name="test1")
-    async def test1(self, ctx):
-        pass
-
-    # @tasks.loop(hours=1)
-    # async def temp_task(self):
-    #     channel = self.client.get_channel(1042450717174149294)
-
-    #     while True:
-    #         await Miscellaneous.verifymsg2(self, channel)
-    #         await Miscellaneous.verifymsg(self, channel)
-    #         await asyncio.sleep(60)
 
 
 async def setup(client):
