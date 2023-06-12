@@ -83,19 +83,6 @@ class Currency(commands.Cog):
         )
         return await ctx.response.send_message(embed=profile_embed)
 
-    @app_commands.command(name="test1")
-    async def test1(self, ctx: discord.Interaction):
-        guild: discord.Guild = self.client.get_guild(987352212017676408)
-        treason = guild.get_role(1090184365566333009)
-        safe = guild.get_role(1090185036688531466)
-        for user in guild.members:
-            if treason in user.roles:
-                await user.remove_roles(treason)
-                await user.add_roles(safe)
-            else:
-                await user.remove_roles(safe)
-                await user.add_roles(treason)
-
 
     @app_commands.command(name="leaderboard-currency", description="Shows the leaderboard of the currency!")
     @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
