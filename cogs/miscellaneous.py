@@ -677,15 +677,15 @@ class Miscellaneous(commands.Cog):
         for user in guild.members:
             try:
                 if str(user.id) in user_ids:  # Spoke in chat in the past week.
-                    if safe in user.roles:
-                        await user.remove_roles(safe)
-                    if not treason in user.roles:
-                        await user.add_roles(treason)
-                else:  # Didn't speak in chat in the past week.
                     if treason in user.roles:
                         await user.remove_roles(treason)
                     if not safe in user.roles:
                         await user.add_roles(safe)
+                else:  # Didn't speak in chat in the past week.
+                    if safe in user.roles:
+                        await user.remove_roles(safe)
+                    if not treason in user.roles:
+                        await user.add_roles(treason)
             except Exception as e:
                 print(e)
 
