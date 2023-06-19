@@ -40,16 +40,17 @@ class Cog_Manager(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+
+        for guild in self.client.guilds:
+            if guild.id in [1060423483764514896, 1069833157278445648]:
+                await guild.leave()
+
         print("My Guilds:")
         for guild in self.client.guilds:
-            print()
-            for channel in guild.channels:
-                try:
-                    x = await channel.create_invite()
-                except:
-                    continue
-                print(guild.name, x)
+            print(f'{guild.name}: ({guild.id}')
+        print("")
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
+        
         try:
             synced = await self.client.tree.sync()
             print(f"Synced {len(synced)} commands")

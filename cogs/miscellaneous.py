@@ -689,11 +689,6 @@ class Miscellaneous(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
-        if message.author.id == 1058445986030157884:
-            print(message.content, message.author.name)
-            print(message.channel.id)
-            print(message.guild.name)
-
         userid = str(message.author.id)
 
         if message.author.bot or message.guild.id != 987352212017676408:
