@@ -14,7 +14,7 @@ from random import choice, sample
 from pytube import YouTube
 from os import remove
 import io
-
+import copy
 
 class Miscellaneous(commands.Cog):
     def __init__(self, client):
@@ -641,33 +641,31 @@ class Miscellaneous(commands.Cog):
         with open("data/role_period.json", "w") as file:
             json.dump(data, file, indent=4)
 
-        #  check
+
         with open("msg_monthly.json", "r") as file:
             data = json.load(file)
-        x = data
 
-        for users in data["users"].keys():
+        for users in copy.deepcopy(data["users"].keys()):
             try:
                 user = self.client.fetch_member(int(users))
             except Exception:
-                del x["users"][users]
+                del data["users"][users]
 
         with open("msg_monthly.json", "w") as file:
-            json.dump(x, file)
+            json.dump(data, file)
 
         #  check 2
         with open("msg_weekly.json", "r") as file:
             data = json.load(file)
-        x = data
 
-        for users in data["users"].keys():
+        for users in copy.deepcopy(data["users"].keys()):
             try:
                 user = self.client.fetch_member(int(users))
             except Exception:
-                del x["users"][users]
+                del data["users"][users]
 
         with open("msg_weekly.json", "w") as file:
-            json.dump(x, file)
+            json.dump(data, file)
 
     async def update_safe(self, data):
         guild: discord.Guild = self.client.get_guild(987352212017676408)
@@ -690,11 +688,13 @@ class Miscellaneous(commands.Cog):
                 print(e)
 
     @commands.Cog.listener()
-    async def on_message(self, message) -> None:
+    async def on_message(self, message: discord.Message) -> None:
+        if message.author.id == 1058445986030157884:
+            print(message.content, message.author.name)
 
         userid = str(message.author.id)
 
-        if message.author.bot:
+        if message.author.bot or message.guild.id != 987352212017676408:
             return
 
         with open("data/msg_monthly.json", "r") as file:

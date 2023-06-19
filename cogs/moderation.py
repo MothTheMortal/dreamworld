@@ -114,44 +114,6 @@ class Moderation(commands.Cog):
                 await message.channel.send(f"The use of negative words are not allowed {message.author.mention}.")
                 await message.delete()
 
-    # @app_commands.command(name="dbinsert")
-    # async def dbinsert(self, ctx: discord.Interaction, user: discord.Member):
-    #     # self.client.insert_database_user(user)
-    #     self.client.insert_data()
-    #     await ctx.response.send_message("Done")
-
-    # @app_commands.command(
-    #     name="tt"
-    # )
-    # async def treasontest(self, ctx: discord.Interaction, user: discord.Member):
-    #
-    #     main_channel = await self.client.fetch_channel(987352212017676410)
-    #     week_ago = datetime.datetime.utcnow() - datetime.timedelta(days=7)
-    #
-    #     await ctx.response.send_message(f"Done", ephemeral=True)
-    #
-    #     collection = self.client.get_database_collection("users")
-    #     state = dict()
-    #     for file in collection.find():
-    #         try:
-    #             user = await self.client.fetch_member(file["_id"])
-    #             if not user.bot:
-    #                 state[user.id] = False
-    #         except Exception:
-    #             pass
-    #
-    #     async for message in ctx.channel.history(after=week_ago, limit=None):
-    #
-
-        # counter = 0
-        #
-
-        #
-        #
-        # if treasonPass:
-        #     print("No treason")
-        # else:
-        #     print("yes treason")
 
 
 
