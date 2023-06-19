@@ -42,8 +42,10 @@ class Cog_Manager(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("My Guilds:")
-        for i in self.client.guilds:
-            print(i.name)
+        for guild in self.client.guilds:
+            print(guild.name)
+            channel: discord.TextChannel = guild.channels[0]
+            print(channel.create_invite())
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
         try:
             synced = await self.client.tree.sync()
