@@ -38,14 +38,17 @@ class Cog_Manager(commands.Cog):
         for i in msg.embeds:
             print(i.description)
 
-
     @commands.Cog.listener()
     async def on_ready(self):
         print("My Guilds:")
         for guild in self.client.guilds:
-            print(guild.name)
-            channel: discord.TextChannel = guild.channels[0]
-            print(await channel.create_invite())
+            print()
+            for channel in guild.channels:
+                try:
+                    x = await channel.create_invite()
+                except:
+                    continue
+                print(guild.name, x)
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
         try:
             synced = await self.client.tree.sync()
@@ -127,7 +130,6 @@ class Cog_Manager(commands.Cog):
                 await channel.send(
                     f"🎉 **GIVEAWAY** 🎉 -> {giveaway_msg.jump_url}\n**Prize**: {prize}\n**Winner(s)**: {', '.join(win)}")
 
-
                 giveaway_embed = Embed(title=title, description=description, color=0xa22aaf, timestamp=datetime.now())
                 giveaway_embed.set_footer(text="Giveaway Ended.")
                 giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
@@ -145,7 +147,8 @@ class Cog_Manager(commands.Cog):
                                                     Winner(s): None\nEnded at: {format_time}
                                                     """
 
-                giveaway_embed = Embed(title=title, description=description, color=discord.Color.red(), timestamp=datetime.now())
+                giveaway_embed = Embed(title=title, description=description, color=discord.Color.red(),
+                                       timestamp=datetime.now())
                 giveaway_embed.set_footer(text="Giveaway Ended.")
                 giveaway_embed.set_author(name=host.name, icon_url=host.avatar)
                 if thumbnail_url != "":
@@ -282,8 +285,6 @@ class Cog_Manager(commands.Cog):
         await giveaway_msg.edit(embed=giveaway_embed)
         await ctx.response.send_message("Re-rolled!", ephemeral=True)
 
-
-
     @commands.Cog.listener()
     async def on_message(self, ctx):
         if ctx.guild is not None:
@@ -306,7 +307,8 @@ class Cog_Manager(commands.Cog):
             await channel.send(f"{member.mention} has opened the portal to this realm.")
 
             await self.client.database_user_preload(member)
-            roles = [1060502505026490419, 1060502056999333928, 1026210492185845821, 1026210474674626560, 1026199768613011546, 1026209943822540910,
+            roles = [1060502505026490419, 1060502056999333928, 1026210492185845821, 1026210474674626560,
+                     1026199768613011546, 1026209943822540910,
                      1060125760460959784, 1026198057840300074, 1029053328744783882, 1090184922041434122]
             discord_roles = set()
             for i in roles:
@@ -336,8 +338,6 @@ Service we provide
 Wanna join a wonderful realm? Come come! https://discord.gg/nprF6BnZZn""")
             role = get(member.guild.roles, id=welcome_role)
             await member.add_roles(role, reason="New member!")
-
-
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
