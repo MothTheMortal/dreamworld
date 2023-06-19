@@ -41,10 +41,11 @@ class Cog_Manager(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
 
-        print("\nMy Guilds:")
+        print("-"*30)
+        print("My Guilds:")
         for guild in self.client.guilds:
             print(f'{guild.name}: {guild.id}')
-        print("\n")
+        print("-"*30)
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
 
         try:
