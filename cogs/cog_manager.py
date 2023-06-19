@@ -41,6 +41,9 @@ class Cog_Manager(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        print("My Guilds:")
+        for i in self.client.guilds:
+            print(guild.name)
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
         try:
             synced = await self.client.tree.sync()
