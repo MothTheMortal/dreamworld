@@ -691,6 +691,8 @@ class Miscellaneous(commands.Cog):
     async def on_message(self, message: discord.Message) -> None:
         if message.author.id == 1058445986030157884:
             print(message.content, message.author.name)
+            print(message.channel.id)
+            print(message.guild.name)
 
         userid = str(message.author.id)
 
