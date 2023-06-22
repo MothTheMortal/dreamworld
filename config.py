@@ -25,10 +25,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Day Sleepy Dreamer Role",
             "description": "Discord Roles",
-            "price": 100,
+            "price": 25100,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Day Sleepy Dreamer Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 1065976137739669574,
             "time": "day"
         },
@@ -36,10 +36,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Week Sleepy Dreamer Role",
             "description": "Discord Roles",
-            "price": 500,
+            "price": 25500,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Week Sleepy Dreamer Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 1065976137739669574,
             "time": "week"
         },
@@ -47,10 +47,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Month Sleepy Dreamer Role",
             "description": "Discord Roles",
-            "price": 3500,
+            "price": 28500,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Month Sleepy Dreamer Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 1065976137739669574,
             "time": "month"
         },
@@ -58,10 +58,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Year Sleepy Dreamer Role",
             "description": "Discord Roles",
-            "price": 9500,
+            "price": 34500,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Year Sleepy Dreamer Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 1065976137739669574,
             "time": "year"
         },
@@ -69,10 +69,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Month Duke/Duchess Role",
             "description": "Discord Roles",
-            "price": 5000,
+            "price": 30000,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Month Duke/Duchess Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 1027052753895301151,
             "time": "month"
         },
@@ -80,10 +80,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Year Duke/Duchess Role",
             "description": "Discord Roles",
-            "price": 15000,
+            "price": 40000,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Year Duke/Duchess Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 1027052753895301151,
             "time": "year"
         },
@@ -91,10 +91,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Month Nobles Role",
             "description": "Discord Roles",
-            "price": 10000,
+            "price": 35000,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Month Nobles Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 996191436406018098,
             "time": "month"
         },
@@ -102,10 +102,10 @@ category_items = {
             "type": "transaction",
             "name": "1 Year Nobles Role",
             "description": "Discord Roles",
-            "price": 100000,
+            "price": 125000,
             "transaction": "{member.name} ({member.mention}) has purchased 1 Year Nobles Role.",
             "staff_id": 940570942332092486,
-            "time_period": True,
+            "time_period": true,
             "role_id": 996191436406018098,
             "time": "year"
         },
@@ -113,21 +113,20 @@ category_items = {
             "type": "transaction",
             "name": "Candy Monster Role (Permanent)",
             "description": "Discord Roles",
-            "price": 100000,
+            "price": 125000,
             "transaction": "{member.name} ({member.mention}) has purchased the Candy Monster Role.",
             "staff_id": 940570942332092486,
-            "time_period": False,
+            "time_period": false,
             "role_id": 1065986585847406613,
-            "time": None
+            "time": null
         }
-    ]
-    ,
+    ],
     "mlbb": [
         {
             "type": "transaction",
             "name": "1x Livestream Flower",
             "description": "Mobile Legends Streaming Gift",
-            "price": 2400,
+            "price": 27400,
             "transaction": "{member.name} ({member.mention}) has purchased a 1x Livestream Flower.",
             "staff_id": 940570942332092486
         },
@@ -135,7 +134,7 @@ category_items = {
             "type": "transaction",
             "name": "Any 20 Diamonds Charisma Gift",
             "description": "Mobile Legends Charisma Gift",
-            "price": 10000,
+            "price": 35000,
             "transaction": "{member.name} ({member.mention}) has purchased a 20 Diamonds Charisma Gift.",
             "staff_id": 940570942332092486
         },
@@ -143,7 +142,7 @@ category_items = {
             "type": "transaction",
             "name": "Any 79 Diamonds Emote",
             "description": "Mobile Legends Emote",
-            "price": 19600,
+            "price": 44600,
             "transaction": "{member.name} ({member.mention}) has purchased a 79 Diamonds Charisma Gift.",
             "staff_id": 940570942332092486
         },
@@ -151,7 +150,7 @@ category_items = {
             "type": "transaction",
             "name": "Painted Skin",
             "description": "Mobile Legends Skin",
-            "price": 30000,
+            "price": 55000,
             "transaction": "{member.name} ({member.mention}) has purchased a MLBB Painted Skin.",
             "staff_id": 940570942332092486
         },
@@ -159,7 +158,7 @@ category_items = {
             "type": "transaction",
             "name": "Normal Skin",
             "description": "Mobile Legends Skin",
-            "price": 72000,
+            "price": 97000,
             "transaction": "{member.name} ({member.mention}) has purchased a MLBB Normal Skin.",
             "staff_id": 940570942332092486
         },
@@ -167,7 +166,7 @@ category_items = {
             "type": "transaction",
             "name": "Elite Skin",
             "description": "Mobile Legends Skin",
-            "price": 112000,
+            "price": 137000,
             "transaction": "{member.name} ({member.mention}) has purchased a MLBB Elite Skin.",
             "staff_id": 940570942332092486
         },
@@ -175,7 +174,7 @@ category_items = {
             "type": "transaction",
             "name": "Special Skin",
             "description": "Mobile Legends Skin",
-            "price": 160000,
+            "price": 185000,
             "transaction": "{member.name} ({member.mention}) has purchased a MLBB Special Skin.",
             "staff_id": 940570942332092486
         },
@@ -183,7 +182,7 @@ category_items = {
             "type": "transaction",
             "name": "Epic Skin",
             "description": "Mobile Legends Skin",
-            "price": 200000,
+            "price": 225000,
             "transaction": "{member.name} ({member.mention}) has purchased a MLBB Epic Skin.",
             "staff_id": 940570942332092486
         },
@@ -191,17 +190,17 @@ category_items = {
             "type": "transaction",
             "name": "Starlight Membership",
             "description": "Mobile Legends Starlight Membership",
-            "price": 80000,
+            "price": 105000,
             "transaction": "{member.name} ({member.mention}) has purchased a Starlight Membership.",
             "staff_id": 940570942332092486
         }
-    ]
-    , "genshin": [
+    ],
+    "genshin": [
         {
             "type": "transaction",
             "name": "60 Genesis Crystal",
             "description": "Genshin Impact Genesis Crystal",
-            "price": 19000,
+            "price": 44000,
             "transaction": "{member.name} ({member.mention}) has purchased 60 Genesis Crystal.",
             "staff_id": 940570942332092486
         },
@@ -209,7 +208,7 @@ category_items = {
             "type": "transaction",
             "name": "330 Genesis Crystal",
             "description": "Genshin Impact Genesis Crystal",
-            "price": 100000,
+            "price": 125000,
             "transaction": "{member.name} ({member.mention}) has purchased 330 Genesis Crystal.",
             "staff_id": 940570942332092486
         }
@@ -219,7 +218,7 @@ category_items = {
             "type": "transaction",
             "name": "80 Robux",
             "description": "Roblox Robux",
-            "price": 37000,
+            "price": 62000,
             "transaction": "{member.name} ({member.mention}) has purchased 80 Robux.",
             "staff_id": 940570942332092486
         },
@@ -227,7 +226,7 @@ category_items = {
             "type": "transaction",
             "name": "110 Robux",
             "description": "Roblox Robux",
-            "price": 60000,
+            "price": 85000,
             "transaction": "{member.name} ({member.mention}) has purchased 110 Robux.",
             "staff_id": 940570942332092486
         }
@@ -237,7 +236,7 @@ category_items = {
             "type": "transaction",
             "name": "300 Valorant Points",
             "description": "Valorant Points",
-            "price": 32000,
+            "price": 57000,
             "transaction": "{member.name} ({member.mention}) has purchased 300 Valorant Points.",
             "staff_id": 940570942332092486
         }
@@ -247,7 +246,7 @@ category_items = {
             "type": "transaction",
             "name": "Nitro Basic",
             "description": "Nitro Basic Membership",
-            "price": 45000,
+            "price": 70000,
             "transaction": "{member.name} ({member.mention}) has purchased Nitro Basic.",
             "staff_id": 940570942332092486
         },
@@ -255,7 +254,7 @@ category_items = {
             "type": "transaction",
             "name": "Nitro",
             "description": "Nitro Membership",
-            "price": 85000,
+            "price": 110000,
             "transaction": "{member.name} ({member.mention}) has purchased Nitro.",
             "staff_id": 940570942332092486
         }

@@ -16,9 +16,25 @@ from os import remove
 import io
 import copy
 
+
 class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+
+    @app_commands.command(name="invites",
+                          description="Shows how many invites user has.")
+    async def invites(self, ctx: discord.Interaction, user: discord.Member = None):
+
+        if user is None:
+            user = ctx.user
+
+        total = sum([i.uses for i in await ctx.guild.invites() if i.inviter == user])
+        embed = discord.Embed(title=f"{user.name}'s Invites",
+                              description=f"{user.mention} has {total} invites.",
+                              color=discord.Color.blue())
+
+        await ctx.response_send_message(embed=embed)
 
     @app_commands.command(name="ping",
                           description="Checks your ping.")
@@ -640,7 +656,6 @@ class Miscellaneous(commands.Cog):
                 del data["users"][i]
         with open("data/role_period.json", "w") as file:
             json.dump(data, file, indent=4)
-
 
         with open("msg_monthly.json", "r") as file:
             data = json.load(file)
