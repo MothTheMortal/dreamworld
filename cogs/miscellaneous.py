@@ -36,6 +36,28 @@ class Miscellaneous(commands.Cog):
 
         await ctx.response.send_message(embed=embed)
 
+    @app_commands.command(name="invites-leaderboard",
+                          description="Shows invites leaderboard.")
+    async def invites_leaderboard(self, ctx: discord.Interaction, places=10):
+        invites_list = await ctx.guild.invites()
+        users = {user: 0 for user in ctx.guild.members}
+
+        for user in users.keys():
+            users[user] = sum([i.uses for i in invites_list if i.inviter == user])
+
+        sorted_users = sorted(users.items(), key=lambda x: x[1], reverse=True)
+        
+        lb_embed: discord.Embed = self.client.create_embed("Dreamworld Invites Leaderboard", f"The top {places} members with the most invites!")
+        for i in range(1, places+1):
+            try:
+                lb_embed.add_field(name=f"{i}. {sorted_users[i-1][1]} invites", value=f"{sorted_users[i-1][0].mention} - {sorted_users[i-1][0].display_name}", inline=False)
+            except:
+                lb_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+
+
+        await ctx.response.send_message(embed=lb_embed)
+
+
     @app_commands.command(name="ping",
                           description="Checks your ping.")
     async def ping(self, ctx: discord.Interaction):
