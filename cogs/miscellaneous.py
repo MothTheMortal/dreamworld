@@ -34,7 +34,7 @@ class Miscellaneous(commands.Cog):
                               description=f"{user.mention} has {total} invites.",
                               color=discord.Color.blue())
 
-        await ctx.response_send_message(embed=embed)
+        await ctx.response.send_message(embed=embed)
 
     @app_commands.command(name="ping",
                           description="Checks your ping.")
