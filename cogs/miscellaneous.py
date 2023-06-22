@@ -21,7 +21,6 @@ class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-
     @app_commands.command(name="invites",
                           description="Shows how many invites user has.")
     async def invites(self, ctx: discord.Interaction, user: discord.Member = None):
@@ -38,7 +37,7 @@ class Miscellaneous(commands.Cog):
 
     @app_commands.command(name="invites-leaderboard",
                           description="Shows invites leaderboard.")
-    async def invites_leaderboard(self, ctx: discord.Interaction, places=10):
+    async def invites_leaderboard(self, ctx: discord.Interaction, places: int = 10):
         invites_list = await ctx.guild.invites()
         users = {user: 0 for user in ctx.guild.members}
 
@@ -46,17 +45,18 @@ class Miscellaneous(commands.Cog):
             users[user] = sum([i.uses for i in invites_list if i.inviter == user])
 
         sorted_users = sorted(users.items(), key=lambda x: x[1], reverse=True)
-        
-        lb_embed: discord.Embed = self.client.create_embed("Dreamworld Invites Leaderboard", f"The top {places} members with the most invites!")
-        for i in range(1, places+1):
+
+        lb_embed: discord.Embed = self.client.create_embed("Dreamworld Invites Leaderboard",
+                                                           f"The top {places} members with the most invites!")
+        for i in range(1, places + 1):
             try:
-                lb_embed.add_field(name=f"{i}. {sorted_users[i-1][1]} invites", value=f"{sorted_users[i-1][0].mention} - {sorted_users[i-1][0].display_name}", inline=False)
+                lb_embed.add_field(name=f"{i}. {sorted_users[i - 1][1]} invites",
+                                   value=f"{sorted_users[i - 1][0].mention} - {sorted_users[i - 1][0].display_name}",
+                                   inline=False)
             except:
                 lb_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
 
-
         await ctx.response.send_message(embed=lb_embed)
-
 
     @app_commands.command(name="ping",
                           description="Checks your ping.")
