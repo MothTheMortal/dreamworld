@@ -73,24 +73,24 @@ class Miscellaneous(commands.Cog):
             await ctx.response.send_message(f"{ctx.user.mention} has suicidal tendencies and requires mental support.")
         elif user.id == 940570942332092486:
             await ctx.response.send_message(
-                f"{ctx.user.mention} has tried to kill the Owner of the Universe itself, and has been blown into smithereens by Hidaki's Rocket Launcher.")
+                f"{ctx.user.mention} has tried to kill the Owner of the Universe itself, and has been blown into smithereens by Aang's Rocket Launcher.")
         elif user.id == 1035103134441287762:
             await ctx.response.send_message(f"{ctx.user.mention} has tried to kill God, but ended up dying himself.")
-        elif user.id == 478552612657037315:
+        elif user.id == 369817231498018816:
             await ctx.response.send_message(
-                f"Before {ctx.user.mention} even thought of killing Hidaki, his whole being poofed from existence; akin to being Thanos snapped.")
+                f"Before {ctx.user.mention} even thought of killing Aang, his whole being poofed from existence; akin to being Thanos snapped.")
         elif user.id == 273890943407751168:
             await ctx.response.send_message(
                 f"{ctx.user.mention} has tried to kill the Creator of God himself, and now lost all their stars.")
         elif user.id == 987228839212089365:
             await ctx.response.send_message(
-                f"{ctx.user.mention} has tried to kill {user.mention} but was stabbed by Atriz before he could even come close.")
-        elif user.id == 835436949065957416:
+                f"{ctx.user.mention} has tried to kill {user.mention} but was stabbed by God before he could even come close.")
+        elif user.id == 273890943407751168:
             await ctx.response.send_message(
-                f"{ctx.user.mention} has tried to kill {user.mention} but was lit on fire by Aria.")
+                f"{ctx.user.mention} has tried to kill {user.mention} but was lit on fire by the Goddess.")
         elif user.id == 369817231498018816:
             await ctx.response.send_message(
-                f"{ctx.user.mention} has tried to kill {user.mention} but had their ass gorilla glued by Ivy.")
+                f"{ctx.user.mention} has tried to kill {user.mention} but had their ass gorilla glued by Velna.")
 
         else:
             await ctx.response.send_message(f"{ctx.user.mention} has killed {user.mention}")
