@@ -47,7 +47,8 @@ class Miscellaneous(commands.Cog):
         sorted_users = sorted(users.items(), key=lambda x: x[1], reverse=True)
 
         lb_embed: discord.Embed = self.client.create_embed("Dreamworld Invites Leaderboard",
-                                                           f"The top {places} members with the most invites!")
+                                                           f"The top {places} members with the most invites!",
+                                                           color=discord.Color.blue())
         for i in range(1, places + 1):
             try:
                 lb_embed.add_field(name=f"{i}. {sorted_users[i - 1][1]} invites",
