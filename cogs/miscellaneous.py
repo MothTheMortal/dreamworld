@@ -51,6 +51,8 @@ class Miscellaneous(commands.Cog):
                                                            color=discord.Color.blue())
         for i in range(1, places + 1):
             try:
+                if sorted_users[i - 1][1] == 0:
+                    raise IndexError
                 lb_embed.add_field(name=f"{i}. {sorted_users[i - 1][1]} invites",
                                    value=f"{sorted_users[i - 1][0].mention} - {sorted_users[i - 1][0].display_name}",
                                    inline=False)
