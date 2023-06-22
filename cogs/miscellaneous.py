@@ -39,7 +39,7 @@ class Miscellaneous(commands.Cog):
                           description="Shows invites leaderboard.")
     async def invites_leaderboard(self, ctx: discord.Interaction, places: int = 10):
         invites_list = await ctx.guild.invites()
-        users = {user: 0 for user in ctx.guild.members}
+        users = {user: 0 for user in ctx.guild.members if not user.bot}
 
         for user in users.keys():
             users[user] = sum([i.uses for i in invites_list if i.inviter == user])
