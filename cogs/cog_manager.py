@@ -306,11 +306,15 @@ class Cog_Manager(commands.Cog):
                      1060125760460959784, 1026198057840300074, 1029053328744783882, 1090184922041434122, 987389964486578236]
             discord_roles = set()
             for i in roles:
-                role = get(member.guild.roles, id=i)
-                if role is None:
+                try:
+                    role = get(member.guild.roles, id=i)
+                    if role is None:
+                        pass
+                    else:
+                        discord_roles.add(role)
+                except Exception as err:
+                    print(err)
                     pass
-                else:
-                    discord_roles.add(role)
 
             await member.add_roles(*discord_roles, reason="New member!")
         elif member.guild.id == 1022173766291312701:
