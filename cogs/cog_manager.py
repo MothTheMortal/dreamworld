@@ -301,7 +301,7 @@ class Cog_Manager(commands.Cog):
             await channel.send(f"{member.mention} has opened the portal to this realm.")
 
             await self.client.database_user_preload(member)
-            roles = [987352212017676408, 1060502056999333928, 1026210492185845821, 1026210474674626560,
+            roles = [1060502056999333928, 1026210492185845821, 1026210474674626560,
                      1026199768613011546, 1026209943822540910,
                      1060125760460959784, 1026198057840300074, 1029053328744783882, 1090184922041434122, 987389964486578236]
             discord_roles = set()
