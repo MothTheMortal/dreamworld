@@ -35,6 +35,21 @@ class Miscellaneous(commands.Cog):
     async def get_random_spell(self, ctx: discord.Interaction):
         await ctx.response.send_message(await self.random_spell())
 
+    @app_commands.command(name="delete-tournament", description="Deletes the ongoing tournament.")
+    @app_commands.default_permissions(administrator=True)
+    async def delete_tournament(self, ctx: discord.Interaction):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+
+        if tournament == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        data_collection.update_one({"_id": 0}, {"$set": {"tournament": {}}})
+        await ctx.response.send_message("Tournament Deleted!")
 
     @app_commands.command(name="create-tournament", description="Creates a tournament.")
     @app_commands.describe(
@@ -69,6 +84,7 @@ class Miscellaneous(commands.Cog):
             "first_prize": first_prize,
             "second_prize": second_prize,
             "third_prize": third_prize,
+            "started": False,
             "participants": []
         }
 
@@ -83,6 +99,12 @@ class Miscellaneous(commands.Cog):
         tournament = doc["tournament"]
         if tournament == {}:
             em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        if tournament["started"]:
+            em = self.client.create_embed("Tournament has already started!", "", discord.Color.red())
             await ctx.response.send_message(embed=em)
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
