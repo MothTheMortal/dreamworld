@@ -64,7 +64,7 @@ class Miscellaneous(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        description = f"Tournament Starts on {tournament['date']} {tournament['time']}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\nAll Participants will receive: {tournament['participant_prize']}"
+        description = f"**Date:** {tournament['date']}\n**Time:** {tournament['time']}\n{'-'*20}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\n{'-'*20}\n**Participating Reward:** {tournament['participant_prize']}"
 
         em = self.client.create_embed("MLBB Tournament", description, config.embed_purple)
         em.add_field(name="Rules:", value="")
