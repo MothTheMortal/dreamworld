@@ -40,6 +40,15 @@ class Miscellaneous(commands.Cog):
     @app_commands.default_permissions(administrator=True)
     async def create_tournament(self, ctx: discord.Interaction, channel: discord.TextChannel, date: str, time: str,
                                 participant_prize: str, first_prize: str, second_prize: str, third_prize: str):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+        if tournament != {}:
+            em = self.client.create_embed("Tournament Ongoing", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+        await ctx.response.send_message("Tournament Created!")
         data = {
             "channel": channel.id,
             "date": date,
@@ -66,8 +75,11 @@ class Miscellaneous(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
+        em = self.client.create_embed(f"{ctx.user.mention} has jointed the Tournament!", f"", discord.Color.green())
+        await ctx.response.send_message(embed=em)
         tournament["participants"].append((ctx.user.id, mlbb_id))
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": tournament}})
+
 
 
     @app_commands.command(name="start-tournament")
@@ -90,9 +102,9 @@ class Miscellaneous(commands.Cog):
 
         users = tournament["participants"]
         em = self.client.create_embed("Tournament Participants", f"{len(users)} Participants", discord.Color.blue())
-        
+
         for data in users:
-            member: discord.Member = self.client.fetch_member(int(data[0]))
+            member: discord.Member = await self.client.fetch_member(int(data[0]))
             em.add_field(name="", value=f"{member.mention} - {data[1]}")
 
         await ctx.edit_original_response(embed=em)
