@@ -64,7 +64,7 @@ class Miscellaneous(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        description = f"**Date:** {tournament['date']}\n**Time:** {tournament['time']}\n{'-'*20}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\n{'-'*20}\n**Participating Reward:** {tournament['participant_prize']}\n{'-'*20}"
+        description = f"**Date & Time:** {tournament['date']} {tournament['time']} <t:{tournament['unix']}>\n{'-'*20}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\n{'-'*20}\n**Participating Reward:** {tournament['participant_prize']}\n{'-'*20}"
 
         em = self.client.create_embed("MLBB Tournament", description, config.embed_purple)
         em.add_field(name="Rules:", value="")
@@ -103,6 +103,7 @@ class Miscellaneous(commands.Cog):
         unix_seconds = config.calculate_unix_seconds(int(new_date[0]), int(new_date[1]), int(new_date[2]), int(new_time[0]), int(new_time[1]))
 
         await ctx.response.send_message(f"Tournament Created! <t:{unix_seconds}>", ephemeral=True)
+
         data = {
             "channel": channel.id,
             "date": date,
