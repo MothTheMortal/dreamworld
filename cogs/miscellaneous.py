@@ -67,9 +67,9 @@ class Miscellaneous(commands.Cog):
         description = f"**Date:** {tournament['date']}\n**Time:** {tournament['time']}\n{'-'*20}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\n{'-'*20}\n**Participating Reward:** {tournament['participant_prize']}"
 
         em = self.client.create_embed("MLBB Tournament", description, config.embed_purple)
-        em.add_field(name="Rules:", value="")
+        em.add_field(name="", value="**Rule:**")
         for rule in config.tournament_rules.split("\n"):
-            em.add_field(name="", value=rule, inline=False)
+            em.add_field(name=rule, value="", inline=False)
 
         await ctx.response.send_message(embed=em)
 
