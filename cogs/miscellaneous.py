@@ -49,7 +49,7 @@ class Miscellaneous(commands.Cog):
             return await msg.delete(delay=10)
 
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": {}}})
-        await ctx.response.send_message("Tournament Deleted!")
+        await ctx.response.send_message("Tournament Deleted!", ephemeral=True)
 
 
     @app_commands.command(name="tournament", description="Shows you the information on the ongoing tournament.")
@@ -98,7 +98,7 @@ class Miscellaneous(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        await ctx.response.send_message("Tournament Created!")
+        await ctx.response.send_message("Tournament Created!", ephemeral=True)
         data = {
             "channel": channel.id,
             "date": date,
