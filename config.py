@@ -1,3 +1,6 @@
+import datetime
+import pytz
+
 # Cogs Configuration
 cogs = ["cog_manager", "currency", "moderation", "miscellaneous"]
 
@@ -83,10 +86,10 @@ category_items = {'roles': [
      'transaction': '{member.name} ({member.mention}) has purchased 80 Robux.', 'staff_id': 940570942332092486},
     {'type': 'transaction', 'name': '110 Robux', 'description': 'Roblox Robux', 'price': 85000,
      'transaction': '{member.name} ({member.mention}) has purchased 110 Robux.', 'staff_id': 940570942332092486}],
-                  'valorant': [{'type': 'transaction', 'name': '300 Valorant Points', 'description': 'Valorant Points',
-                                'price': 57000,
-                                'transaction': '{member.name} ({member.mention}) has purchased 300 Valorant Points.',
-                                'staff_id': 940570942332092486}], 'discord': [
+    'valorant': [{'type': 'transaction', 'name': '300 Valorant Points', 'description': 'Valorant Points',
+                  'price': 57000,
+                  'transaction': '{member.name} ({member.mention}) has purchased 300 Valorant Points.',
+                  'staff_id': 940570942332092486}], 'discord': [
         {'type': 'transaction', 'name': 'Nitro Basic', 'description': 'Nitro Basic Membership', 'price': 70000,
          'transaction': '{member.name} ({member.mention}) has purchased Nitro Basic.', 'staff_id': 940570942332092486},
         {'type': 'transaction', 'name': 'Nitro', 'description': 'Nitro Membership', 'price': 110000,
@@ -123,6 +126,14 @@ tournament_rules = """
 4. Must follow game rules
 5. No rage quit
 """
+
+
+def calculate_unix_seconds(year, month, day, hour, minute):
+    tz = pytz.timezone("UTC")
+    dt = datetime.datetime(year, month, day, hour, minute, tzinfo=tz)
+    unix_timestamp = int(dt.timestamp())
+    return unix_timestamp - 8 * 60 * 60
+
 
 # ID Configuration
 channel_ids = {

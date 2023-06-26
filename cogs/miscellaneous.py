@@ -98,17 +98,23 @@ class Miscellaneous(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        await ctx.response.send_message("Tournament Created!", ephemeral=True)
+        new_date = date.split("/")
+        new_time = time.split(":")
+        unix_seconds = config.calculate_unix_seconds(int(new_date[0]), int(new_date[1]), int(new_date[2]), int(new_time[0]), int(new_time[1]))
+
+        await ctx.response.send_message(f"Tournament Created! <t:{unix_seconds}>", ephemeral=True)
         data = {
             "channel": channel.id,
             "date": date,
             "time": time,
+            "unix": unix_seconds,
             "participant_prize": participant_prize,
             "first_prize": first_prize,
             "second_prize": second_prize,
             "third_prize": third_prize,
             "started": False,
             "participants": []
+
         }
 
         self.client.get_database_collection("data").update_one({"_id": 0}, {"$set": {"tournament": data}})
