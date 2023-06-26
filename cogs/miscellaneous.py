@@ -773,10 +773,11 @@ class Miscellaneous(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
         userid = str(message.author.id)
-
-        if message.author.bot or message.guild.id != 987352212017676408:
-            return
-
+        try:
+            if message.author.bot or message.guild.id != 987352212017676408:
+                return
+        except:
+            pass
         with open("data/msg_monthly.json", "r") as file:
             data = json.load(file)
 
