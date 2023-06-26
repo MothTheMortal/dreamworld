@@ -117,11 +117,11 @@ spells = ["Execute", "Retribution", "Inspire", "Sprint", "Revitalize", "Aegis", 
           "Flicker", "Arrival", "Vengeance"]
 
 tournament_rules = """
-1. **No trash talking**
-2. **No cheats/hack**
-3. **No bribe**
-4. **Must follow game rules**
-5. **No rage quit**
+1. No trash talking
+2. No cheats/hack
+3. No bribe
+4. Must follow game rules
+5. No rage quit
 """
 
 # ID Configuration

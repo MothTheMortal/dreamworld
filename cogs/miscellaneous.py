@@ -51,6 +51,29 @@ class Miscellaneous(commands.Cog):
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": {}}})
         await ctx.response.send_message("Tournament Deleted!")
 
+
+    @app_commands.command(name="tournament", description="Shows you the information on the ongoing tournament.")
+    async def tournament(self, ctx: discord.Interaction):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+
+        if tournament == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        description = f"1st Place Prize: {tournament['first_prize']}\n2nd Place Prize: {tournament['second_prize']}\n3rd Place Prize: {tournament['third_prize']}\nAll Participants will receive: {tournament['participant_prize']}"
+
+        em = self.client.create_embed("MLBB Tournament", description, config.embed_purple)
+        em.add_field(name="Rules:", value="")
+        for rule in config.tournament_rules.split("\n"):
+            em.add_field(name="", value=rule)
+
+        await ctx.response.send_message(embed=em)
+
+
     @app_commands.command(name="create-tournament", description="Creates a tournament.")
     @app_commands.describe(
         channel="The channel where the tournament will be hosted.",
