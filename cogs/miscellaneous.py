@@ -123,7 +123,7 @@ class Miscellaneous(commands.Cog):
         for data in users:
             count += 1
             member: discord.Member = await self.client.fetch_member(int(data[0]))
-            em.add_field(name="", value=f"{count}. {member.mention} - {data[1]}", inline=False)
+            em.add_field(name="", value=f"**{count}.** {member.mention} - {data[1]}", inline=False)
 
         await ctx.edit_original_response(embed=em)
 
