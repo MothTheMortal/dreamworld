@@ -50,6 +50,9 @@ class Miscellaneous(commands.Cog):
 
         if doc["tournament"] == {}:
             em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            await msg.delete(delay=10)
 
     @app_commands.command(name="start-tournament")
     async def start_tournament(self, ctx: discord.Interaction):
