@@ -112,6 +112,7 @@ class Cog_Manager(commands.Cog):
         data_collection = self.client.get_database_collection("data")
         doc = data_collection.find_one({"_id": 0})
         data = doc["tournament"]
+
         if data == {}:
             em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
             await ctx.response.send_message(embed=em)
@@ -126,9 +127,11 @@ class Cog_Manager(commands.Cog):
 
         data["started"] = True
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
-
-        control_embed = self.client.create_embed("Tournament Handler", "", discord.Color.green())
-
+        data = data_collection.find_one({"_id": 0})["tournament"]
+        control_embed = self.client.create_embed("Tournament Handler", f"{len(data['participants'])} participants in the Tournament.", discord.Color.green())
+        # Buttons 1: Continue, Remove Absent Players,
+        # Buttons 2: Select Team Size
+        # Buttons 3: Select Category -> Provide random hero/spell -> Announce in chat ->
 
     @app_commands.command(name="get-random-hero", description="Get a random MLBB hero")
     async def get_random_hero(self, ctx: discord.Interaction):
