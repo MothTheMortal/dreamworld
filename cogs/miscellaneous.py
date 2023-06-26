@@ -37,6 +37,7 @@ class Miscellaneous(commands.Cog):
         second_prize="The prize for the 2nd place winnner",
         third_prize="The prize for the 3rd place winnner"
     )
+    @app_commands.default_permissions(administrator=True)
     async def create_tournament(self, ctx: discord.Interaction, channel: discord.TextChannel, date: str, time: str,
                                 participant_prize: str, first_prize: str, second_prize: str, third_prize: str):
         pass
@@ -52,9 +53,10 @@ class Miscellaneous(commands.Cog):
             em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
             await ctx.response.send_message(embed=em)
             msg = await ctx.original_response()
-            await msg.delete(delay=10)
+            return await msg.delete(delay=10)
 
     @app_commands.command(name="start-tournament")
+    @app_commands.default_permissions(administrator=True)
     async def start_tournament(self, ctx: discord.Interaction):
         pass
 
@@ -65,7 +67,9 @@ class Miscellaneous(commands.Cog):
 
         if doc["tournament"] == {}:
             em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
-
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
 
     @app_commands.command(name="invites",
                           description="Shows how many invites user has.")
