@@ -151,7 +151,6 @@ class Miscellaneous(commands.Cog):
 
     @app_commands.command(name="tournament-participants", description="Shows the participants of the ongoing Tournament.")
     async def tournament_participants(self, ctx: discord.Interaction):
-        await ctx.response.defer()
         data_collection = self.client.get_database_collection("data")
         doc = data_collection.find_one({"_id": 0})
         tournament = doc["tournament"]
@@ -170,7 +169,7 @@ class Miscellaneous(commands.Cog):
             member: discord.Member = await self.client.fetch_member(int(data[0]))
             em.add_field(name="", value=f"**{count}.** {member.mention} - {data[1]}", inline=False)
 
-        await ctx.edit_original_response(embed=em)
+        await ctx.response.send_message(embed=em)
 
     @app_commands.command(name="invites",
                           description="Shows how many invites user has.")
