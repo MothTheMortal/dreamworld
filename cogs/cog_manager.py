@@ -63,8 +63,8 @@ class Cog_Manager(commands.Cog):
             for msg_id in giveaways_list:
                 if int(data[msg_id]["end_time"]) < time.time():
                     await self.giveaway_finish(str(msg_id))
-
-            if (data := self.client.get_database_collection("data").find_one({"_id": 0})["tournament"]) != {}:
+            data = self.client.get_database_collection("data").find_one({"_id": 0})["tournament"]
+            if data != {}:
                 if data["unix"] < time.time():
                     await self.tournament_handler()
 
