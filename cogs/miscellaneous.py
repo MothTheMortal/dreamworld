@@ -64,12 +64,12 @@ class Miscellaneous(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        description = f"1st Place Prize: {tournament['first_prize']}\n2nd Place Prize: {tournament['second_prize']}\n3rd Place Prize: {tournament['third_prize']}\nAll Participants will receive: {tournament['participant_prize']}"
+        description = f"**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\nAll Participants will receive: {tournament['participant_prize']}"
 
         em = self.client.create_embed("MLBB Tournament", description, config.embed_purple)
         em.add_field(name="Rules:", value="")
         for rule in config.tournament_rules.split("\n"):
-            em.add_field(name="", value=rule)
+            em.add_field(name="", value=rule, inline=False)
 
         await ctx.response.send_message(embed=em)
 
