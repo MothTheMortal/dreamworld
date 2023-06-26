@@ -53,14 +53,225 @@ class Cog_Manager(commands.Cog):
         await self.giveaway_handler()
 
     async def giveaway_handler(self):
+
         while True:
+
             with open("data/giveaways.json", "r") as f:
                 data = json.load(f)
             giveaways_list = [i for i in data.keys()]
+
             for msg_id in giveaways_list:
                 if int(data[msg_id]["end_time"]) < time.time():
                     await self.giveaway_finish(str(msg_id))
+
+            if data := self.client.get_database_collection("data").find_one({"_id": 0})["tournament"] != {}:
+                if data["unix"] < time.time():
+                    await self.tournament_handler()
+
             await asyncio.sleep(5)
+
+    async def random_hero(self):
+        return choice(config.heroes)
+
+    async def random_spell(self):
+        return choice(config.spells)
+
+    async def tournament_handler(self):
+        channel: discord.TextChannel = self.client.get_channel(config.channel_ids["tournament"])
+        msg = await channel.send(content="Tournament time has reached! Please run /start-tournament when all the staff member and players are ready to start the tournament.\nMake sure to use /tournament-remove-player to remove absent players before starting the tournament.")
+
+    @app_commands.command(name="tournament-remove-player", description="Remove a player from the tournament")
+    @app_commands.default_permissions(administrator=True)
+    async def tournament_remove_player(self, ctx: discord.Interaction, player: discord.Member):
+        data_collection = self.client.get_database_collection("data")
+        data = data_collection.find_one({"_id": 0})["tournament"]
+
+        if data == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        if data["started"]:
+            em = self.client.create_embed("Tournament has already started!", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        try:
+            data["participants"].remove(player.id)
+            data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
+            await ctx.response.send_message(f"{player.mention} has been removed from the tournament.", ephemeral=True)
+        except ValueError:
+            await ctx.response.send_message(f"{player.mention} is not in the tournament.", ephemeral=True)
+
+    @app_commands.command(name="start-tournament", description="Starts the ongoing Tournament.")
+    @app_commands.default_permissions(administrator=True)
+    async def start_tournament(self, ctx: discord.Interaction):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        data = doc["tournament"]
+        if data == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        if data["started"]:
+            em = self.client.create_embed("Tournament has already started!", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        data["started"] = True
+        data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
+
+        control_embed = self.client.create_embed("Tournament Handler", "", discord.Color.green())
+
+
+    @app_commands.command(name="get-random-hero", description="Get a random MLBB hero")
+    async def get_random_hero(self, ctx: discord.Interaction):
+        await ctx.response.send_message(await self.random_hero())
+
+    @app_commands.command(name="get-random-spell", description="Get a random MLBB spell")
+    async def get_random_spell(self, ctx: discord.Interaction):
+        await ctx.response.send_message(await self.random_spell())
+
+    @app_commands.command(name="delete-tournament", description="Deletes the ongoing tournament.")
+    @app_commands.default_permissions(administrator=True)
+    async def delete_tournament(self, ctx: discord.Interaction):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+
+        if tournament == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        data_collection.update_one({"_id": 0}, {"$set": {"tournament": {}}})
+        await ctx.response.send_message("Tournament Deleted!", ephemeral=True)
+
+    @app_commands.command(name="tournament", description="Shows you the information on the ongoing tournament.")
+    async def tournament(self, ctx: discord.Interaction):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+
+        if tournament == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        description = f"**Date & Time:** {tournament['date']} {tournament['time']} <t:{tournament['unix']}>\n{'-'*20}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\n{'-'*20}\n**Participating Reward:** {tournament['participant_prize']}\n{'-'*20}"
+
+        em = self.client.create_embed("MLBB Tournament", description, config.embed_purple)
+        em.add_field(name="Rules:", value="")
+        for rule in config.tournament_rules.split("\n"):
+            em.add_field(name="", value=rule, inline=False)
+
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="create-tournament", description="Creates a tournament.")
+    @app_commands.describe(
+        channel="The channel where the tournament will be hosted.",
+        date="The date of the tournament (YYYY/MM/DD)",
+        time="The time of the tournament (HH:MM) 24-hour clock",
+        participant_prize="The prize for the participants",
+        first_prize="The prize for the 1st place winnner",
+        second_prize="The prize for the 2nd place winnner",
+        third_prize="The prize for the 3rd place winnner"
+    )
+    @app_commands.default_permissions(administrator=True)
+    async def create_tournament(self, ctx: discord.Interaction, channel: discord.TextChannel, date: str, time: str,
+                                participant_prize: str, first_prize: str, second_prize: str, third_prize: str):
+
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+
+        if tournament != {}:
+            em = self.client.create_embed("Tournament Ongoing", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        new_date = date.split("/")
+        new_time = time.split(":")
+        unix_seconds = config.calculate_unix_seconds(int(new_date[0]), int(new_date[1]), int(new_date[2]), int(new_time[0]), int(new_time[1]))
+
+        await ctx.response.send_message(f"Tournament Created! <t:{unix_seconds}>", ephemeral=True)
+
+        data = {
+            "channel": channel.id,
+            "date": date,
+            "time": time,
+            "unix": unix_seconds,
+            "participant_prize": participant_prize,
+            "first_prize": first_prize,
+            "second_prize": second_prize,
+            "third_prize": third_prize,
+            "started": False,
+            "participants": []
+
+        }
+
+        self.client.get_database_collection("data").update_one({"_id": 0}, {"$set": {"tournament": data}})
+
+
+    @app_commands.command(name="join-tournament", description="Joins the ongoing Tournament.")
+    @app_commands.describe(mlbb_id="The ID of your MLBB account")
+    async def join_tournament(self, ctx: discord.Interaction, mlbb_id: str):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+        if tournament == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        if tournament["started"]:
+            em = self.client.create_embed("Tournament has already started!", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        if any([True if i[0] == ctx.user.id else False for i in tournament["participants"]]):
+            em = self.client.create_embed("You are already participating!", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        tournament["participants"].append((ctx.user.id, mlbb_id))
+        data_collection.update_one({"_id": 0}, {"$set": {"tournament": tournament}})
+        em = self.client.create_embed(f"{ctx.user.display_name} has joined the Tournament!", f"", discord.Color.green())
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="tournament-participants", description="Shows the participants of the ongoing Tournament.")
+    async def tournament_participants(self, ctx: discord.Interaction):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+        tournament = doc["tournament"]
+
+        if tournament == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
+        users = tournament["participants"]
+        em = self.client.create_embed("Tournament Participants", f"{len(users)} Participants", discord.Color.blue())
+        count = 0
+        for data in users:
+            count += 1
+            member: discord.Member = await self.client.fetch_member(int(data[0]))
+            em.add_field(name="", value=f"**{count}.** {member.mention} - {data[1]}", inline=False)
+
+        await ctx.response.send_message(embed=em)
+
 
     async def giveaway_finish(self, message_id: str):
         with open("data/giveaways.json", "r") as f:
