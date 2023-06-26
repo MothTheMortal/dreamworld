@@ -31,6 +31,10 @@ embed_red = 0xFF0000
 profile_picture = "https://cdn.discordapp.com/attachments/1022541233383559209/1035879359266947142/Screenshot_1147.png"
 thumbnail = "https://cdn.discordapp.com/attachments/1022541233383559209/1035879359266947142/Screenshot_1147.png"
 
+
+heroes = ["Novaria", "Arlott", "Joy", 'Aamon', 'Akai', 'Aldous', 'Alice', 'Alpha', 'Alucard', 'Angela', 'Argus', 'Atlas', 'Aurora', 'Aulus', 'Badang', 'Balmond', 'Bane', 'Barats', 'Baxia', 'Beatrix', 'Belerick', 'Benedetta', 'Brody', 'Bruno', 'Carmilla', 'Cecilion', "Chang'e", 'Chou', 'Claude', 'Clint', 'Cyclops', 'Diggie', 'Dyrroth', 'Esmeralda', 'Edith', 'Estes', 'Eudora', 'Fanny', 'Faramis', 'Floryn', 'Franco', 'Fredrinn', 'Freya', 'Gatotkaca', 'Gloo', 'Gord', 'Granger', 'Grock', 'Guinevere', 'Gusion', 'Hanabi', 'Hanzo', 'Harith', 'Harley', 'Hayabusa', 'Helcurt', 'Hilda', 'Hylos', 'Irithel', 'Jawhead', 'Johnson', 'Julian', 'Kadita', 'Kagura', 'Kaja', 'Karina', 'Karrie', 'Khaleed', 'Khufra', 'Kimmy', 'Lancelot', 'Lapu-lapu', 'Layla', 'Leomord', 'Lesley', 'Ling', 'Lolita', 'Lunox', 'Luo yi', 'Lylia', 'Mathilda', 'Martis', 'Masha', 'Melissa', 'Minotaur', 'Minsitthar', 'Miya', 'Moskov', 'Nana', 'Natan', 'Natalia', 'Odette', 'Pharsa', 'Phoveus', 'Popol and kupa', 'Paquito', 'Rafaela', 'Roger', 'Ruby', 'Saber', 'Selena', 'Silvanna', 'Sun', 'Terizla', 'Thamuz', 'Tigreal', 'Uranus', 'Vale', 'Valentina', 'Valir', 'Vexana', 'Wanwan', 'Xavier', 'X.borg', 'Yin', 'Yisun-shin', 'Yuzhong', 'Yve', 'Zhask', 'Zilong']
+spells = ["Execute", "Retribution", "Inspire", "Sprint", "Revitalize", "Aegis", "Petrify", "Purify", "Flameshot", "Flicker", "Arrival", "Vengeance"]
+
 # ID Configuration
 channel_ids = {
     "welcomes": 987358087327387708,

@@ -21,6 +21,49 @@ class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    async def random_hero(self):
+        return choice(config.heroes)
+
+    async def random_spell(self):
+        return choice(config.spells)
+
+    @app_commands.command(name="create-tournament")
+    @app_commands.describe(
+        channel="The channel where the tournament will be hosted.",
+        date="The date of the tournament (YYYY/MM/DD)",
+        time="The time of the tournament (HH:MM) 24-hour clock",
+        participant_prize="The prize for the participants",
+        first_prize="The prize for the 1st place winnner",
+        second_prize="The prize for the 2nd place winnner",
+        third_prize="The prize for the 3rd place winnner"
+    )
+    async def create_tournament(self, ctx: discord.Interaction, channel: discord.TextChannel, date: str, time: str,
+                                participant_prize: str, first_prize: str, second_prize: str, third_prize: str):
+        pass
+
+
+    @app_commands.command(name="join-tournament")
+    @app_commands.describe(mlbb_id="The ID of your MLBB account")
+    async def join_tournament(self, ctx: discord.Interaction, mlbb_id: str):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+
+        if doc["tournament"] == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+
+    @app_commands.command(name="start-tournament")
+    async def start_tournament(self, ctx: discord.Interaction):
+        pass
+
+    @app_commands.command(name="tournament-participants")
+    async def tournament_participants(self, ctx: discord.Interaction):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+
+        if doc["tournament"] == {}:
+            em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
+
+
     @app_commands.command(name="invites",
                           description="Shows how many invites user has.")
     async def invites(self, ctx: discord.Interaction, user: discord.Member = None):
