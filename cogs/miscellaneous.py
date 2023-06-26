@@ -27,16 +27,16 @@ class Miscellaneous(commands.Cog):
     async def random_spell(self):
         return choice(config.spells)
 
-    @app_commands.command(name="get-random-hero")
+    @app_commands.command(name="get-random-hero", description="Get a random MLBB hero")
     async def get_random_hero(self, ctx: discord.Interaction):
         await ctx.response.send_message(await self.random_hero())
 
-    @app_commands.command(name="get-random-spell")
+    @app_commands.command(name="get-random-spell", description="Get a random MLBB spell")
     async def get_random_spell(self, ctx: discord.Interaction):
         await ctx.response.send_message(await self.random_spell())
 
 
-    @app_commands.command(name="create-tournament")
+    @app_commands.command(name="create-tournament", description="Creates a tournament.")
     @app_commands.describe(
         channel="The channel where the tournament will be hosted.",
         date="The date of the tournament (YYYY/MM/DD)",
@@ -75,7 +75,7 @@ class Miscellaneous(commands.Cog):
         self.client.get_database_collection("data").update_one({"_id": 0}, {"$set": {"tournament": data}})
 
 
-    @app_commands.command(name="join-tournament")
+    @app_commands.command(name="join-tournament", description="Joins the ongoing Tournament.")
     @app_commands.describe(mlbb_id="The ID of your MLBB account")
     async def join_tournament(self, ctx: discord.Interaction, mlbb_id: str):
         data_collection = self.client.get_database_collection("data")
@@ -99,12 +99,12 @@ class Miscellaneous(commands.Cog):
         await ctx.response.send_message(embed=em)
 
 
-    @app_commands.command(name="start-tournament")
+    @app_commands.command(name="start-tournament", description="Starts the ongoing Tournament.")
     @app_commands.default_permissions(administrator=True)
     async def start_tournament(self, ctx: discord.Interaction):
         pass
 
-    @app_commands.command(name="tournament-participants")
+    @app_commands.command(name="tournament-participants", description="Shows the participants of the ongoing Tournament.")
     async def tournament_participants(self, ctx: discord.Interaction):
         await ctx.response.defer()
         data_collection = self.client.get_database_collection("data")
