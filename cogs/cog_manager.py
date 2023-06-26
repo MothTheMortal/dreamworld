@@ -99,7 +99,8 @@ class Cog_Manager(commands.Cog):
             return await msg.delete(delay=10)
 
         try:
-            data["participants"].remove(player.id)
+            for i in [i for i in data["participants"] if player.id in i]:
+                data["participants"].remove(i)
             data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
             await ctx.response.send_message(f"{player.mention} has been removed from the tournament.", ephemeral=True)
         except ValueError:
