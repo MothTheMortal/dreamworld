@@ -75,11 +75,16 @@ class Miscellaneous(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        em = self.client.create_embed(f"{ctx.user.mention} has jointed the Tournament!", f"", discord.Color.green())
-        await ctx.response.send_message(embed=em)
+        if any([True if i[0] == ctx.user.id else False for i in tournament["participants"]]):
+            em = self.client.create_embed("You are already participating!", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
         tournament["participants"].append((ctx.user.id, mlbb_id))
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": tournament}})
-
+        em = self.client.create_embed(f"{ctx.user.mention} has joined the Tournament!", f"", discord.Color.green())
+        await ctx.response.send_message(embed=em)
 
 
     @app_commands.command(name="start-tournament")
