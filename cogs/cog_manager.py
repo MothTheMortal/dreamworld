@@ -191,7 +191,7 @@ class Cog_Manager(commands.Cog):
             await ctx.response.send_message(embed=embed, view=view)
 
         async def select_team_size(ctx: discord.Interaction, embed):
-
+            print("Selecting team size")
             async def dropmenu_callback(ctx: discord.Interaction):
                 size = dropmenu.values[0]
                 data = data_collection.find_one({"_id": 0})["tournament"]
