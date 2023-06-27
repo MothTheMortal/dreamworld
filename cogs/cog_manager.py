@@ -9,7 +9,7 @@ import asyncio
 import json
 import time
 from random import choice
-from discord import Embed
+from discord import Embed, ui
 from datetime import datetime, timedelta
 
 
@@ -129,6 +129,31 @@ class Cog_Manager(commands.Cog):
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
         data = data_collection.find_one({"_id": 0})["tournament"]
         control_embed = self.client.create_embed("Tournament Handler", f"{len(data['participants'])} participants in the Tournament.", discord.Color.green())
+
+        view = ui.View()
+
+        async def dropmenu_callback(ctx: discord.Interaction):
+            global data
+            await ctx.response.send_message(f"{' '.join(dropmenu.values)}, have been removed from the tournament.")
+
+            for user_id in dropmenu.values:
+                for i in [i for i in data["participants"] if user_id in i]:
+                    data["participants"].remove(i)
+                data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
+                data = data_collection.find_one({"_id": 0})["tournament"]
+
+        options = []
+        for t in data["participants"]:
+            user_id = t[0]
+            user = await self.client.fetch_user(user_id)
+            options.append(discord.SelectOption(label=user.display_name, value=user.id))
+
+
+        dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1, max_values=len(None), options=options)
+        dropmenu.callback = dropmenu_callback
+        view.add_item(dropmenu)
+
+
         # Buttons 1: Continue, Remove Absent Players,
         # Buttons 2: Select Team Size
         # Buttons 3: Select Category -> Provide random hero/spell -> Announce in chat ->
