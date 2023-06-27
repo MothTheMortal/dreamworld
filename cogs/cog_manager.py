@@ -206,6 +206,7 @@ class Cog_Manager(commands.Cog):
                        discord.SelectOption(label="3v3", value=3), discord.SelectOption(label="4v4", value=4),
                        discord.SelectOption(label="5v5", value=5)]
             dropmenu = ui.Select(placeholder="Select Team Size", min_values=1, max_values=1, options=options)
+            dropmenu.callback = dropmenu_callback
             view.add_item(dropmenu)
 
             if not ctx.response.is_done():
