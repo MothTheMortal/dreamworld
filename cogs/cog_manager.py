@@ -1,3 +1,5 @@
+import copy
+
 import discord
 from discord.ext import commands
 import config
@@ -143,9 +145,10 @@ class Cog_Manager(commands.Cog):
 
 
             for user_id in dropmenu.values:
-                for i in [i for i in data["participants"] if user_id in i]:
-                    data["participants"].remove(i)
-                    print(i)
+                for i in copy.deepcopy(data["participants"]):
+                    if user_id in i:
+                        data["participants"].remove(i)
+                        print(i)
                 data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
                 data = data_collection.find_one({"_id": 0})["tournament"]
 
