@@ -125,6 +125,12 @@ class Cog_Manager(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
+        if len(data["participants"]) <= 2:
+            em = self.client.create_embed("Tournament does not have enough players to start!", "", discord.Color.red())
+            await ctx.response.send_message(embed=em)
+            msg = await ctx.original_response()
+            return await msg.delete(delay=10)
+
         data["started"] = True
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
         data = data_collection.find_one({"_id": 0})["tournament"]
@@ -149,7 +155,7 @@ class Cog_Manager(commands.Cog):
             options.append(discord.SelectOption(label=user.display_name, value=user.id))
 
 
-        dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1, max_values=len(None), options=options)
+        dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1, max_values=len(data["participants"]), options=options)
         dropmenu.callback = dropmenu_callback
         view.add_item(dropmenu)
 
