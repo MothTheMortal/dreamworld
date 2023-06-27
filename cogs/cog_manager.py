@@ -159,6 +159,7 @@ class Cog_Manager(commands.Cog):
                 await select_team_size(ctx, embed)
 
             async def button2_callback(ctx: discord.Interaction):
+                global dropmenu
                 options = []
                 for t in data["participants"]:
                     user_id = t[0]
