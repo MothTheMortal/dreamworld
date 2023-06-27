@@ -156,6 +156,7 @@ class Cog_Manager(commands.Cog):
                 await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
 
             async def button_callback(ctx: discord.Interaction):
+                print("BUTTON CALL")
                 await select_team_size(ctx, embed)
 
             options = []
