@@ -154,6 +154,7 @@ class Cog_Manager(commands.Cog):
                     data = data_collection.find_one({"_id": 0})["tournament"]
 
                 await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
+                return
 
             async def button_callback(ctx: discord.Interaction):
                 print("BUTTON CALL")
