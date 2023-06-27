@@ -156,24 +156,32 @@ class Cog_Manager(commands.Cog):
                 await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
 
             async def button_callback(ctx: discord.Interaction):
-                print("BUTTON CALL")
                 await select_team_size(ctx, embed)
 
-            options = []
-            for t in data["participants"]:
-                user_id = t[0]
-                user = await self.client.fetch_user(user_id)
-                options.append(discord.SelectOption(label=user.display_name, value=user.id))
+            async def button2_callback(ctx: discord.Interaction):
+                options = []
+                for t in data["participants"]:
+                    user_id = t[0]
+                    user = await self.client.fetch_user(user_id)
+                    options.append(discord.SelectOption(label=user.display_name, value=user.id))
 
-            dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1,
-                                 max_values=len(data["participants"]), options=options, row=0)
-            dropmenu.callback = dropmenu_callback
+                dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1,
+                                     max_values=len(data["participants"]), options=options)
+                dropmenu.callback = dropmenu_callback
+                view = ui.View()
+                view.add_item(dropmenu)
+                await ctx.response.edit_message(embed=embed, view=view)
 
-            button = ui.Button(label="Continue", style=discord.ButtonStyle.green, row=1)
+
+            button = ui.Button(label="Continue", style=discord.ButtonStyle.green)
             button.callback = button_callback
 
-            view.add_item(dropmenu)
+            button2 = ui.Button(label="Remove Absent Players", style=discord.ButtonStyle.red)
+            button2.callback = button2_callback
+
+
             view.add_item(button)
+
 
             await ctx.response.send_message(embed=embed, view=view)
 
