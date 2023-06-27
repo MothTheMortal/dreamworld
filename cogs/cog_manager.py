@@ -140,13 +140,16 @@ class Cog_Manager(commands.Cog):
 
         async def dropmenu_callback(ctx: discord.Interaction):
             data = data_collection.find_one({"_id": 0})["tournament"]
-            await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
+
 
             for user_id in dropmenu.values:
                 for i in [i for i in data["participants"] if user_id in i]:
                     data["participants"].remove(i)
+                    print(i)
                 data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
                 data = data_collection.find_one({"_id": 0})["tournament"]
+
+            await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
 
         options = []
         for t in data["participants"]:
