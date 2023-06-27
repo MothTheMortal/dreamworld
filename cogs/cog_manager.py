@@ -1,3 +1,5 @@
+import copy
+
 import discord
 from discord.ext import commands
 import config
@@ -154,6 +156,7 @@ class Cog_Manager(commands.Cog):
                     data = data_collection.find_one({"_id": 0})["tournament"]
 
                 await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
+                await select_team_size(ctx, embed)
 
             async def button_callback(ctx: discord.Interaction):
                 await select_team_size(ctx, embed)
@@ -188,10 +191,25 @@ class Cog_Manager(commands.Cog):
             await ctx.response.send_message(embed=embed, view=view)
 
         async def select_team_size(ctx: discord.Interaction, embed):
+
+            async def dropmenu_callback(ctx: discord.Interaction):
+                size = dropmenu.values[0]
+                data = data_collection.find_one({"_id": 0})["tournament"]
+                new_embed: discord.Embed = copy.deepcopy(embed)
+                new_embed.description += f"\nTeam Size: {size}"
+                await ctx.response.edit_message(embed=new_embed, view=None)
+
+            view = ui.View()
+            options = [discord.SelectOption(label="1v1", value=1), discord.SelectOption(label="2v2", value=2),
+                       discord.SelectOption(label="3v3", value=3), discord.SelectOption(label="4v4", value=4),
+                       discord.SelectOption(label="5v5", value=5)]
+            dropmenu = ui.Select(placeholder="Select Team Size", min_values=1, max_values=1, options=options)
+            view.add_item(dropmenu)
+
             if not ctx.response.is_done():
-                await ctx.response.edit_message(embed=embed, view=None)
+                await ctx.response.edit_message(embed=embed, view=view)
             else:
-                await ctx.edit_original_response(embed=embed, view=None)
+                await ctx.edit_original_response(embed=embed, view=view)
 
         await remove_player(ctx, control_embed)  # Buttons 1: Continue, Remove Absent Players,
         # Buttons 2: Select Team Size
