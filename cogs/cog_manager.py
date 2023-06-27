@@ -195,7 +195,6 @@ class Cog_Manager(commands.Cog):
 
             async def dropmenu_callback(ctx: discord.Interaction):
                 size = dropmenu.values[0]
-                print(size)
                 data = data_collection.find_one({"_id": 0})["tournament"]
                 new_embed: discord.Embed = copy.deepcopy(embed)
                 new_embed.description += f"\nTeam Size: {size}"
