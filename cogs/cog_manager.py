@@ -168,7 +168,7 @@ class Cog_Manager(commands.Cog):
                                  max_values=len(data["participants"]), options=options)
             dropmenu.callback = dropmenu_callback
 
-            button = ui.Button(label="Continue", style=discord.ButtonStyle.green())
+            button = ui.Button(label="Continue", style=discord.ButtonStyle.green)
             button.callback = button_callback
 
             view.add_item(button)
