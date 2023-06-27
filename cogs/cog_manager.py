@@ -181,6 +181,7 @@ class Cog_Manager(commands.Cog):
 
 
             view.add_item(button)
+            view.add_item(button2)
 
 
             await ctx.response.send_message(embed=embed, view=view)
