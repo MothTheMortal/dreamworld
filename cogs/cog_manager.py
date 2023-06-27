@@ -139,7 +139,7 @@ class Cog_Manager(commands.Cog):
         view = ui.View()
 
         async def dropmenu_callback(ctx: discord.Interaction):
-            global data
+            data = data_collection.find_one({"_id": 0})["tournament"]
             await ctx.response.send_message(f"{' '.join(dropmenu.values)}, have been removed from the tournament.")
 
             for user_id in dropmenu.values:
