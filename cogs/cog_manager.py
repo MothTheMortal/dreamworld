@@ -37,11 +37,11 @@ class Cog_Manager(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
 
-        print("-"*30)
+        print("-" * 30)
         print("My Guilds:")
         for guild in self.client.guilds:
             print(f'{guild.name}: {guild.id}')
-        print("-"*30)
+        print("-" * 30)
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
 
         try:
@@ -78,7 +78,8 @@ class Cog_Manager(commands.Cog):
 
     async def tournament_handler(self):
         channel: discord.TextChannel = self.client.get_channel(config.channel_ids["tournament"])
-        msg = await channel.send(content="Tournament time has reached! Please run /start-tournament when all the staff member and players are ready to start the tournament.\nMake sure to use /tournament-remove-player to remove absent players before starting the tournament.")
+        msg = await channel.send(
+            content="Tournament time has reached! Please run /start-tournament when all the staff member and players are ready to start the tournament.\nMake sure to use /tournament-remove-player to remove absent players before starting the tournament.")
 
     @app_commands.command(name="tournament-remove-player", description="Remove a player from the tournament")
     @app_commands.default_permissions(administrator=True)
@@ -134,36 +135,53 @@ class Cog_Manager(commands.Cog):
         data["started"] = True
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
         data = data_collection.find_one({"_id": 0})["tournament"]
-        control_embed = self.client.create_embed("Tournament Handler", f"{len(data['participants'])} participants in the Tournament.", discord.Color.green())
+        control_embed = self.client.create_embed("Tournament Handler",
+                                                 f"{len(data['participants'])} participants in the Tournament.",
+                                                 discord.Color.green())
 
-        view = ui.View()
+        async def remove_player(ctx: discord.Interaction, embed):
 
-        async def dropmenu_callback(ctx: discord.Interaction):
-            data = data_collection.find_one({"_id": 0})["tournament"]
+            view = ui.View()
 
-
-            for x in dropmenu.values:
-                user_id = int(x)
-                for i in [i for i in data["participants"] if user_id in i]:
-                    data["participants"].remove(i)
-                data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
+            async def dropmenu_callback(ctx: discord.Interaction):
                 data = data_collection.find_one({"_id": 0})["tournament"]
 
-            await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
+                for x in dropmenu.values:
+                    user_id = int(x)
+                    for i in [i for i in data["participants"] if user_id in i]:
+                        data["participants"].remove(i)
+                    data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
+                    data = data_collection.find_one({"_id": 0})["tournament"]
 
-        options = []
-        for t in data["participants"]:
-            user_id = t[0]
-            user = await self.client.fetch_user(user_id)
-            options.append(discord.SelectOption(label=user.display_name, value=user.id))
+                await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
 
+            async def button_callback(ctx: discord.Interaction):
+                await select_team_size(ctx, embed)
 
-        dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1, max_values=len(data["participants"]), options=options)
-        dropmenu.callback = dropmenu_callback
-        view.add_item(dropmenu)
-        await ctx.response.send_message(embed=control_embed, view=view)
+            options = []
+            for t in data["participants"]:
+                user_id = t[0]
+                user = await self.client.fetch_user(user_id)
+                options.append(discord.SelectOption(label=user.display_name, value=user.id))
 
-        # Buttons 1: Continue, Remove Absent Players,
+            dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1,
+                                 max_values=len(data["participants"]), options=options)
+            dropmenu.callback = dropmenu_callback
+
+            button = ui.Button(label="Continue", style=discord.ButtonStyle.green())
+            button.callback = button_callback
+
+            view.add_item(button)
+            view.add_item(dropmenu)
+            await ctx.response.send_message(embed=embed, view=view)
+
+        async def select_team_size(ctx: discord.Interaction, embed):
+            if not ctx.response.is_done():
+                await ctx.response.edit_message(embed=embed, view=None)
+            else:
+                await ctx.edit_original_response(embed=embed, view=None)
+
+        await remove_player(ctx, control_embed)  # Buttons 1: Continue, Remove Absent Players,
         # Buttons 2: Select Team Size
         # Buttons 3: Select Category -> Provide random hero/spell -> Announce in chat ->
 
@@ -203,7 +221,7 @@ class Cog_Manager(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        description = f"**Date & Time:** {tournament['date']} {tournament['time']} <t:{tournament['unix']}>\n{'-'*20}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\n{'-'*20}\n**Participating Reward:** {tournament['participant_prize']}\n{'-'*20}"
+        description = f"**Date & Time:** {tournament['date']} {tournament['time']} <t:{tournament['unix']}>\n{'-' * 20}\n**1st Place Prize:** {tournament['first_prize']}\n**2nd Place Prize:** {tournament['second_prize']}\n**3rd Place Prize:** {tournament['third_prize']}\n{'-' * 20}\n**Participating Reward:** {tournament['participant_prize']}\n{'-' * 20}"
 
         em = self.client.create_embed("MLBB Tournament", description, config.embed_purple)
         em.add_field(name="Rules:", value="")
@@ -238,7 +256,8 @@ class Cog_Manager(commands.Cog):
 
         new_date = date.split("/")
         new_time = time.split(":")
-        unix_seconds = config.calculate_unix_seconds(int(new_date[0]), int(new_date[1]), int(new_date[2]), int(new_time[0]), int(new_time[1]))
+        unix_seconds = config.calculate_unix_seconds(int(new_date[0]), int(new_date[1]), int(new_date[2]),
+                                                     int(new_time[0]), int(new_time[1]))
 
         await ctx.response.send_message(f"Tournament Created! <t:{unix_seconds}>", ephemeral=True)
 
@@ -257,7 +276,6 @@ class Cog_Manager(commands.Cog):
         }
 
         self.client.get_database_collection("data").update_one({"_id": 0}, {"$set": {"tournament": data}})
-
 
     @app_commands.command(name="join-tournament", description="Joins the ongoing Tournament.")
     @app_commands.describe(mlbb_id="The ID of your MLBB account")
@@ -288,7 +306,8 @@ class Cog_Manager(commands.Cog):
         em = self.client.create_embed(f"{ctx.user.display_name} has joined the Tournament!", f"", discord.Color.green())
         await ctx.response.send_message(embed=em)
 
-    @app_commands.command(name="tournament-participants", description="Shows the participants of the ongoing Tournament.")
+    @app_commands.command(name="tournament-participants",
+                          description="Shows the participants of the ongoing Tournament.")
     async def tournament_participants(self, ctx: discord.Interaction):
         data_collection = self.client.get_database_collection("data")
         doc = data_collection.find_one({"_id": 0})
@@ -309,7 +328,6 @@ class Cog_Manager(commands.Cog):
             em.add_field(name="", value=f"**{count}.** {member.mention} - {data[1]}", inline=False)
 
         await ctx.response.send_message(embed=em)
-
 
     async def giveaway_finish(self, message_id: str):
         with open("data/giveaways.json", "r") as f:
@@ -552,7 +570,8 @@ class Cog_Manager(commands.Cog):
             await self.client.database_user_preload(member)
             roles = [1060502056999333928, 1026210492185845821, 1026210474674626560,
                      1026199768613011546, 1026209943822540910,
-                     1060125760460959784, 1026198057840300074, 1029053328744783882, 1090184922041434122, 987389964486578236]
+                     1060125760460959784, 1026198057840300074, 1029053328744783882, 1090184922041434122,
+                     987389964486578236]
             discord_roles = set()
             for i in roles:
                 try:
