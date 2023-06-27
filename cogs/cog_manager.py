@@ -132,7 +132,7 @@ class Cog_Manager(commands.Cog):
             msg = await ctx.original_response()
             return await msg.delete(delay=10)
 
-        data["started"] = True
+        # data["started"] = True
         data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
         data = data_collection.find_one({"_id": 0})["tournament"]
         control_embed = self.client.create_embed("Tournament Handler",
