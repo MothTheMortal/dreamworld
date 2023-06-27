@@ -158,7 +158,7 @@ class Cog_Manager(commands.Cog):
         dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1, max_values=len(data["participants"]), options=options)
         dropmenu.callback = dropmenu_callback
         view.add_item(dropmenu)
-
+        await ctx.response.send_message(embed=control_embed, view=view)
 
         # Buttons 1: Continue, Remove Absent Players,
         # Buttons 2: Select Team Size
