@@ -154,7 +154,6 @@ class Cog_Manager(commands.Cog):
                     data = data_collection.find_one({"_id": 0})["tournament"]
 
                 await ctx.response.send_message(f"{', '.join(dropmenu.values)} have been removed from the tournament.")
-                return
 
             async def button_callback(ctx: discord.Interaction):
                 print("BUTTON CALL")
@@ -167,14 +166,15 @@ class Cog_Manager(commands.Cog):
                 options.append(discord.SelectOption(label=user.display_name, value=user.id))
 
             dropmenu = ui.Select(placeholder="Remove Absent Players", min_values=1,
-                                 max_values=len(data["participants"]), options=options)
+                                 max_values=len(data["participants"]), options=options, row=0)
             dropmenu.callback = dropmenu_callback
 
-            button = ui.Button(label="Continue", style=discord.ButtonStyle.green)
+            button = ui.Button(label="Continue", style=discord.ButtonStyle.green, row=1)
             button.callback = button_callback
 
-            view.add_item(button)
             view.add_item(dropmenu)
+            view.add_item(button)
+
             await ctx.response.send_message(embed=embed, view=view)
 
         async def select_team_size(ctx: discord.Interaction, embed):
