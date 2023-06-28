@@ -216,6 +216,11 @@ class Miscellaneous(commands.Cog):
             value=f"{reported_user}",
             inline=True
         )
+        log_embed.add_field(
+            name="Reported by:",
+            value=ctx.user.name,
+            inline=True
+        )
 
         await channel.send(embed=log_embed)
 
