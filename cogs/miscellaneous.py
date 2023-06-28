@@ -165,7 +165,7 @@ class Miscellaneous(commands.Cog):
         )
         log_embed.add_field(
             name="Submitted by:",
-            value=f"{ctx.user.mention}",
+            value=f"{ctx.user.display_name}",
             inline=True
         )
         user: discord.Member = self.client.get_user(273890943407751168)
