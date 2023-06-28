@@ -201,7 +201,11 @@ class Miscellaneous(commands.Cog):
         data = data[str(confession_number)]
         user = self.client.get_user(273890943407751168)
         channel = await user.create_dm()
-
+        try:
+            reported_user: discord.Member = self.client.get_user(data['user'])
+            reported_user = reported_user.display_name
+        except Exception:
+            reported_user = data['user']
         log_embed = self.client.create_embed(
             f"Confession Reported (#{confession_number})",
             f'{data["text"]}',
@@ -209,7 +213,7 @@ class Miscellaneous(commands.Cog):
         )
         log_embed.add_field(
             name="Submitted by:",
-            value=f"{data['user']}",
+            value=f"{reported_user}",
             inline=True
         )
 
