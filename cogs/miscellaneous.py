@@ -200,7 +200,7 @@ class Miscellaneous(commands.Cog):
 
         data = data[str(confession_number)]
         user = self.client.get_user(273890943407751168)
-        channel = user.create_dm()
+        channel = await user.create_dm()
 
         log_embed = self.client.create_embed(
             f"Confession Reported (#{confession_number})",
