@@ -158,7 +158,6 @@ class Miscellaneous(commands.Cog):
 
         await confess_channel.send(embed=confess_embed)
 
-        log_channel = self.client.get_channel(config.channel_ids["logs2"])
         log_embed = self.client.create_embed(
             f"Confession Log (#{count})",
             f'"{text}"',
@@ -169,7 +168,52 @@ class Miscellaneous(commands.Cog):
             value=f"{ctx.user.mention}",
             inline=True
         )
+        user: discord.Member = self.client.get_user(273890943407751168)
+        log_channel = await user.create_dm()
         await log_channel.send(embed=log_embed)
+
+        with open("data/confessions.json", "r") as f:
+            old = json.load(f)
+
+        old[str(count)] = {
+            "text": text,
+            "user": ctx.user.id
+        }
+
+        with open("data/confessions.json", "w") as f:
+            json.dump(old, f)
+
+    @app_commands.command(name="report-confession", description="Report a confession to the bot.")
+    async def report_confession(self, ctx: discord.Interaction, confession_number: int):
+        collection = self.client.get_database_collection("data")
+        profile = collection.find_one({"_id": 0})
+        count = profile["confession_count"]
+
+        with open("data/confessions.json", "r") as f:
+            data = json.load(f)
+    
+        if confession_number > count or str(confession_number) not in data.keys():
+            embed = discord.Embed(title="Confession Not Found", description="", colour=discord.Colour.red())
+            return await ctx.response.send_message(embed=embed)
+
+        await ctx.response.send_message(f"Confession #{confession_number} has been reported.")
+
+        data = data[str(confession_number)]
+        user = self.client.get_user(273890943407751168)
+        channel = user.create_dm()
+
+        log_embed = self.client.create_embed(
+            f"Confession Reported (#{confession_number})",
+            f'{data["text"]}',
+            discord.Colour.red()
+        )
+        log_embed.add_field(
+            name="Submitted by:",
+            value=f"{data['user']}",
+            inline=True
+        )
+
+        await channel.send(embed=log_embed)
 
     @app_commands.command(name="quote",
                           description="Tells a random Zen Quote.")
