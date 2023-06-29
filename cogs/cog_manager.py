@@ -243,6 +243,7 @@ class Cog_Manager(commands.Cog):
 
                 async def team1_callback(ctx: discord.Interaction):
                     await ctx.response.defer()
+                    print(team1)
                     return team1
 
                 async def team2_callback(ctx: discord.Interaction):
