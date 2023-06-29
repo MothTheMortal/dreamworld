@@ -269,6 +269,7 @@ class Cog_Manager(commands.Cog):
                 def check(rctx):
                     return rctx.channel == ctx.channel
                 payload = await self.client.wait_for("interaction", check=check)
+                await asyncio.sleep(0.5)
                 print("Working", winner)
                 return winner
 
