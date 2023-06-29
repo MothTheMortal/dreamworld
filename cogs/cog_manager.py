@@ -254,8 +254,6 @@ class Cog_Manager(commands.Cog):
                 embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
                 view = ui.View()
                 button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.grey, disabled=True)
-                print(team1, team2)
-                print(team_count)
                 button1 = ui.Button(label=f"Team {team_count[team1[0]]}", style=discord.ButtonStyle.green)
                 button1.callback = team1_callback
                 button2 = ui.Button(label=f"Team {team_count[team2[0]]}", style=discord.ButtonStyle.red)
@@ -273,6 +271,7 @@ class Cog_Manager(commands.Cog):
             matches = []
             match_counter = 0
             while True:
+                print(teams)
                 for i in range(0, len(teams), 2):
                     matches.append(teams[i:i + 2])
                 print(matches)
