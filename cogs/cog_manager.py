@@ -248,7 +248,7 @@ class Cog_Manager(commands.Cog):
                 await show_teams(ctx)
                 await get_teams(ctx, embed)
 
-            await assign_details(ctx, embed)
+
 
             async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
                 global teams, xd
@@ -304,6 +304,8 @@ class Cog_Manager(commands.Cog):
                 embed.add_field(name=f"Team {team_count[winner[0]]}", value=", ".join(winner), inline=False)
                 await ctx.edit_original_response(embed=embed, view=None)
 
+            await assign_details(ctx, embed)
+            
         await remove_player(ctx, control_embed)
 
     @app_commands.command(name="get-random-hero", description="Get a random MLBB hero")
