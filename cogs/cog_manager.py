@@ -268,11 +268,9 @@ class Cog_Manager(commands.Cog):
                 view.add_item(button2)
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
-                def check(ctx):
-                    print("Checking")
-                    return over
-                print("Running wait")
-                payload = await self.client.wait_for("on_message", check=check)
+                def check(rctx):
+                    return rctx.channel == ctx.channel
+                payload = await self.client.wait_for("interaction", check=check)
 
             shuffle(teams)
             matches = []
@@ -285,7 +283,6 @@ class Cog_Manager(commands.Cog):
                     if len(matches[i]) == 2:
                         print("Hi")
                         matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
-
                     else:
                         matches[i] = matches[i][0]
 
