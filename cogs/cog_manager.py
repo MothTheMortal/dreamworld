@@ -334,8 +334,8 @@ class Cog_Manager(commands.Cog):
 
                     for i in users.split(" "):
                         embed2.add_field(name="User", value=f"<@{i}>", inline=True)
-                        embed2.add_field(name="Hero", value=hero, inline=True)
-                        embed2.add_field(name="Spell", value=spell, inline=True)
+                        embed2.add_field(name="Hero", value=user_skills[i][0], inline=True)
+                        embed2.add_field(name="Spell", value=user_skills[i][1], inline=True)
 
                     await ctx.edit_original_response(content="", embed=embed2, view=None)
                 else:
