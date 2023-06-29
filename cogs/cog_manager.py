@@ -191,17 +191,16 @@ class Cog_Manager(commands.Cog):
             await ctx.response.send_message(embed=embed, view=view)
 
         async def select_team_size(ctx: discord.Interaction, embed):
-            print("Selecting team size")
-
             async def dropmenu_callback(ctx: discord.Interaction):
                 size = int(dropmenu.values[0])
                 data = data_collection.find_one({"_id": 0})["tournament"]
                 if not len(data["participants"]) % size == 0:
-                    await ctx.response.edit_message(content=f"Missing {len(data['participants']) // size} participants for {size}v{size}", view=None)
+                    await ctx.response.edit_message(content=f"**Missing {len(data['participants']) // size} participants for {size}v{size}**", view=None)
                     return await select_team_size(ctx, embed)
                 new_embed: discord.Embed = copy.deepcopy(embed)
                 new_embed.description += f"\nTeam Size: {size}"
-                await ctx.response.edit_message(content=f"The tournament will continue as {size}v{size}", embed=new_embed, view=None)
+                await ctx.response.edit_message(content=f"**The tournament will continue as {size}v{size}**", embed=new_embed, view=None)
+                return await start_handle(ctx, new_embed, size)
 
             view = ui.View()
             options = [discord.SelectOption(label="1v1", value=1), discord.SelectOption(label="2v2", value=2),
@@ -215,6 +214,23 @@ class Cog_Manager(commands.Cog):
                 await ctx.response.edit_message(embed=embed, view=view)
             else:
                 await ctx.edit_original_response(embed=embed, view=view)
+
+        async def start_handle(ctx, embed, size):
+            users_data = data['participants']
+            users = [self.client.get_user(ID) for ID in users_data[0]]
+            no_teams = len(users) / size
+            teams = []
+            matches = []
+            users_copy = copy.deepcopy(users)
+            for i in range(no_teams):
+                team = []
+                for x in range(size):
+                    team.append(users_copy.pop(0))
+                teams.append(team)
+            print(teams)
+
+
+
 
         await remove_player(ctx, control_embed)  # Buttons 1: Continue, Remove Absent Players,
         # Buttons 2: Select Team Size
