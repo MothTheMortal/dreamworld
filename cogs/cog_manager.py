@@ -268,13 +268,10 @@ class Cog_Manager(commands.Cog):
                 def check(rctx):
                     return rctx.channel == ctx.channel
 
-                interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
-                await asyncio.sleep(1.5)
+                interaction: discord.Interaction = await self.client.wait_for("message", check=check)
+                await asyncio.sleep(2)
                 print(winner, "WINNER")
-                if interaction.custom_id == '1':
-                    return winner
-                else:
-                    return winner
+                return winner
 
             shuffle(teams)
             matches = []
