@@ -244,7 +244,7 @@ class Cog_Manager(commands.Cog):
                 async def callback(ctx: discord.Interaction):
                     await ctx.response.defer()
                     print(select.values)
-                    await ctx.channel.send(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
+                    await ctx.channel.send(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])-1][0]]} won!")
 
 
                 data = [team1, team2]
