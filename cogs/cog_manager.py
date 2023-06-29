@@ -223,7 +223,8 @@ class Cog_Manager(commands.Cog):
             no_teams = len(users) // size
             team_count = dict()
             teams = []
-
+            history = []
+            
             users_copy = copy.deepcopy(users)
             for i in range(no_teams):
                 team = []
@@ -267,8 +268,8 @@ class Cog_Manager(commands.Cog):
             shuffle(teams)
             matches = []
             match_counter = 0
-            history = []
-            
+
+
             while True:
                 for i in range(0, len(teams), 2):
                     matches.append(teams[i:i + 2])
