@@ -245,6 +245,7 @@ class Cog_Manager(commands.Cog):
                 async def team2_callback(ctx: discord.Interaction):
                     await ctx.response.defer()
                     return team2
+
                 embed.clear_fields()
                 embed.description = f"Team {team_count[str(team1)]} VS Team {team_count[str(team2)]}\n{', '.join(team1)} VS {', '.join(team2)}"
                 view = ui.View()
@@ -256,7 +257,7 @@ class Cog_Manager(commands.Cog):
                 view.add_item(button0)
                 view.add_item(button1)
                 view.add_item(button2)
-                await ctx.edit_original_response(embed=embed, view=view)
+                await ctx.edit_original_response(content="", embed=embed, view=view)
 
 
             shuffle(teams)
@@ -268,8 +269,8 @@ class Cog_Manager(commands.Cog):
 
                 for i in range(len(matches)):
                     if len(matches[i]) == 2:
-
                         matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
+                        print("Hi")
                     else:
                         matches[i] = matches[i][0]
 
