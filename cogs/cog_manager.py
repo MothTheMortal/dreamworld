@@ -328,9 +328,16 @@ class Cog_Manager(commands.Cog):
                 global user_skills
                 await ctx.response.defer()
                 user_skills[str(user.id)] = [hero, spell]
-                if len(xd) == 0:
-                    print(user_skills)
-                    await show_teams(ctx)
+                if len(data) == 0:
+
+                    embed = self.client.create_embed("Hero & Spell Randomized", "", discord.Colour.green())
+
+                    for i in users.split(" "):
+                        embed.add_field(name="User", value=f"<@{i}>", inline=True)
+                        embed.add_field(name="Hero", value=hero, inline=True)
+                        embed.add_field(name="Spell", value=spell, inline=True)
+
+                    await ctx.edit_original_response(content="", embed=embed, view=None)
                 else:
                     await get_skills(ctx, embed)
 
