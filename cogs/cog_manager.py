@@ -238,27 +238,21 @@ class Cog_Manager(commands.Cog):
             await ctx.edit_original_response(embed=embed, view=None)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
-                over = False
-                channel = self.client.get_channel(1040242387563323503)
 
                 async def team1_callback(ctx: discord.Interaction):
-                    global over
                     await ctx.response.defer()
-                    over = True
-                    await channel.send(f"Team {team_count[str(team1)]} won against Team {team_count[str(team2)]}!")
                     return team1
 
                 async def team2_callback(ctx: discord.Interaction):
-                    global over
                     await ctx.response.defer()
-                    over = True
-                    await channel.send(f"Team {team_count[str(team2)]} won against Team {team_count[str(team1)]}!")
                     return team2
 
                 embed.clear_fields()
                 embed.description = f"Team {team_count[str(team1)]} VS Team {team_count[str(team2)]}\n{', '.join(team1)} VS {', '.join(team2)}"
                 view = ui.View()
                 button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.grey, disabled=True)
+                print(team1, team2)
+                print(team_count[str(team1)], team_count[str(team2)])
                 button1 = ui.Button(label=f"Team {team_count[str(team1)]}", style=discord.ButtonStyle.green)
                 button1.callback = team1_callback
                 button2 = ui.Button(label=f"Team {team_count[str(team2)]}", style=discord.ButtonStyle.red)
