@@ -239,44 +239,28 @@ class Cog_Manager(commands.Cog):
             await asyncio.sleep(3)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
-                winner = team1
-
-                async def team1_callback(ctx: discord.Interaction):
-                    global winner
-                    await ctx.response.defer()
-
-                async def team2_callback(ctx: discord.Interaction):
-                    print("RUN")
-                    global winner
-                    winner = team2
-                    await ctx.response.defer()
+                global history
 
                 embed.clear_fields()
-                embed.title = f"Match {match_counter} - {embed.title}"
+                embed.title = f"Match {match_counter} - Tournament Handler"
                 embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
                 view = ui.View()
-                button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.grey, disabled=True)
-                button1 = ui.Button(label=f"Team {team_count[team1[0]]}", style=discord.ButtonStyle.green,
-                                    custom_id="1")
-                button1.callback = team1_callback
-                button2 = ui.Button(label=f"Team {team_count[team2[0]]}", style=discord.ButtonStyle.red, custom_id="2")
-                button2.callback = team2_callback
-                view.add_item(button0)
-                view.add_item(button1)
-                view.add_item(button2)
+                select = ui.Select(placeholder="Who won?", min_values=1, max_values=1,
+                                   options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value=team1),
+                                            discord.SelectOption(label=f"Team {team_count[team2[0]]}", value=team2)])
+                view.add_item(select)
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
                 def check(rctx):
                     return rctx.channel == ctx.channel
 
                 interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
-                await asyncio.sleep(2)
-                print(winner, "WINNER")
-                return winner
+                return interaction.message.components[0].values[0]
 
             shuffle(teams)
             matches = []
             match_counter = 0
+            history = []
             while True:
 
                 print(f"TEAMS: {teams}")
