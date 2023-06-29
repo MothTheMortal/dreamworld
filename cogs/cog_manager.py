@@ -271,15 +271,18 @@ class Cog_Manager(commands.Cog):
             matches = []
             match_counter = 0
             while True:
+
                 print(f"TEAMS: {teams}")
                 for i in range(0, len(teams), 2):
                     matches.append(teams[i:i + 2])
-                print(f"MATCHES: {matches}")
+
+                print(f"MATCHES: {matches} {len(matches)}")
                 for i in range(len(matches)):
                     if len(matches[i]) == 2:
                         match_counter += 1
                         print(matches[i][0], matches[i][1])
                         matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
+                        print("WINNER", matches[i])
                     else:
                         matches[i] = matches[i][0]
 
