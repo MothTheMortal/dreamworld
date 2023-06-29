@@ -359,7 +359,7 @@ class Cog_Manager(commands.Cog):
         count = 0
         for data in users:
             count += 1
-            member: discord.Member = await self.client.fetch_member(int(data[0]))
+            member = self.client.get_user(data[0])
             em.add_field(name="", value=f"**{count}.** {member.mention} - {data[1]}", inline=False)
 
         await ctx.response.send_message(embed=em)
