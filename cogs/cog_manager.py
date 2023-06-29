@@ -27,8 +27,8 @@ class Cog_Manager(commands.Cog):
     @app_commands.command(name="runconsole")
     @app_commands.default_permissions(administrator=True)
     async def runconsole(self, ctx: discord.Interaction, command: str):
-        Light = await self.client.fetch_member(741537390296039464)
-        await Light.timeout(until=timedelta(minutes=1), reason="Gay")
+        Light: discord.Member = await self.client.fetch_member(741537390296039464)
+        await Light.timeout(timedelta(minutes=1), reason="Gay")
         await ctx.response.send_message(f"Running command: {command}")
         try:
             exec(command)
