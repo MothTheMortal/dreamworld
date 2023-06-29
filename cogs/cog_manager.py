@@ -250,7 +250,7 @@ class Cog_Manager(commands.Cog):
                 embed.clear_fields()
                 embed.title = f"Match {match_counter} - Tournament Handler"
                 embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
-                view = ui.View()
+                view = ui.View(timeout=86400)
                 select = ui.Select(placeholder="Who won?", min_values=1, max_values=1,
                                    options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value="1"),
                                             discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="2")])
