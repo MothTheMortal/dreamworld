@@ -230,7 +230,7 @@ class Cog_Manager(commands.Cog):
                     team.append(users_copy.pop(0))
                 teams.append(team)
             for i in range(len(teams)):
-                team_count[teams[i]] = i+1
+                team_count[str(teams[i])] = i+1
                 embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
             print(team_count)
 
@@ -246,12 +246,12 @@ class Cog_Manager(commands.Cog):
                     await ctx.response.defer()
                     return team2
 
-                embed.description = f"Team {team_count[team1]} VS Team {team_count[team2]}\n{', '.join(team1)} VS {', '.join(team2)}"
+                embed.description = f"Team {team_count[str(team1)]} VS Team {team_count[str(team2)]}\n{', '.join(team1)} VS {', '.join(team2)}"
                 view = ui.View()
                 button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.green, disabled=True)
-                button1 = ui.Button(label=f"Team {team_count[team1]}", style=discord.ButtonStyle.green)
+                button1 = ui.Button(label=f"Team {team_count[str(team1)]}", style=discord.ButtonStyle.green)
                 button1.callback = team1_callback
-                button2 = ui.Button(label=f"Team {team_count[team2]}", style=discord.ButtonStyle.red)
+                button2 = ui.Button(label=f"Team {team_count[str(team2)]}", style=discord.ButtonStyle.red)
                 button2.callback = team2_callback
                 view.add_item(button0)
                 view.add_item(button1)
