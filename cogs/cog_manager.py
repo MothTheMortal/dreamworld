@@ -222,6 +222,7 @@ class Cog_Manager(commands.Cog):
             shuffle(users)
             no_teams = len(users) // size
             team_count = dict(history=[])
+            user_skills = dict()
             teams = []
 
             users_copy = copy.deepcopy(users)
@@ -230,71 +231,164 @@ class Cog_Manager(commands.Cog):
                 for x in range(size):
                     team.append(users_copy.pop(0))
                 teams.append(team)
-            for i in range(len(teams)):
-                team_count[teams[i][0]] = i + 1
-                embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
 
-            await ctx.edit_original_response(embed=embed, view=None)
+            async def show_teams(ctx: discord.Interaction):
+                global team_count
+                em2 = self.client.create_embed(f"Tournament Teams - {size}v{size}", "", discord.Colour.green())
+                for i in range(len(teams)):
+                    team_count[teams[i][0]] = i + 1
+                    em2.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
 
-            await asyncio.sleep(3)
+            await ctx.channel.send(embed=em2)
 
-            shuffle(teams)
-            matches = []
-            match_counter = 0
+            async def callback(ctx: discord.Interaction):
+                global randomization
+                await ctx.response.defer()
+                randomization = int(selectIdea.values[0])
+                await assign_details(ctx, embed)
 
+            view = ui.View()
+            selectIdea = ui.Select(placeholder="Select Randomization Settings", min_values=1, max_values=1,
+                                   options=[
+                                       discord.SelectOption(label="Random Heroes & Spells", value="0"),
+                                       discord.SelectOption(label="Only Random Hero", value="1"),
+                                       discord.SelectOption(label="Only Random Spells", value="2"),
+                                       discord.SelectOption(label="No Randomization", value="3")
+                                   ])
+            selectIdea.callback = callback
+            view.add_item(selectIdea)
+            xd = copy.deepcopy(users_data)
+            xd = [x[0] for x in xd]
+            await ctx.edit_original_response(content="", view=view, embed=embed)
 
-            async def get_winner(ctx, embed: discord.Embed, team1, team2):
+            async def get_skills(ctx: discord.Interaction, embed: discord.Embed):
+                global xd
+                user = self.client.get_user(int(xd.pop(0)))
 
-                async def callback(ctx: discord.Interaction):
+                async def continue_callback(ctx: discord.Interaction):
+                    global user_skills
                     await ctx.response.defer()
-                    await ctx.channel.send(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
-                    team_count["history"].append(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
-
-                data = [team1, team2]
-                embed.clear_fields()
-                embed.title = f"Match {match_counter} - Tournament Handler"
-                embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
-                view = ui.View(timeout=86400)
-                select = ui.Select(placeholder="Who won?", min_values=1, max_values=1,
-                                   options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value="0"),
-                                            discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="1")])
-                select.callback = callback
-                view.add_item(select)
-                await ctx.edit_original_response(content="", embed=embed, view=view)
-
-                def check(rctx):
-                    return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
-
-                interaction: discord.Interaction = await self.client.wait_for("message", check=check)
-                return data[int(select.values[0])]
-
-            while True:
-                for i in range(0, len(teams), 2):
-                    matches.append(teams[i:i + 2])
-
-                for i in range(len(matches)):
-                    if len(matches[i]) == 2:
-                        match_counter += 1
-                        matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
+                    user_skills[str(user.id)] = [hero, spell]
+                    if len(xd) == 0:
+                        pass
                     else:
-                        matches[i] = matches[i][0]
-                if len(matches) == 1:
-                    winner = matches[0]
-                    break
-                teams = matches
+                        await get_skills(ctx, embed)
+
+                async def change_hero(ctx: discord.Interaction):
+                    global hero
+                    hero = self.random_hero()
+                    embed.title = "Hero & Spell Selection"
+                    embed.description = ""
+                    embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+                    embed.add_field(name="Hero", value=hero, inline=True)
+                    embed.add_field(name="Spell", value=spell, inline=True)
+                    await ctx.response.edit_message(embed=embed, view=view)
+
+                async def change_spell(ctx: discord.Interaction):
+                    global spell
+                    spell = self.random_spell()
+                    embed.title = "Hero & Spell Selection"
+                    embed.description = ""
+                    embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+                    embed.add_field(name="Hero", value=hero, inline=True)
+                    embed.add_field(name="Spell", value=spell, inline=True)
+                    await ctx.response.edit_message(embed=embed, view=view)
+
+                view = ui.View()
+
+                hero = self.random_hero()
+                spell = self.random_spell()
+
+                button0 = ui.Button(label="Next", style=discord.ButtonStyle.green)
+                button0.callback = continue_callback
+                view.add_item(button0)
+                if randomization in [0, 1]:
+                    button1 = ui.Button(label="Change Hero", style=discord.ButtonStyle.red)
+                    button1.callback = change_hero
+                    view.add_item(button1)
+                if randomization in [0, 2]:
+                    button2 = ui.Button(label="Change Spell", style=discord.ButtonStyle.red)
+                    button2.callback = change_spell
+                    view.add_item(button2)
+
+                embed.title = "Hero & Spell Selection"
+                embed.description = ""
+                embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+                embed.add_field(name="Hero", value=hero, inline=True)
+                embed.add_field(name="Spell", value=spell, inline=True)
+                await ctx.edit_original_response(embed=embed, view=view)
+
+            async def assign_details(ctx: discord.Interaction, embed: discord.Embed):
+                if randomization == 3:
+                    await show_teams(ctx)
+                    await get_teams(ctx, embed)
+                else:
+
+                    for i in users_data:
+                        try:
+                            user_id = i[0]
+                            user: discord.User = self.client.get_user(user_id)
+                            await get_skills(ctx, embed, user)
+
+                        except Exception:
+                            print("ERROR", i)
+
+            async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
+                global teams
+                shuffle(teams)
                 matches = []
-                teams = teams[::-1]
+                match_counter = 0
 
-            embed.title = f"Team {team_count[winner[0]]} WON - Tournament Handler"
-            embed.add_field(name=f"Team {team_count[winner[0]]}", value=", ".join(winner), inline=False)
-            await ctx.edit_original_response(embed=embed, view=None)
+                async def get_winner(ctx, embed: discord.Embed, team1, team2):
 
+                    async def callback(ctx: discord.Interaction):
+                        await ctx.response.defer()
+                        await ctx.channel.send(
+                            f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
+                        team_count["history"].append(
+                            f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
 
+                    data = [team1, team2]
+                    embed.clear_fields()
+                    embed.title = f"Match {match_counter} - Tournament Handler"
+                    embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
+                    view = ui.View(timeout=86400)
+                    select = ui.Select(placeholder="Who won?", min_values=1, max_values=1,
+                                       options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value="0"),
+                                                discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="1")])
+                    select.callback = callback
+                    view.add_item(select)
+                    await ctx.edit_original_response(content="", embed=embed, view=view)
 
+                    def check(rctx):
+                        return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
 
-        await remove_player(ctx, control_embed)  # Buttons 1: Continue, Remove Absent Players,
-        # Buttons 2: Select Team Size
-        # Buttons 3: Select Category -> Provide random hero/spell -> Announce in chat ->
+                    interaction: discord.Interaction = await self.client.wait_for("message", check=check)
+                    return data[int(select.values[0])]
+
+                while True:
+                    for i in range(0, len(teams), 2):
+                        matches.append(teams[i:i + 2])
+
+                    for i in range(len(matches)):
+                        if len(matches[i]) == 2:
+                            match_counter += 1
+                            matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
+                        else:
+                            matches[i] = matches[i][0]
+                    if len(matches) == 1:
+                        winner = matches[0]
+                        break
+                    teams = matches
+                    matches = []
+                    teams = teams[::-1]
+
+                embed.title = f"Team {team_count[winner[0]]} won the Tournament!"
+                embed.description = ""
+                embed.add_field(name=f"Team {team_count[winner[0]]}", value=", ".join(winner), inline=False)
+                await ctx.edit_original_response(embed=embed, view=None)
+
+        await remove_player(ctx, control_embed)
 
     @app_commands.command(name="get-random-hero", description="Get a random MLBB hero")
     async def get_random_hero(self, ctx: discord.Interaction):
