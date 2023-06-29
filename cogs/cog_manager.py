@@ -240,14 +240,14 @@ class Cog_Manager(commands.Cog):
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
                 global history
-
+                data = [team1, team2]
                 embed.clear_fields()
                 embed.title = f"Match {match_counter} - Tournament Handler"
                 embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
                 view = ui.View()
                 select = ui.Select(placeholder="Who won?", min_values=1, max_values=1,
-                                   options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value=team1),
-                                            discord.SelectOption(label=f"Team {team_count[team2[0]]}", value=team2)])
+                                   options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value="1"),
+                                            discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="2")])
                 view.add_item(select)
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
@@ -255,7 +255,7 @@ class Cog_Manager(commands.Cog):
                     return rctx.channel == ctx.channel
 
                 interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
-                return interaction.message.components[0].values[0]
+                return data[int(interaction.message.components[0].values[0])]
 
             shuffle(teams)
             matches = []
