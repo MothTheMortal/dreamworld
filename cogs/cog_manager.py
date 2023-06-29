@@ -262,6 +262,7 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
                 def check(rctx):
+                    print("checking")
                     return rctx.channel == ctx.channel
 
                 payload = await self.client.wait_for("on_interaction", check=check)
