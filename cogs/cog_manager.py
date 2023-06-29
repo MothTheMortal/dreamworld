@@ -277,11 +277,6 @@ class Cog_Manager(commands.Cog):
                     if randomization in [0, 2]:
                         txt += spell
 
-                    if len(xd) == 0:
-                        await show_teams(ctx)
-                    else:
-                        await get_skills(ctx, embed)
-
                     await ctx.channel.send(f"{user.mention}({user.display_name}) will use {txt}!")
 
 
@@ -339,6 +334,11 @@ class Cog_Manager(commands.Cog):
                     return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
 
                 interaction = await self.client.wait_for("message", check=check)
+
+                if len(xd) == 0:
+                    pass
+                else:
+                    await get_skills(ctx, embed)
 
             async def assign_details(ctx: discord.Interaction, embed: discord.Embed):
                 await show_teams(ctx)
