@@ -233,9 +233,11 @@ class Cog_Manager(commands.Cog):
             for i in range(len(teams)):
                 team_count[str(teams[i])] = i + 1
                 embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
-            print(team_count)
+
 
             await ctx.edit_original_response(embed=embed, view=None)
+                
+            await asyncio.sleep(3)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
 
