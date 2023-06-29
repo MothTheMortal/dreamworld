@@ -291,8 +291,8 @@ class Cog_Manager(commands.Cog):
                     embed.description = ""
                     embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
                     if randomization in [0, 2]:
-                        embed.add_field(name="Hero", value=hero, inline=True)
-                    embed.add_field(name="Spell", value=spell, inline=True)
+                        embed.add_field(name="Spell", value=spell, inline=True)
+                    embed.add_field(name="Hero", value=hero, inline=True)
                     await ctx.response.edit_message(embed=embed, view=view)
 
                 async def change_spell(ctx: discord.Interaction):
