@@ -286,7 +286,7 @@ class Cog_Manager(commands.Cog):
                     embed.clear_fields()
                     embed.title = "Hero & Spell Selection"
                     embed.description = ""
-                    embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+                    embed.add_field(name="User", value=f"({user.display_name})", inline=True)
                     embed.add_field(name="Hero", value=hero, inline=True)
                     if randomization in [0, 2]:
                         embed.add_field(name="Spell", value=spell, inline=True)
@@ -384,12 +384,6 @@ class Cog_Manager(commands.Cog):
                     for i in range(len(matches)):
                         if len(matches[i]) == 2:
                             match_counter += 1
-                            if not randomization == 3:
-                                xd = matches[i][0]
-                                xd.extend(matches[i][1])
-                                xd = copy.deepcopy(xd)
-                                xd = [i[2:-1] for i in xd]
-                                await get_skills(ctx, embed)
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
                             matches[i] = matches[i][0]
