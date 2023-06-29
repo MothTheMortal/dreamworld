@@ -259,6 +259,11 @@ class Cog_Manager(commands.Cog):
                 view.add_item(button2)
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
+                def check(rctx):
+                    return rctx.channel == ctx.channel
+
+                payload = await self.client.wait_for("on_interaction", check=check)
+
 
             shuffle(teams)
             matches = []
