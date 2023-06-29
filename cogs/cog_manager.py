@@ -271,10 +271,19 @@ class Cog_Manager(commands.Cog):
                     global user_skills
                     await ctx.response.defer()
                     user_skills[str(user.id)] = [hero, spell]
+                    txt = ""
+                    if randomization in [0, 1]:
+                        txt += hero + " "
+                    if randomization in [0, 2]:
+                        txt += spell
+
                     if len(xd) == 0:
                         await show_teams(ctx)
                     else:
                         await get_skills(ctx, embed)
+
+                    await ctx.channel.send(f"{user.mention}({user.display_name}) will use {txt}!")
+
 
                 async def change_hero(ctx: discord.Interaction):
                     global hero
@@ -324,9 +333,12 @@ class Cog_Manager(commands.Cog):
                 embed.title = "Hero & Spell Selection"
                 embed.description = ""
 
-
-
                 await ctx.edit_original_response(embed=embed, view=view)
+
+                def check(rctx: discord.Interaction):
+                    return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
+
+                interaction = await self.client.wait_for("message", check=check)
 
             async def assign_details(ctx: discord.Interaction, embed: discord.Embed):
                 await show_teams(ctx)
