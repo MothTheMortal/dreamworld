@@ -115,7 +115,7 @@ class Cog_Manager(commands.Cog):
         data_collection = self.client.get_database_collection("data")
         doc = data_collection.find_one({"_id": 0})
         data = doc["tournament"]
-
+        history = []
         if data == {}:
             em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
             await ctx.response.send_message(embed=em)
@@ -223,8 +223,7 @@ class Cog_Manager(commands.Cog):
             no_teams = len(users) // size
             team_count = dict()
             teams = []
-            history = []
-            
+
             users_copy = copy.deepcopy(users)
             for i in range(no_teams):
                 team = []
