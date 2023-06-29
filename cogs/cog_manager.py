@@ -259,7 +259,7 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
                 def check(rctx):
-                    return rctx.channel == ctx.channel and rctx.user.id == 1035103134441287762
+                    return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
 
                 interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                 return data[int(select.values[0])]
