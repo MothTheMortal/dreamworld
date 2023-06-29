@@ -261,7 +261,7 @@ class Cog_Manager(commands.Cog):
                     return rctx.channel == ctx.channel
 
                 interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
-                await asyncio.sleep(1.5)
+                await asyncio.sleep(3)
                 return data[int(select.values[0])]
 
             shuffle(teams)
