@@ -222,6 +222,8 @@ class Cog_Manager(commands.Cog):
             teams = []
             matches = []
             users_copy = copy.deepcopy(users)
+            print(no_teams)
+            print(users_copy)
             for i in range(no_teams):
                 team = []
                 for x in range(size):
