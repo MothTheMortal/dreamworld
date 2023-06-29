@@ -244,106 +244,11 @@ class Cog_Manager(commands.Cog):
 
                 await ctx.channel.send(embed=em2)
 
-            async def callback(ctx: discord.Interaction):
-                global randomization
-                await ctx.response.defer()
-                randomization = int(selectIdea.values[0])
-                await assign_details(ctx, embed)
-
-            view = ui.View()
-            selectIdea = ui.Select(placeholder="Select Randomization Settings", min_values=1, max_values=1,
-                                   options=[
-                                       discord.SelectOption(label="Random Heroes & Spells", value="0"),
-                                       discord.SelectOption(label="Only Random Hero", value="1"),
-                                       discord.SelectOption(label="Only Random Spells", value="2"),
-                                       discord.SelectOption(label="No Randomization", value="3")
-                                   ])
-            selectIdea.callback = callback
-            view.add_item(selectIdea)
-
-            await ctx.edit_original_response(content="", view=view, embed=embed)
-
-            async def get_skills(ctx: discord.Interaction, embed: discord.Embed):
-                global xd, hero, spell
-                user = self.client.get_user(int(xd.pop(0)))
-
-                async def continue_callback(ctx: discord.Interaction):
-                    global user_skills
-                    await ctx.response.defer()
-                    user_skills[str(user.id)] = [hero, spell]
-                    txt = ""
-                    if randomization in [0, 1]:
-                        txt += hero + " "
-                    if randomization in [0, 2]:
-                        txt += spell
-
-                    await ctx.channel.send(f"{user.mention}({user.display_name}) will use {txt}!")
-
-
-                async def change_hero(ctx: discord.Interaction):
-                    global hero
-                    hero = await self.random_hero()
-                    embed.clear_fields()
-                    embed.title = "Hero & Spell Selection"
-                    embed.description = ""
-                    embed.add_field(name="User", value=f"({user.display_name})", inline=True)
-                    embed.add_field(name="Hero", value=hero, inline=True)
-                    if randomization in [0, 2]:
-                        embed.add_field(name="Spell", value=spell, inline=True)
-                    await ctx.response.edit_message(embed=embed, view=view)
-
-                async def change_spell(ctx: discord.Interaction):
-                    global spell
-                    spell = await self.random_spell()
-                    embed.clear_fields()
-                    embed.title = "Hero & Spell Selection"
-                    embed.description = ""
-                    embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
-                    if randomization in [0, 1]:
-                        embed.add_field(name="Hero", value=hero, inline=True)
-                    embed.add_field(name="Spell", value=spell, inline=True)
-                    await ctx.response.edit_message(embed=embed, view=view)
-
-                embed.clear_fields()
-                view = ui.View()
-
-                hero = await self.random_hero()
-                spell = await self.random_spell()
-
-                button0 = ui.Button(label="Next", style=discord.ButtonStyle.green)
-                button0.callback = continue_callback
-                view.add_item(button0)
-                embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
-                if randomization in [0, 1]:
-                    button1 = ui.Button(label="Change Hero", style=discord.ButtonStyle.red)
-                    button1.callback = change_hero
-                    view.add_item(button1)
-                    embed.add_field(name="Hero", value=hero, inline=True)
-                if randomization in [0, 2]:
-                    button2 = ui.Button(label="Change Spell", style=discord.ButtonStyle.red)
-                    button2.callback = change_spell
-                    embed.add_field(name="Spell", value=spell, inline=True)
-                    view.add_item(button2)
-
-                embed.title = "Hero & Spell Selection"
-                embed.description = ""
-
-                await ctx.edit_original_response(embed=embed, view=view)
-
-                def check(rctx: discord.Interaction):
-                    return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
-
-                interaction = await self.client.wait_for("message", check=check)
-
-                if len(xd) == 0:
-                    pass
-                else:
-                    await get_skills(ctx, embed)
-
             async def assign_details(ctx: discord.Interaction, embed: discord.Embed):
                 await show_teams(ctx)
                 await get_teams(ctx, embed)
 
+            await assign_details(ctx, embed)
 
             async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
                 global teams, xd
