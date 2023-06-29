@@ -238,13 +238,7 @@ class Cog_Manager(commands.Cog):
                 em2 = self.client.create_embed(f"Tournament Teams - {size}v{size}", "", discord.Colour.green())
                 for i in range(len(teams)):
                     team_count[teams[i][0]] = i + 1
-                    txt = ""
-
-                    if randomization == 3:
-                        txt = ", ".join(teams[i])
-                    else:
-                        for ID in teams[i]:
-                            txt += f"{ID} - {user_skills[ID[2:-1]][0]} - {user_skills[ID[2:-1]][1]}\n"
+                    txt = ", ".join(teams[i])
 
                     em2.add_field(name=f"Team {i + 1}", value=txt, inline=False)
 
