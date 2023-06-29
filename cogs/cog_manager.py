@@ -217,7 +217,7 @@ class Cog_Manager(commands.Cog):
 
         async def start_handle(ctx, embed, size):
             users_data = data['participants']
-            users = [self.client.get_user(ID) for ID in users_data[0]]
+            users = [ID for ID in users_data[0]]
             no_teams = len(users) / size
             teams = []
             matches = []
