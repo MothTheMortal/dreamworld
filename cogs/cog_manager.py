@@ -239,7 +239,7 @@ class Cog_Manager(commands.Cog):
                     team_count[teams[i][0]] = i + 1
                     em2.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
 
-            await ctx.channel.send(embed=em2)
+                await ctx.channel.send(embed=em2)
 
             async def callback(ctx: discord.Interaction):
                 global randomization
