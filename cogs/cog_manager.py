@@ -275,7 +275,7 @@ class Cog_Manager(commands.Cog):
             while True:
                 for i in range(0, len(teams), 2):
                     matches.append(teams[i:i + 2])
-
+                print(matches)
                 for i in range(len(matches)):
                     if len(matches[i]) == 2:
                         match_counter += 1
