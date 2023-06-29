@@ -277,7 +277,8 @@ class Cog_Manager(commands.Cog):
 
                 async def change_hero(ctx: discord.Interaction):
                     global hero
-                    hero = self.random_hero()
+                    hero = await self.random_hero()
+                    embed.clear_fields()
                     embed.title = "Hero & Spell Selection"
                     embed.description = ""
                     embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
@@ -287,7 +288,8 @@ class Cog_Manager(commands.Cog):
 
                 async def change_spell(ctx: discord.Interaction):
                     global spell
-                    spell = self.random_spell()
+                    spell = await self.random_spell()
+                    embed.clear_fields()
                     embed.title = "Hero & Spell Selection"
                     embed.description = ""
                     embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
@@ -297,8 +299,8 @@ class Cog_Manager(commands.Cog):
 
                 view = ui.View()
 
-                hero = self.random_hero()
-                spell = self.random_spell()
+                hero = await self.random_hero()
+                spell = await self.random_spell()
 
                 button0 = ui.Button(label="Next", style=discord.ButtonStyle.green)
                 button0.callback = continue_callback
