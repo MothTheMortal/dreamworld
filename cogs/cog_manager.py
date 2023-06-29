@@ -196,9 +196,12 @@ class Cog_Manager(commands.Cog):
             async def dropmenu_callback(ctx: discord.Interaction):
                 size = dropmenu.values[0]
                 data = data_collection.find_one({"_id": 0})["tournament"]
+                if not len(data["participants"]) % size == 0:
+                    await ctx.response.edit_message(content=f"Missing {len(data['participants']) // size} participants for {size}v{size}", view=None)
+                    return await select_team_size(ctx, embed)
                 new_embed: discord.Embed = copy.deepcopy(embed)
                 new_embed.description += f"\nTeam Size: {size}"
-                await ctx.response.edit_message(embed=new_embed, view=None)
+                await ctx.response.edit_message(content=f"The tournament will continue as {size}v{size}", embed=new_embed, view=None)
 
             view = ui.View()
             options = [discord.SelectOption(label="1v1", value=1), discord.SelectOption(label="2v2", value=2),
