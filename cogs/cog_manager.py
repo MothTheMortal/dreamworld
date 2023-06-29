@@ -220,8 +220,9 @@ class Cog_Manager(commands.Cog):
             users = [f"<@{ID[0]}>" for ID in users_data]
             shuffle(users)
             no_teams = len(users) // size
+            team_count = dict()
             teams = []
-            matches = []
+
             users_copy = copy.deepcopy(users)
             for i in range(no_teams):
                 team = []
@@ -229,11 +230,56 @@ class Cog_Manager(commands.Cog):
                     team.append(users_copy.pop(0))
                 teams.append(team)
             for i in range(len(teams)):
+                team_count[teams[i]] = i+1
                 embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
-            shuffle(teams)
-            for i in range(len(teams) // 2):
-                embed.add_field(name=f"Match {i + 1}", value=f"Team {i + 1} vs Team {i + 2}", inline=False)
+            print(team_count)
+
             await ctx.edit_original_response(embed=embed, view=None)
+
+            async def get_winner(ctx, embed: discord.Embed, team1, team2):
+
+                async def team1_callback(ctx: discord.Interaction):
+                    await ctx.response.defer()
+                    return team1
+
+                async def team2_callback(ctx: discord.Interaction):
+                    await ctx.response.defer()
+                    return team2
+
+                embed.description = f"Team {team_count[team1]} VS Team {team_count[team2]}\n{', '.join(team1)} VS {', '.join(team2)}"
+                view = ui.View()
+                button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.green, disabled=True)
+                button1 = ui.Button(label=f"Team {team_count[team1]}", style=discord.ButtonStyle.green)
+                button1.callback = team1_callback
+                button2 = ui.Button(label=f"Team {team_count[team2]}", style=discord.ButtonStyle.red)
+                button2.callback = team2_callback
+                view.add_item(button0)
+                view.add_item(button1)
+                view.add_item(button2)
+                await ctx.edit_original_response(embed=embed, view=view)
+
+
+            shuffle(teams)
+            matches = []
+            match_counter = 0
+            while True:
+                for i in range(0, len(teams), 2):
+                    matches.append(teams[i:i + 2])
+
+                for i in range(len(matches)):
+                    if len(matches[i]) == 2:
+
+                        matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
+                    else:
+                        matches[i] = matches[i][0]
+
+                if len(matches) == 1:
+                    print(matches[0], "WON")
+                    break
+
+                teams = matches
+                matches = []
+                teams = teams[::-1]
 
 
 
