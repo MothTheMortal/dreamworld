@@ -246,6 +246,7 @@ class Cog_Manager(commands.Cog):
                     await ctx.response.defer()
 
                 async def team2_callback(ctx: discord.Interaction):
+                    print("RUN")
                     global winner
                     winner = team2
                     await ctx.response.defer()
