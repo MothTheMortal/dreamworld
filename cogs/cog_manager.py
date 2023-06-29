@@ -115,7 +115,7 @@ class Cog_Manager(commands.Cog):
         data_collection = self.client.get_database_collection("data")
         doc = data_collection.find_one({"_id": 0})
         data = doc["tournament"]
-        history = []
+
         if data == {}:
             em = self.client.create_embed("No Active Tournament", "", discord.Color.red())
             await ctx.response.send_message(embed=em)
@@ -236,7 +236,12 @@ class Cog_Manager(commands.Cog):
 
             await ctx.edit_original_response(embed=embed, view=None)
 
-            await asyncio.sleep(3)
+            await asyncio.sleep(3)  
+
+            shuffle(teams)
+            matches = []
+            match_counter = 0
+            history = []
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
                 global history
@@ -263,11 +268,6 @@ class Cog_Manager(commands.Cog):
                 interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                 history.append(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
                 return data[int(select.values[0])]
-
-            shuffle(teams)
-            matches = []
-            match_counter = 0
-
 
             while True:
                 for i in range(0, len(teams), 2):
