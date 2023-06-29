@@ -244,11 +244,11 @@ class Cog_Manager(commands.Cog):
 
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
-                global history
 
                 async def callback(ctx: discord.Interaction):
                     await ctx.response.defer()
-
+                    await ctx.channel.send(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
+                    team_count["history"].append(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
 
                 data = [team1, team2]
                 embed.clear_fields()
@@ -260,13 +260,12 @@ class Cog_Manager(commands.Cog):
                                             discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="1")])
                 select.callback = callback
                 view.add_item(select)
-                await ctx.edit_original_response(content="\n".join(team_count['history']), embed=embed, view=view)
+                await ctx.edit_original_response(content="", embed=embed, view=view)
 
                 def check(rctx):
                     return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
 
                 interaction: discord.Interaction = await self.client.wait_for("message", check=check)
-                team_count["history"].append(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
                 return data[int(select.values[0])]
 
             while True:
