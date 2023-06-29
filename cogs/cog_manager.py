@@ -335,11 +335,9 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(embed=embed, view=view)
 
             async def assign_details(ctx: discord.Interaction, embed: discord.Embed):
-                if randomization == 3:
-                    await show_teams(ctx)
-                    await get_teams(ctx, embed)
-                else:
-                    await get_skills(ctx, embed)
+                await show_teams(ctx)
+                await get_teams(ctx, embed)
+
 
             async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
                 global teams, xd
@@ -373,8 +371,6 @@ class Cog_Manager(commands.Cog):
                     interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                     return data[int(select.values[0])]
 
-                # xd = copy.deepcopy(users_data)
-                # xd = [x[0] for x in xd]
                 while True:
                     for i in range(0, len(teams), 2):
                         matches.append(teams[i:i + 2])
@@ -382,8 +378,9 @@ class Cog_Manager(commands.Cog):
                     for i in range(len(matches)):
                         if len(matches[i]) == 2:
                             match_counter += 1
-                            xd = copy.deepcopy(matches[i][0].extend(matches[i][1]))
-                            await get_skills(ctx, embed)
+                            if not randomization == 3:
+                                xd = copy.deepcopy(matches[i][0].extend(matches[i][1]))
+                                await get_skills(ctx, embed)
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
                             matches[i] = matches[i][0]
