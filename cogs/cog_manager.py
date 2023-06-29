@@ -238,7 +238,15 @@ class Cog_Manager(commands.Cog):
                 em2 = self.client.create_embed(f"Tournament Teams - {size}v{size}", "", discord.Colour.green())
                 for i in range(len(teams)):
                     team_count[teams[i][0]] = i + 1
-                    em2.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
+                    txt = ""
+
+                    if randomization == 3:
+                        txt = ", ".join(teams[i])
+                    else:
+                        for ID in teams[i]:
+                            txt += f"{ID} - {user_skills[ID[2:-1]][0]} - {user_skills[ID[2:-1]][1]}\n"
+
+                    em2.add_field(name=f"Team {i + 1}", value=txt, inline=False)
 
                 await ctx.channel.send(embed=em2)
 
@@ -271,7 +279,8 @@ class Cog_Manager(commands.Cog):
                     await ctx.response.defer()
                     user_skills[str(user.id)] = [hero, spell]
                     if len(xd) == 0:
-                        pass
+                        print(user_skills)
+                        await show_teams(ctx)
                     else:
                         await get_skills(ctx, embed)
 
