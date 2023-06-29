@@ -217,13 +217,11 @@ class Cog_Manager(commands.Cog):
 
         async def start_handle(ctx, embed, size):
             users_data = data['participants']
-            users = [ID for ID in users_data[0]]
+            users = [ID[0] for ID in users_data]
             no_teams = len(users) // size
             teams = []
             matches = []
             users_copy = copy.deepcopy(users)
-            print(no_teams)
-            print(users_copy)
             for i in range(no_teams):
                 team = []
                 for x in range(size):
