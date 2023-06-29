@@ -217,7 +217,7 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(embed=embed, view=view)
 
         async def start_handle(ctx, embed, size):
-            global team_count
+            global team_count, teams, user_skills, users_data, users
             users_data = data['participants']
             users = [f"<@{ID[0]}>" for ID in users_data]
             shuffle(users)
@@ -324,15 +324,7 @@ class Cog_Manager(commands.Cog):
                     await show_teams(ctx)
                     await get_teams(ctx, embed)
                 else:
-
-                    for i in users_data:
-                        try:
-                            user_id = i[0]
-                            user: discord.User = self.client.get_user(user_id)
-                            await get_skills(ctx, embed, user)
-
-                        except Exception:
-                            print("ERROR", i)
+                    await get_skills(ctx, embed)
 
             async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
                 global teams
