@@ -316,6 +316,7 @@ class Cog_Manager(commands.Cog):
                 button0 = ui.Button(label="Next", style=discord.ButtonStyle.green)
                 button0.callback = continue_callback
                 view.add_item(button0)
+                embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
                 if randomization in [0, 1]:
                     button1 = ui.Button(label="Change Hero", style=discord.ButtonStyle.red)
                     button1.callback = change_hero
@@ -329,7 +330,7 @@ class Cog_Manager(commands.Cog):
 
                 embed.title = "Hero & Spell Selection"
                 embed.description = ""
-                embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+
 
 
                 await ctx.edit_original_response(embed=embed, view=view)
