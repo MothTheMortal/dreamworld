@@ -240,26 +240,21 @@ class Cog_Manager(commands.Cog):
             await asyncio.sleep(3)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
-                winner = None
 
                 async def team1_callback(ctx: discord.Interaction):
-                    global winner
                     await ctx.response.defer()
-                    winner = team1
 
                 async def team2_callback(ctx: discord.Interaction):
-                    global winner
                     await ctx.response.defer()
-                    winner = team2
 
                 embed.clear_fields()
                 embed.title = f"Match {match_counter} - {embed.title}"
                 embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
                 view = ui.View()
                 button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.grey, disabled=True)
-                button1 = ui.Button(label=f"Team {team_count[team1[0]]}", style=discord.ButtonStyle.green)
+                button1 = ui.Button(label=f"Team {team_count[team1[0]]}", style=discord.ButtonStyle.green, custom_id="1")
                 button1.callback = team1_callback
-                button2 = ui.Button(label=f"Team {team_count[team2[0]]}", style=discord.ButtonStyle.red)
+                button2 = ui.Button(label=f"Team {team_count[team2[0]]}", style=discord.ButtonStyle.red, custom_id="2")
                 button2.callback = team2_callback
                 view.add_item(button0)
                 view.add_item(button1)
@@ -268,10 +263,12 @@ class Cog_Manager(commands.Cog):
 
                 def check(rctx):
                     return rctx.channel == ctx.channel
-                payload = await self.client.wait_for("interaction", check=check)
-                await asyncio.sleep(0.5)
-                print("Working", winner)
-                return winner
+                interaction = await self.client.wait_for("interaction", check=check)
+
+                if interaction.custom_id == '1':
+                    return team1
+                else:
+                    return team2
 
             shuffle(teams)
             matches = []
