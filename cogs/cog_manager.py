@@ -255,7 +255,7 @@ class Cog_Manager(commands.Cog):
                     return rctx.channel == ctx.channel
 
                 interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
-                return data[int(interaction.message.components[0].values[0])]
+                return data[int(select.values[0])]
 
             shuffle(teams)
             matches = []
