@@ -268,7 +268,7 @@ class Cog_Manager(commands.Cog):
                 def check(rctx):
                     return rctx.channel == ctx.channel
 
-                interaction: discord.Interaction = await self.client.wait_for("message", check=check)
+                interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
                 await asyncio.sleep(2)
                 print(winner, "WINNER")
                 return winner
