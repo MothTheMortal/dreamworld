@@ -256,7 +256,7 @@ class Cog_Manager(commands.Cog):
                 embed.clear_fields()
                 embed.description = f"Team {team_count[str(team1)]} VS Team {team_count[str(team2)]}\n{', '.join(team1)} VS {', '.join(team2)}"
                 view = ui.View()
-                button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.green, disabled=True)
+                button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.grey, disabled=True)
                 button1 = ui.Button(label=f"Team {team_count[str(team1)]}", style=discord.ButtonStyle.green)
                 button1.callback = team1_callback
                 button2 = ui.Button(label=f"Team {team_count[str(team2)]}", style=discord.ButtonStyle.red)
