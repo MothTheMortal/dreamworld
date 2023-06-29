@@ -217,7 +217,7 @@ class Cog_Manager(commands.Cog):
 
         async def start_handle(ctx, embed, size):
             users_data = data['participants']
-            users = [ID[0] for ID in users_data]
+            users = [f"<@{ID[0]}>" for ID in users_data]
             shuffle(users)
             no_teams = len(users) // size
             teams = []
@@ -228,7 +228,9 @@ class Cog_Manager(commands.Cog):
                 for x in range(size):
                     team.append(users_copy.pop(0))
                 teams.append(team)
-            print(teams)
+            for i in range(len(teams)):
+                embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
+            await ctx.edit_original_response(embed=embed, view=None)
 
 
 
