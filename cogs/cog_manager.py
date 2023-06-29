@@ -240,15 +240,17 @@ class Cog_Manager(commands.Cog):
             await asyncio.sleep(3)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
+                winner = None
 
                 async def team1_callback(ctx: discord.Interaction):
+                    global winner
                     await ctx.response.defer()
-                    print(team1)
-                    return team1
+                    winner = team1
 
                 async def team2_callback(ctx: discord.Interaction):
+                    global winner
                     await ctx.response.defer()
-                    return team2
+                    winner = team2
 
                 embed.clear_fields()
                 embed.title = f"Match {match_counter} - {embed.title}"
@@ -267,6 +269,7 @@ class Cog_Manager(commands.Cog):
                 def check(rctx):
                     return rctx.channel == ctx.channel
                 payload = await self.client.wait_for("interaction", check=check)
+                return winner
 
             shuffle(teams)
             matches = []
