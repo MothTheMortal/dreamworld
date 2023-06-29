@@ -373,7 +373,9 @@ class Cog_Manager(commands.Cog):
                         if len(matches[i]) == 2:
                             match_counter += 1
                             if not randomization == 3:
-                                xd = copy.deepcopy(matches[i][0].extend(matches[i][1]))
+                                xd = matches[i][0]
+                                xd.extend(matches[i][1])
+                                xd = copy.deepcopy(xd)
                                 await get_skills(ctx, embed)
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
