@@ -269,6 +269,7 @@ class Cog_Manager(commands.Cog):
                 def check(rctx):
                     return rctx.channel == ctx.channel
                 payload = await self.client.wait_for("interaction", check=check)
+                print("Working", winner)
                 return winner
 
             shuffle(teams)
