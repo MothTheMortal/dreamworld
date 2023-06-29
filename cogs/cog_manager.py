@@ -312,6 +312,7 @@ class Cog_Manager(commands.Cog):
     @app_commands.default_permissions(administrator=True)
     @app_commands.describe(users="A list of user IDs separated by spaces.")
     async def rhp(self, ctx: discord.Interaction, users: str):
+        global data, user_skills
         await ctx.response.defer()
         user_skills = dict()
         data = users.split(" ")
