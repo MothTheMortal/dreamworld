@@ -330,14 +330,14 @@ class Cog_Manager(commands.Cog):
                 user_skills[str(user.id)] = [hero, spell]
                 if len(data) == 0:
 
-                    embed = self.client.create_embed("Hero & Spell Randomized", "", discord.Colour.green())
+                    embed2 = self.client.create_embed("Hero & Spell Randomized", "", discord.Colour.green())
 
                     for i in users.split(" "):
-                        embed.add_field(name="User", value=f"<@{i}>", inline=True)
-                        embed.add_field(name="Hero", value=hero, inline=True)
-                        embed.add_field(name="Spell", value=spell, inline=True)
+                        embed2.add_field(name="User", value=f"<@{i}>", inline=True)
+                        embed2.add_field(name="Hero", value=hero, inline=True)
+                        embed2.add_field(name="Spell", value=spell, inline=True)
 
-                    await ctx.edit_original_response(content="", embed=embed, view=None)
+                    await ctx.edit_original_response(content="", embed=embed2, view=None)
                 else:
                     await get_skills(ctx, embed)
 
