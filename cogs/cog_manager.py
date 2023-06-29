@@ -155,7 +155,8 @@ class Cog_Manager(commands.Cog):
                     data_collection.update_one({"_id": 0}, {"$set": {"tournament": data}})
                     data = data_collection.find_one({"_id": 0})["tournament"]
 
-                await ctx.response.edit_message(content=f"{', '.join(dropmenu.values)} have been removed from the tournament.")
+                await ctx.response.edit_message(
+                    content=f"{', '.join(dropmenu.values)} have been removed from the tournament.")
                 await select_team_size(ctx, embed)
 
             async def button_callback(ctx: discord.Interaction):
@@ -176,17 +177,14 @@ class Cog_Manager(commands.Cog):
                 view.add_item(dropmenu)
                 await ctx.response.edit_message(embed=embed, view=view)
 
-
             button = ui.Button(label="Continue", style=discord.ButtonStyle.green)
             button.callback = button_callback
 
             button2 = ui.Button(label="Remove Absent Players", style=discord.ButtonStyle.red)
             button2.callback = button2_callback
 
-
             view.add_item(button)
             view.add_item(button2)
-
 
             await ctx.response.send_message(embed=embed, view=view)
 
@@ -195,11 +193,14 @@ class Cog_Manager(commands.Cog):
                 size = int(dropmenu.values[0])
                 data = data_collection.find_one({"_id": 0})["tournament"]
                 if not len(data["participants"]) % size == 0:
-                    await ctx.response.edit_message(content=f"**Missing {len(data['participants']) // size} participants for {size}v{size}**", view=None)
+                    await ctx.response.edit_message(
+                        content=f"**Missing {len(data['participants']) // size} participants for {size}v{size}**",
+                        view=None)
                     return await select_team_size(ctx, embed)
                 new_embed: discord.Embed = copy.deepcopy(embed)
                 new_embed.description += f"\nTeam Size: {size}"
-                await ctx.response.edit_message(content=f"**The tournament will continue as {size}v{size}**", embed=new_embed, view=None)
+                await ctx.response.edit_message(content=f"**The tournament will continue as {size}v{size}**",
+                                                embed=new_embed, view=None)
                 return await start_handle(ctx, new_embed, size)
 
             view = ui.View()
@@ -230,13 +231,14 @@ class Cog_Manager(commands.Cog):
                     team.append(users_copy.pop(0))
                 teams.append(team)
             for i in range(len(teams)):
-                team_count[str(teams[i])] = i+1
+                team_count[str(teams[i])] = i + 1
                 embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
             print(team_count)
 
             await ctx.edit_original_response(embed=embed, view=None)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
+                print(team1, team2)
 
                 async def team1_callback(ctx: discord.Interaction):
                     await ctx.response.defer()
@@ -264,7 +266,6 @@ class Cog_Manager(commands.Cog):
 
                 payload = await self.client.wait_for("on_interaction", check=check)
 
-
             shuffle(teams)
             matches = []
             match_counter = 0
@@ -286,12 +287,6 @@ class Cog_Manager(commands.Cog):
                 teams = matches
                 matches = []
                 teams = teams[::-1]
-
-
-
-
-
-
 
         await remove_player(ctx, control_embed)  # Buttons 1: Continue, Remove Absent Players,
         # Buttons 2: Select Team Size
