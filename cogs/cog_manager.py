@@ -279,6 +279,7 @@ class Cog_Manager(commands.Cog):
                 for i in range(len(matches)):
                     if len(matches[i]) == 2:
                         match_counter += 1
+                        print(matches[i][0], matches[i][1])
                         matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                     else:
                         matches[i] = matches[i][0]
