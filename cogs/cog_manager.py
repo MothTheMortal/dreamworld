@@ -236,7 +236,7 @@ class Cog_Manager(commands.Cog):
 
 
             await ctx.edit_original_response(embed=embed, view=None)
-                
+
             await asyncio.sleep(3)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
@@ -255,6 +255,7 @@ class Cog_Manager(commands.Cog):
                 button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.grey, disabled=True)
                 print(team1, team2)
                 print(team_count[str(team1)], team_count[str(team2)])
+                print(team_count)
                 button1 = ui.Button(label=f"Team {team_count[str(team1)]}", style=discord.ButtonStyle.green)
                 button1.callback = team1_callback
                 button2 = ui.Button(label=f"Team {team_count[str(team2)]}", style=discord.ButtonStyle.red)
