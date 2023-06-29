@@ -271,10 +271,10 @@ class Cog_Manager(commands.Cog):
             matches = []
             match_counter = 0
             while True:
-                print(teams)
+                print(f"TEAMS: {teams}")
                 for i in range(0, len(teams), 2):
                     matches.append(teams[i:i + 2])
-                print(matches)
+                print(f"MATCHES: {matches}")
                 for i in range(len(matches)):
                     if len(matches[i]) == 2:
                         match_counter += 1
