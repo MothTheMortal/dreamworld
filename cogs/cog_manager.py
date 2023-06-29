@@ -234,17 +234,20 @@ class Cog_Manager(commands.Cog):
                 team_count[teams[i][0]] = i + 1
                 embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
 
-
             await ctx.edit_original_response(embed=embed, view=None)
 
             await asyncio.sleep(3)
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
+                winner = team1
 
                 async def team1_callback(ctx: discord.Interaction):
+                    global winner
                     await ctx.response.defer()
 
                 async def team2_callback(ctx: discord.Interaction):
+                    global winner
+                    winner = team2
                     await ctx.response.defer()
 
                 embed.clear_fields()
@@ -252,7 +255,8 @@ class Cog_Manager(commands.Cog):
                 embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
                 view = ui.View()
                 button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.grey, disabled=True)
-                button1 = ui.Button(label=f"Team {team_count[team1[0]]}", style=discord.ButtonStyle.green, custom_id="1")
+                button1 = ui.Button(label=f"Team {team_count[team1[0]]}", style=discord.ButtonStyle.green,
+                                    custom_id="1")
                 button1.callback = team1_callback
                 button2 = ui.Button(label=f"Team {team_count[team2[0]]}", style=discord.ButtonStyle.red, custom_id="2")
                 button2.callback = team2_callback
@@ -263,12 +267,14 @@ class Cog_Manager(commands.Cog):
 
                 def check(rctx):
                     return rctx.channel == ctx.channel
+
                 interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
-                print(interaction.message.components)
+                await asyncio.sleep(1.5)
+                print(winner, "WINNER")
                 if interaction.custom_id == '1':
-                    return team1
+                    return winner
                 else:
-                    return team2
+                    return winner
 
             shuffle(teams)
             matches = []
