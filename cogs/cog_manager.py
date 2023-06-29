@@ -266,8 +266,7 @@ class Cog_Manager(commands.Cog):
                                    ])
             selectIdea.callback = callback
             view.add_item(selectIdea)
-            xd = copy.deepcopy(users_data)
-            xd = [x[0] for x in xd]
+
             await ctx.edit_original_response(content="", view=view, embed=embed)
 
             async def get_skills(ctx: discord.Interaction, embed: discord.Embed):
@@ -343,13 +342,12 @@ class Cog_Manager(commands.Cog):
                     await get_skills(ctx, embed)
 
             async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
-                global teams
+                global teams, xd
                 shuffle(teams)
                 matches = []
                 match_counter = 0
 
                 async def get_winner(ctx, embed: discord.Embed, team1, team2):
-
                     async def callback(ctx: discord.Interaction):
                         await ctx.response.defer()
                         await ctx.channel.send(
@@ -375,6 +373,8 @@ class Cog_Manager(commands.Cog):
                     interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                     return data[int(select.values[0])]
 
+                # xd = copy.deepcopy(users_data)
+                # xd = [x[0] for x in xd]
                 while True:
                     for i in range(0, len(teams), 2):
                         matches.append(teams[i:i + 2])
@@ -382,6 +382,8 @@ class Cog_Manager(commands.Cog):
                     for i in range(len(matches)):
                         if len(matches[i]) == 2:
                             match_counter += 1
+                            xd = copy.deepcopy(matches[i][0].extend(matches[i][1]))
+                            await get_skills(ctx, embed)
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
                             matches[i] = matches[i][0]
