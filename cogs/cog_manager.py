@@ -10,7 +10,7 @@ from discord import app_commands
 import asyncio
 import json
 import time
-from random import choice
+from random import choice, shuffle
 from discord import Embed, ui
 from datetime import datetime, timedelta
 
@@ -218,6 +218,7 @@ class Cog_Manager(commands.Cog):
         async def start_handle(ctx, embed, size):
             users_data = data['participants']
             users = [ID[0] for ID in users_data]
+            shuffle(users)
             no_teams = len(users) // size
             teams = []
             matches = []
