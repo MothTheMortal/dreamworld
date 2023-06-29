@@ -263,7 +263,7 @@ class Cog_Manager(commands.Cog):
             await ctx.edit_original_response(content="", view=view, embed=embed)
 
             async def get_skills(ctx: discord.Interaction, embed: discord.Embed):
-                global xd
+                global xd, hero, spell
                 user = self.client.get_user(int(xd.pop(0)))
 
                 async def continue_callback(ctx: discord.Interaction):
@@ -313,7 +313,7 @@ class Cog_Manager(commands.Cog):
                     button2 = ui.Button(label="Change Spell", style=discord.ButtonStyle.red)
                     button2.callback = change_spell
                     view.add_item(button2)
-
+                embed.clear_fields()
                 embed.title = "Hero & Spell Selection"
                 embed.description = ""
                 embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
