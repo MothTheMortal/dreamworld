@@ -194,7 +194,7 @@ class Cog_Manager(commands.Cog):
             print("Selecting team size")
 
             async def dropmenu_callback(ctx: discord.Interaction):
-                size = dropmenu.values[0]
+                size = int(dropmenu.values[0])
                 data = data_collection.find_one({"_id": 0})["tournament"]
                 if not len(data["participants"]) % size == 0:
                     await ctx.response.edit_message(content=f"Missing {len(data['participants']) // size} participants for {size}v{size}", view=None)
