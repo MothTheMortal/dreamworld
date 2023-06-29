@@ -376,6 +376,7 @@ class Cog_Manager(commands.Cog):
                                 xd = matches[i][0]
                                 xd.extend(matches[i][1])
                                 xd = copy.deepcopy(xd)
+                                xd = [i[2:-1] for i in xd]
                                 await get_skills(ctx, embed)
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
