@@ -245,7 +245,7 @@ class Cog_Manager(commands.Cog):
                 async def team2_callback(ctx: discord.Interaction):
                     await ctx.response.defer()
                     return team2
-                embed.clear_    fields()
+                embed.clear_fields()
                 embed.description = f"Team {team_count[str(team1)]} VS Team {team_count[str(team2)]}\n{', '.join(team1)} VS {', '.join(team2)}"
                 view = ui.View()
                 button0 = ui.Button(label=f"Who won?", style=discord.ButtonStyle.green, disabled=True)
