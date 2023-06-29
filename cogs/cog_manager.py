@@ -243,8 +243,6 @@ class Cog_Manager(commands.Cog):
 
                 async def callback(ctx: discord.Interaction):
                     await ctx.response.defer()
-                    print(select.values)
-                    await ctx.channel.send(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
 
 
                 data = [team1, team2]
@@ -257,20 +255,21 @@ class Cog_Manager(commands.Cog):
                                             discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="1")])
                 select.callback = callback
                 view.add_item(select)
-                await ctx.edit_original_response(content="", embed=embed, view=view)
+                await ctx.edit_original_response(content="\n".join(history), embed=embed, view=view)
 
                 def check(rctx):
                     return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
 
                 interaction: discord.Interaction = await self.client.wait_for("message", check=check)
+                history.append(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
                 return data[int(select.values[0])]
 
             shuffle(teams)
             matches = []
             match_counter = 0
             history = []
+            
             while True:
-
                 for i in range(0, len(teams), 2):
                     matches.append(teams[i:i + 2])
 
@@ -280,14 +279,19 @@ class Cog_Manager(commands.Cog):
                         matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                     else:
                         matches[i] = matches[i][0]
-
                 if len(matches) == 1:
-                    print(matches[0], "WON")
+                    winner = matches[0]
                     break
-
                 teams = matches
                 matches = []
                 teams = teams[::-1]
+
+            embed.title = f"Team {team_count[winner[0]]} WON - Tournament Handler"
+            embed.add_field(name=f"Team {team_count[winner[0]]}", value=", ".join(winner), inline=False)
+            await ctx.edit_original_response(embed=embed, view=None)
+
+
+
 
         await remove_player(ctx, control_embed)  # Buttons 1: Continue, Remove Absent Players,
         # Buttons 2: Select Team Size
