@@ -230,7 +230,13 @@ class Cog_Manager(commands.Cog):
                 teams.append(team)
             for i in range(len(teams)):
                 embed.add_field(name=f"Team {i + 1}", value=", ".join(teams[i]), inline=False)
+            shuffle(teams)
+            for i in range(len(teams) // 2):
+                embed.add_field(name=f"Match {i + 1}", value=f"Team {i + 1} vs Team {i + 2}", inline=False)
             await ctx.edit_original_response(embed=embed, view=None)
+
+
+
 
 
 
