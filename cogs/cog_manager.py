@@ -217,6 +217,7 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(embed=embed, view=view)
 
         async def start_handle(ctx, embed, size):
+            global team_count
             users_data = data['participants']
             users = [f"<@{ID[0]}>" for ID in users_data]
             shuffle(users)
