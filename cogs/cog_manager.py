@@ -242,12 +242,14 @@ class Cog_Manager(commands.Cog):
                 channel = self.client.get_channel(1040242387563323503)
 
                 async def team1_callback(ctx: discord.Interaction):
+                    global over
                     await ctx.response.defer()
                     over = True
                     await channel.send(f"Team {team_count[str(team1)]} won against Team {team_count[str(team2)]}!")
                     return team1
 
                 async def team2_callback(ctx: discord.Interaction):
+                    global over
                     await ctx.response.defer()
                     over = True
                     await channel.send(f"Team {team_count[str(team2)]} won against Team {team_count[str(team1)]}!")
@@ -267,8 +269,9 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
                 def check(ctx):
+                    print("Checking")
                     return over
-
+                print("Running wait")
                 payload = await self.client.wait_for("on_message", check=check)
 
             shuffle(teams)
@@ -280,8 +283,9 @@ class Cog_Manager(commands.Cog):
 
                 for i in range(len(matches)):
                     if len(matches[i]) == 2:
-                        matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         print("Hi")
+                        matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
+
                     else:
                         matches[i] = matches[i][0]
 
