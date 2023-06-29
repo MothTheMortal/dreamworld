@@ -263,8 +263,8 @@ class Cog_Manager(commands.Cog):
 
                 def check(rctx):
                     return rctx.channel == ctx.channel
-                interaction = await self.client.wait_for("interaction", check=check)
-
+                interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
+                print(interaction.message.components)
                 if interaction.custom_id == '1':
                     return team1
                 else:
