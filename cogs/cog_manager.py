@@ -240,6 +240,11 @@ class Cog_Manager(commands.Cog):
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
                 global history
+
+                async def callback(ctx: discord.Interaction):
+                    await ctx.response.defer()
+
+
                 data = [team1, team2]
                 embed.clear_fields()
                 embed.title = f"Match {match_counter} - Tournament Handler"
@@ -248,6 +253,7 @@ class Cog_Manager(commands.Cog):
                 select = ui.Select(placeholder="Who won?", min_values=1, max_values=1,
                                    options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value="1"),
                                             discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="2")])
+                select.callback = callback
                 view.add_item(select)
                 await ctx.edit_original_response(content="", embed=embed, view=view)
 
@@ -263,17 +269,13 @@ class Cog_Manager(commands.Cog):
             history = []
             while True:
 
-                print(f"TEAMS: {teams}")
                 for i in range(0, len(teams), 2):
                     matches.append(teams[i:i + 2])
 
-                print(f"MATCHES: {matches} {len(matches)}")
                 for i in range(len(matches)):
                     if len(matches[i]) == 2:
                         match_counter += 1
-                        print(matches[i][0], matches[i][1])
                         matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
-                        print("WINNER", matches[i])
                     else:
                         matches[i] = matches[i][0]
 
