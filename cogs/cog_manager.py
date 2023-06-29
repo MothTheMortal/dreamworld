@@ -243,6 +243,7 @@ class Cog_Manager(commands.Cog):
 
                 async def callback(ctx: discord.Interaction):
                     await ctx.response.defer()
+                    await ctx.channel.send(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])]]} won!")
 
 
                 data = [team1, team2]
@@ -260,8 +261,7 @@ class Cog_Manager(commands.Cog):
                 def check(rctx):
                     return rctx.channel == ctx.channel
 
-                interaction: discord.Interaction = await self.client.wait_for("interaction", check=check)
-                await asyncio.sleep(3)
+                interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                 return data[int(select.values[0])]
 
             shuffle(teams)
