@@ -221,7 +221,7 @@ class Cog_Manager(commands.Cog):
             users = [f"<@{ID[0]}>" for ID in users_data]
             shuffle(users)
             no_teams = len(users) // size
-            team_count = dict()
+            team_count = dict(history=[])
             teams = []
 
             users_copy = copy.deepcopy(users)
@@ -236,12 +236,12 @@ class Cog_Manager(commands.Cog):
 
             await ctx.edit_original_response(embed=embed, view=None)
 
-            await asyncio.sleep(3)  
+            await asyncio.sleep(3)
 
             shuffle(teams)
             matches = []
             match_counter = 0
-            history = []
+
 
             async def get_winner(ctx, embed: discord.Embed, team1, team2):
                 global history
@@ -260,13 +260,13 @@ class Cog_Manager(commands.Cog):
                                             discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="1")])
                 select.callback = callback
                 view.add_item(select)
-                await ctx.edit_original_response(content="\n".join(history), embed=embed, view=view)
+                await ctx.edit_original_response(content="\n".join(team_count['history']), embed=embed, view=view)
 
                 def check(rctx):
                     return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
 
                 interaction: discord.Interaction = await self.client.wait_for("message", check=check)
-                history.append(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
+                team_count["history"].append(f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
                 return data[int(select.values[0])]
 
             while True:
