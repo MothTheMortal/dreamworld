@@ -305,8 +305,85 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(embed=embed, view=None)
 
             await assign_details(ctx, embed)
-            
+
         await remove_player(ctx, control_embed)
+
+    @app_commands.command(name="random-hero-spell", description="Get a random MLBB hero * spell")
+    @app_commands.default_permissions(administrator=True)
+    @app_commands.describe(administrator=True)
+    async def rhp(self, ctx: discord.Interaction, users: str):
+        await ctx.response.defer()
+        user_skills = dict()
+        data = users.split(" ")
+        embed = self.client.create_embed("Hero & Spell Randomizer", "", discord.Colour.green())
+
+
+        async def get_skills(ctx: discord.Interaction, embed: discord.Embed):
+            global data, hero, spell
+            randomization = 0
+            user = self.client.get_user(int(data.pop(0)))
+
+            async def continue_callback(ctx: discord.Interaction):
+                global user_skills
+                await ctx.response.defer()
+                user_skills[str(user.id)] = [hero, spell]
+                if len(xd) == 0:
+                    print(user_skills)
+                    await show_teams(ctx)
+                else:
+                    await get_skills(ctx, embed)
+
+            async def change_hero(ctx: discord.Interaction):
+                global hero
+                hero = await self.random_hero()
+                embed.clear_fields()
+                embed.title = "Hero & Spell Selection"
+                embed.description = ""
+                embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+                if randomization in [0, 2]:
+                    embed.add_field(name="Hero", value=hero, inline=True)
+                embed.add_field(name="Spell", value=spell, inline=True)
+                await ctx.response.edit_message(embed=embed, view=view)
+
+            async def change_spell(ctx: discord.Interaction):
+                global spell
+                spell = await self.random_spell()
+                embed.clear_fields()
+                embed.title = "Hero & Spell Selection"
+                embed.description = ""
+                embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+                if randomization in [0, 1]:
+                    embed.add_field(name="Hero", value=hero, inline=True)
+                embed.add_field(name="Spell", value=spell, inline=True)
+                await ctx.response.edit_message(embed=embed, view=view)
+
+            view = ui.View()
+
+            hero = await self.random_hero()
+            spell = await self.random_spell()
+
+            button0 = ui.Button(label="Next", style=discord.ButtonStyle.green)
+            button0.callback = continue_callback
+            view.add_item(button0)
+            if randomization in [0, 1]:
+                button1 = ui.Button(label="Change Hero", style=discord.ButtonStyle.red)
+                button1.callback = change_hero
+                view.add_item(button1)
+            if randomization in [0, 2]:
+                button2 = ui.Button(label="Change Spell", style=discord.ButtonStyle.red)
+                button2.callback = change_spell
+                view.add_item(button2)
+            embed.clear_fields()
+            embed.title = "Hero & Spell Selection"
+            embed.description = ""
+            embed.add_field(name="User", value=f"{user.mention}({user.display_name})", inline=True)
+            embed.add_field(name="Hero", value=hero, inline=True)
+            embed.add_field(name="Spell", value=spell, inline=True)
+            await ctx.edit_original_response(embed=embed, view=view)
+        await get_skills(ctx, embed)
+
+
+
 
     @app_commands.command(name="get-random-hero", description="Get a random MLBB hero")
     async def get_random_hero(self, ctx: discord.Interaction):
