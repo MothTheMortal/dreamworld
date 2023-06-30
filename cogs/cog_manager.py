@@ -68,7 +68,7 @@ class Cog_Manager(commands.Cog):
             data = self.client.get_database_collection("data").find_one({"_id": 0})["tournament"]
             if data != {}:
                 if data["unix"] < time.time():
-                    await self.tournament_handler()
+                    pass
 
             await asyncio.sleep(5)
 
