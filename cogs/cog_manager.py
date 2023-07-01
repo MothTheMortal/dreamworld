@@ -314,7 +314,7 @@ class Cog_Manager(commands.Cog):
                     matches = []
                     teams = teams[::-1]
 
-                embed.title = f"Team {team_count[winner[0]]} won the Tournament!"
+                embed.title = f"{winner[0]} won the Tournament!"
                 embed.description = ""
                 embed.add_field(name=f"Team {team_count[winner[0]]}", value=", ".join(winner), inline=False)
                 await ctx.edit_original_response(embed=embed, view=None)
