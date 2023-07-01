@@ -248,13 +248,12 @@ class Cog_Manager(commands.Cog):
                 await show_teams(ctx)
                 await get_teams(ctx, embed)
 
-
-
             async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
                 global teams, xd
                 shuffle(teams)
                 matches = []
                 match_counter = 0
+                channel = self.client.get_channel(1122963025721303060)
 
                 async def get_winner(ctx, embed: discord.Embed, team1, team2):
                     async def callback(ctx: discord.Interaction):
@@ -282,6 +281,7 @@ class Cog_Manager(commands.Cog):
                     interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                     return data[int(select.values[0])]
 
+                games = []
                 while True:
                     for i in range(0, len(teams), 2):
                         matches.append(teams[i:i + 2])
@@ -293,10 +293,19 @@ class Cog_Manager(commands.Cog):
                             x.extend(matches[i][1])
                             x = copy.deepcopy(x)
                             x = [i[2:-1] for i in x]
-                            await ctx.channel.send(f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
-                            matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
+                            s = f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```"
+
+                            try:
+                                game_msg = f"Match {match_counter} - Team {team_count[matches[i][0][0]]} vs Team {team_count[matches[i][1][0]]}\n{s}"
+                            except:
+                                game_msg = f"Match {match_counter} - {matches[i][0]} vs {matches[i][1]}\n{s}"
+                            await channel.send(game_msg)
+                            matches[i] = f"Winner of Match {match_counter}"
+
                         else:
+
                             matches[i] = matches[i][0]
+
                     if len(matches) == 1:
                         winner = matches[0]
                         break
@@ -322,7 +331,6 @@ class Cog_Manager(commands.Cog):
         user_skills = dict()
         data = users.split(" ")
         embed = self.client.create_embed("Hero & Spell Randomizer", "", discord.Colour.green())
-
 
         async def get_skills(ctx: discord.Interaction, embed: discord.Embed):
             global data, hero, spell
@@ -393,10 +401,8 @@ class Cog_Manager(commands.Cog):
             embed.add_field(name="Hero", value=hero, inline=True)
             embed.add_field(name="Spell", value=spell, inline=True)
             await ctx.edit_original_response(embed=embed, view=view)
+
         await get_skills(ctx, embed)
-
-
-
 
     @app_commands.command(name="get-random-hero", description="Get a random MLBB hero")
     async def get_random_hero(self, ctx: discord.Interaction):
