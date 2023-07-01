@@ -296,11 +296,11 @@ class Cog_Manager(commands.Cog):
                             s = f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```"
 
                             try:
-                                game_msg = f"Match {match_counter} - Team {team_count[matches[i][0][0]]} vs Team {team_count[matches[i][1][0]]}\n{s}"
+                                game_msg = f"Match {match_counter} - Team {team_count[matches[i][0][0]]} vs Team {team_count[matches[i][1][0]]}\n{s }"
                             except:
-                                game_msg = f"Match {match_counter} - {matches[i][0]} vs {matches[i][1]}\n{s}"
+                                game_msg = f"Match {match_counter} - {matches[i][0][0]} vs {matches[i][1][0]}\n{s}"
                             await channel.send(game_msg)
-                            matches[i] = f"Winner of Match {match_counter}"
+                            matches[i] = [f"Winner of Match {match_counter}"]
 
                         else:
 
