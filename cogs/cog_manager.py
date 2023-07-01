@@ -298,9 +298,10 @@ class Cog_Manager(commands.Cog):
                             try:
                                 game_msg = f"Match {match_counter} - Team {team_count[matches[i][0][0]]} vs Team {team_count[matches[i][1][0]]}\n{s }"
                             except:
-                                game_msg = f"Match {match_counter} - {matches[i][0][0]} vs {matches[i][1][0]}\n{s}"
+
+                                game_msg = f"Match {match_counter} - {'Team ' + str(team_count[matches[i][0][0]]) if len(matches[i][0]) != 1 else matches[i][0][0]} vs {'Team ' + str(team_count[matches[i][1][0]]) if len(matches[i][1]) != 1 else matches[i][1][0]}\n{s}"
                             await channel.send(game_msg)
-                            matches[i] = [f"Winner of Match {match_counter}"]
+                            matches[i] = [f"<@Winner of Match {match_counter}>"]
 
                         else:
 
