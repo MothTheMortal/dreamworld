@@ -62,7 +62,7 @@ class Cog_Manager(commands.Cog):
             doc = self.client.get_database_collection("data").find_one({"_id": 0})["attendance"]
             for user_id in doc.keys():
                 data = doc[user_id]
-                data = dict(sorted(data.items(), key=lambda x: x[0]))
+                data = dict(sorted(data.items(), key=lambda x: x[0], reverse=True))
                 print(data)
                 if abs(time.time() - int(list(data.keys())[0])) >= 259200:
                     channel = self.client.get_channel(config.channel_ids["attendance"])
