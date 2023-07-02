@@ -61,12 +61,15 @@ class Miscellaneous(commands.Cog):
         embed = self.client.create_embed(title=f"{user.name}'s Attendance",
                                          description=f"Total Attendance: {len(data.keys())}\nHighest Streak: {highestStreak}\nCurrent Streak: {currentStreak}\nTotal hours worked: {sum(data.values())}",
                                          color=config.embed_purple)
-        for key in data.keys():
-            unix_seconds = int(key)
-            date = datetime.fromtimestamp(int(key)+8*3600, tz=timezone.utc)
-            date = date.strftime("%Y-%m-%d %I:%M %p")
+        try:
+            for key in data.keys():
+                unix_seconds = int(key)
+                date = datetime.fromtimestamp(int(key)+8*3600, tz=timezone.utc)
+                date = date.strftime("%Y-%m-%d %I:%M %p")
 
-            embed.add_field(name='', value=f'**{date}**: {data[key]} hours', inline=False)
+                embed.add_field(name='', value=f'**{date}**: {data[key]} hours', inline=False)
+        except Exception as err:
+            print(err)
 
         await ctx.response.send_message(embed=embed)
 
