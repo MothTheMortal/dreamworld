@@ -58,6 +58,17 @@ class Cog_Manager(commands.Cog):
 
         while True:
 
+            # Check staff who didn't attend for 3 days
+            doc = self.client.get_database_collection("data").find_one({"_id": 0})["attendance"]
+            for user_id in doc.keys():
+                data = doc[user_id]
+                data = dict(sorted(data.items(), key=lambda x: x[0]))
+                if abs(time.time() - int(data.keys()[0])) >= 259200:
+                    channel = self.client.get_channel(config.channel_ids["attendance"])
+                    await channel.send(f"{self.client.get_user(int(user_id)).mention} hasn't attended for 3 days.")
+                    doc[user_id][str(int(time.time()))] = 0
+                    self.client.get_database_collection("data").update_one({"_id": 0}, {"$set": {"attendance": doc}})
+
             with open("data/giveaways.json", "r") as f:
                 data = json.load(f)
             giveaways_list = [i for i in data.keys()]
