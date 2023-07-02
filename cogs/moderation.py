@@ -42,8 +42,10 @@ class Moderation(commands.Cog):
         count = user_profile["warning"]
         if count == 3:
             user_collection.update_one({"_id": ctx.user.id}, {"$set": {"warning": 0}})
+            count += 1
         else:
             user_collection.update_one({"_id": ctx.user.id}, {"$inc": {"warning": 1}})
+            count += 1
 
         if count < 3:
             warn_embed = self.client.create_embed(
