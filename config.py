@@ -149,7 +149,7 @@ def getHighestStreak(data):
             highestStreak += 1
         else:
             highestStreak = 0
-    return highestStreak
+    return data, highestStreak
 
 
 def calculate_unix_seconds(year, month, day, hour, minute):
