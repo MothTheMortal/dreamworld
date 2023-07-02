@@ -128,6 +128,30 @@ tournament_rules = """
 """
 
 
+def getCurrentStreak(data):
+    data = dict(sorted(data.items(), key=lambda x: x[0]))
+    data2 = list(map(int, data.keys()))
+    currentStreak = 0
+    for i in range(0, len(data2) - 1):
+        if abs(data2[i] - data2[i + 1]) <= 86400:
+            currentStreak += 1
+        else:
+            break
+    return currentStreak
+
+
+def getHighestStreak(data):
+    data = dict(sorted(data.items(), key=lambda x: x[0]))
+    data2 = list(map(int, data.keys()))
+    highestStreak = 0
+    for i in range(0, len(data2) - 1):
+        if abs(data2[i] - data2[i + 1]) <= 86400:
+            highestStreak += 1
+        else:
+            highestStreak = 0
+    return highestStreak
+
+
 def calculate_unix_seconds(year, month, day, hour, minute):
     tz = pytz.timezone("UTC")
     dt = datetime.datetime(year, month, day, hour, minute, tzinfo=tz)
@@ -143,7 +167,8 @@ channel_ids = {
     "shop": 1036907324532588584,
     "confession": 1044927789284982814,
     "logs2": 1021391202756595712,
-    "tournament": 1122963025721303060
+    "tournament": 1122963025721303060,
+    "attendance": 1040245903094722621
 }
 
 emoji_field = {

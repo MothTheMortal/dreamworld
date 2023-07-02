@@ -21,6 +21,47 @@ class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    @app_commands.command(name="work", description="Add your attendance for today.")
+    async def work(self, ctx: discord.Interaction, hours: int):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})["attendance"]
+
+        ID = str(ctx.user.id)
+
+        if ID not in doc.keys():
+            doc[ID] = dict()
+        doc[ID][str(int(time.time()))] = hours
+
+        data_collection.update_one({"_id": 0}, {"$set": {"attendance": doc}})
+
+
+        await ctx.response.send_message(f"Attendance added for {hours} hours.", ephemeral=True)
+        channel = self.client.get_channel(config.channel_ids["attendance"])
+        embed = self.client.create_embed(title=f"{ctx.user.name} will work for {hours} hours.", description="", color=config.embed_purple)
+        await channel.send(embed=embed)
+
+    @app_commands.command(name="attendance", description="Shows your attendance.")
+    async def attendance(self, ctx: discord.Interaction, user: discord.Member = None):
+        if user is None:
+            user = ctx.user
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})["attendance"]
+        ID = str(user.id)
+
+        if ID not in doc.keys():
+            embed = discord.Embed(title=f"Error - No attendance found.", color=discord.Color.red())
+            await ctx.response.send_message(embed=embed)
+
+        data = doc[ID]
+
+        highestStreak = config.getHighestStreak(data)
+        currentStreak = config.getCurrentStreak(data)
+
+
+        embed = self.client.create_embed(title=f"{user.name}'s Attendance",
+                                         description=f"Total Attendance: {len(data.keys())}\nHighest Streak: {highestStreak}, Current Streak: {currentStreak}",
+                                         color=config.embed_purple)
+        await ctx.response.send_message(embed=embed)
 
     @app_commands.command(name="invites",
                           description="Shows how many invites user has.")
@@ -191,7 +232,7 @@ class Miscellaneous(commands.Cog):
 
         with open("data/confessions.json", "r") as f:
             data = json.load(f)
-    
+
         if confession_number > count or str(confession_number) not in data.keys():
             embed = discord.Embed(title="Confession Not Found", description="", colour=discord.Colour.red())
             return await ctx.response.send_message(embed=embed)
