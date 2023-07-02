@@ -129,7 +129,7 @@ tournament_rules = """
 
 
 def getCurrentStreak(data):
-    data = dict(sorted(data.items(), key=lambda x: x[0]))
+    data = dict(sorted(data.items(), key=lambda x: x[0], reverse=True))
     data2 = list(map(int, data.keys()))
     currentStreak = 0
     for i in range(0, len(data2) - 1):
@@ -141,7 +141,7 @@ def getCurrentStreak(data):
 
 
 def getHighestStreak(data):
-    data = dict(sorted(data.items(), key=lambda x: x[0]))
+    data = dict(sorted(data.items(), key=lambda x: x[0], reverse=True))
     data2 = list(map(int, data.keys()))
     highestStreak = 0
     for i in range(0, len(data2) - 1):
