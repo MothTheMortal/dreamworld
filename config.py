@@ -144,12 +144,15 @@ def getHighestStreak(data):
     data = dict(sorted(data.items(), key=lambda x: x[0], reverse=True))
     data2 = list(map(int, data.keys()))
     highestStreak = 0
+    Max = 0
     for i in range(0, len(data2) - 1):
         if abs(data2[i] - data2[i + 1]) <= 86400:
             highestStreak += 1
         else:
+            if highestStreak > Max:
+                Max = highestStreak
             highestStreak = 0
-    return data, highestStreak
+    return data, Max
 
 
 def calculate_unix_seconds(year, month, day, hour, minute):
