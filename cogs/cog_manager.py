@@ -63,7 +63,7 @@ class Cog_Manager(commands.Cog):
             for user_id in doc.keys():
                 data = doc[user_id]
                 data = dict(sorted(data.items(), key=lambda x: x[0]))
-                if abs(time.time() - int(data.keys()[0])) >= 259200:
+                if abs(time.time() - int(list(data.keys())[0])) >= 259200:
                     channel = self.client.get_channel(config.channel_ids["attendance"])
                     await channel.send(f"{self.client.get_user(int(user_id)).mention} hasn't attended for 3 days.")
                     doc[user_id][str(int(time.time()))] = 0
