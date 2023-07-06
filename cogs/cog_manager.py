@@ -55,7 +55,8 @@ class Cog_Manager(commands.Cog):
                 refer_msg: discord.Message = await channel.fetch_message(message.reference.message_id)
                 if refer_msg.author.id == 273890943407751168:
                     msgs.append(message)
-
+        print(len(msgs))
+        [print(i.content) for i in msgs]
         await channel.delete_messages(msgs)
 
 
