@@ -46,18 +46,6 @@ class Cog_Manager(commands.Cog):
         print("-" * 30)
         print(f"Logged in as {self.client.user.name}#{self.client.user.discriminator}")
 
-        channel = self.client.get_channel(987352212017676410)
-        first_msg = await channel.fetch_message(1126537440107180103)
-        msgs = []
-        async for message in channel.history(after=first_msg):
-            message: discord.Message
-            if message.reference:
-                msgs.append(message)
-        print(len(msgs))
-        [print(i.content) for i in msgs]
-        await channel.delete_messages(msgs)
-
-
         try:
             synced = await self.client.tree.sync()
             print(f"Synced {len(synced)} commands")
