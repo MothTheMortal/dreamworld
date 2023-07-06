@@ -48,8 +48,14 @@ class Cog_Manager(commands.Cog):
 
         channel = self.client.get_channel(987352212017676410)
         first_msg = await channel.fetch_message(1126537440107180103)
-        msgs = [message async for message in channel.history(after=first_msg) if
-                message.author.id == 273890943407751168]
+        msgs = []
+        async for message in channel.history(after=first_msg):
+            message: discord.Message
+            if message.reference:
+                refer_msg: discord.Message = await channel.fetch_message(message.reference.message_id)
+                if refer_msg.author.id == 273890943407751168:
+                    msgs.append(message)
+
         await channel.delete_messages(msgs)
 
 
