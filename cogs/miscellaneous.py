@@ -29,7 +29,7 @@ class Miscellaneous(commands.Cog):
         ID = str(ctx.user.id)
 
         if hours < 1:
-            embed = self.client.create_embed(title=f"Error.", description="You cannot work for less than 1 hour.", color=config.embed_red)
+            embed = self.client.create_embed(title=f"Error - Invalid Work Duration", description="You cannot work for less than 1 hour.", color=config.embed_red)
             return await ctx.response.send_message(embed=embed)
 
         if ID not in doc.keys():
