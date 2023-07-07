@@ -25,6 +25,19 @@ class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+
+    @app_commands.command(name="remove-attendance", description="Removes a user from daily attendance.")
+    async def remove_attendance(self, ctx: discord.Interaction, user: discord.Member):
+        data_collection = self.client.get_database_collection("data")
+        doc = data_collection.find_one({"_id": 0})
+
+        if str(user.id) in doc["attendance"].keys():
+            del doc["attendance"][str(user.id)]
+            await ctx.response.send_message(f"{user.mention} has been removed from attendance.")
+            data_collection.update_one({"_id": 0}, {"$set": {"attendance": doc["attendance"]}})
+        else:
+            await ctx.response.send_message(f"{user.mention} is not in attendance.", ephemeral=True)
+
     @app_commands.command(name="clear",
                           description="Clear messages in a channel.")
     @app_commands.default_permissions(manage_messages=True)
