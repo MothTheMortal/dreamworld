@@ -50,7 +50,7 @@ class Miscellaneous(commands.Cog):
 
         if ID not in doc.keys():
             embed = discord.Embed(title=f"Error - No attendance found.", color=discord.Color.red())
-            await ctx.response.send_message(embed=embed)
+            return await ctx.response.send_message(embed=embed)
 
         data = doc[ID]
 
