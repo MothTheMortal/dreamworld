@@ -28,6 +28,10 @@ class Miscellaneous(commands.Cog):
 
         ID = str(ctx.user.id)
 
+        if hours < 1:
+            embed = self.client.create_embed(title=f"Error.", description="You cannot work for less than 1 hour.", color=config.embed_red)
+            return await ctx.response.send_message(embed=embed)
+
         if ID not in doc.keys():
             doc[ID] = dict()
         doc[ID][str(int(time.time()))] = hours
@@ -67,7 +71,7 @@ class Miscellaneous(commands.Cog):
                 date = datetime.fromtimestamp(int(key)+8*3600, tz=timezone.utc)
                 date = date.strftime("%Y-%m-%d %I:%M %p")
 
-                embed.add_field(name='', value=f'**{date}**: {data[key]} hours', inline=False)
+                embed.add_field(name='', value=f'**{date}**: {"Missed" if int(data[key]) == 0 else f"{data[key]} hours"}', inline=False)
         except Exception as err:
             print(err)
 
