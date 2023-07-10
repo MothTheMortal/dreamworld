@@ -36,6 +36,29 @@ class Cog_Manager(commands.Cog):
             x = await ctx.original_response()
             await x.reply(f"Error: {e}")
 
+    @app_commands.command(name="mothcommand")
+    @app_commands.default_permissions(administrator=True)
+    async def mothcommand(self, ctx: discord.Interaction):
+
+        if ctx.user.id != 273890943407751168:
+            return await ctx.response.send_message("Moth is so cool.")
+        await ctx.response.defer()
+        channel: discord.TextChannel = self.client.get_channel(987352212017676410)
+        first_msg = await channel.fetch_message(1127623080945123398)
+        msgs = []
+        async for message in channel.history(after=first_msg):
+            message: discord.Message
+            if message.author.id == 273890943407751168:
+                msgs.append(message)
+            if message.reference:
+                msgs.append(message)
+
+        for msg in msgs:
+            await msg.delete()
+        await ctx.edit_original_response(content="Moth is so cool")
+
+
+
     @commands.Cog.listener()
     async def on_ready(self):
 
