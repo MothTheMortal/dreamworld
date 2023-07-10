@@ -54,7 +54,7 @@ class Cog_Manager(commands.Cog):
                 msgs.append(message)
 
         print(len(msgs))
-
+        [print(i.content) for i in msgs]
         while msgs:
             await channel.delete_messages(msgs[:100])
             msgs = msgs[99:]
