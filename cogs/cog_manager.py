@@ -61,6 +61,10 @@ class Cog_Manager(commands.Cog):
 
         await ctx.edit_original_response(content="Moth is so cool")
 
+    @app_commands.command(name="velna-command")
+    @app_commands.default_permissions(administrator=True)
+    async def velna_command(self, ctx: discord.Interaction):
+        await ctx.response.send_message("Velna is so cool.")
 
 
     @commands.Cog.listener()
