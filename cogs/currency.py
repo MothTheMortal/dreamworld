@@ -84,7 +84,7 @@ class Currency(commands.Cog):
         return await ctx.response.send_message(embed=profile_embed)
 
 
-    @app_commands.command(name="leaderboard-currency", description="Shows the leaderboard for something!")
+    @app_commands.command(name="leaderboard", description="Shows the leaderboard for something!")
     @app_commands.choices(lb_type=[app_commands.Choice(name="Star", value="star"),
                                    app_commands.Choice(name="Candy", value="candy"),
                                    app_commands.Choice(name="Snow", value="snow"),
