@@ -46,12 +46,13 @@ class Cog_Manager(commands.Cog):
         channel: discord.TextChannel = self.client.get_channel(987352212017676410)
         first_msg = await channel.fetch_message(1127623080945123398)
         msgs = []
-        async for message in channel.history(after=first_msg):
+        async for message in channel.history(after=first_msg, limit=1000):
             message: discord.Message
             if message.author.id == 273890943407751168:
                 msgs.append(message)
             if message.reference:
                 msgs.append(message)
+
         print(len(msgs))
         await channel.delete_messages(msgs)
         await ctx.edit_original_response(content="Moth is so cool")
