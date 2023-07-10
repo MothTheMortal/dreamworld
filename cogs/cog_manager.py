@@ -54,7 +54,11 @@ class Cog_Manager(commands.Cog):
                 msgs.append(message)
 
         print(len(msgs))
-        await channel.delete_messages(msgs)
+
+        while msgs:
+            await channel.delete_messages(msgs[:100])
+            msgs = msgs[99:]
+
         await ctx.edit_original_response(content="Moth is so cool")
 
 
