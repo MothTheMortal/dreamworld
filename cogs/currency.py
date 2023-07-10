@@ -84,47 +84,153 @@ class Currency(commands.Cog):
         return await ctx.response.send_message(embed=profile_embed)
 
 
-    @app_commands.command(name="leaderboard-currency", description="Shows the leaderboard of the currency!")
-    @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
-    async def lb(self, ctx: discord.Interaction, currency: app_commands.Choice[str], places: int = 10):
+    @app_commands.command(name="leaderboard-currency", description="Shows the leaderboard for something!")
+    @app_commands.choices(lb_type=[app_commands.Choice(name="Star", value="star"),
+                                   app_commands.Choice(name="Candy", value="candy"),
+                                   app_commands.Choice(name="Snow", value="snow"),
+                                   app_commands.Choice(name="Weekly Messages", value="weekly"),
+                                   app_commands.Choice(name="Monthly Messages", value="monthly"),
+                                   app_commands.Choice(name="Yearly Messages", value="yearly")]
+                          )
+    async def lb(self, ctx: discord.Interaction, lb_type: app_commands.Choice[str], places: int = 10):
 
-        emoji = config.emoji_field[currency.value]
+        if lb_type.value in ["weekly", "monthly", "yearly"]:
+            if lb_type.value == "weekly":
+                class LeaderBoardPosition:
+                    def __init__(self, id, coins):
+                        self.id = id
+                        self.coins = coins
 
-        class LeaderBoardPosition:
-            def __init__(self, id, coins, name):
-                self.id = id
-                self.coins = coins
-                self.name = name
+                leaderboard = []
 
-        leaderboard = []
+                with open("data/msg_weekly.json", "r") as file:
+                    data = json.load(file)
+                collection = self.client.get_database_collection("data")
+                profile = collection.find_one({"_id": 0})
 
-        user_collection = self.client.get_database_collection("users")
+                weekly = profile["weekly_time"]
+                dt_object = datetime.fromtimestamp(weekly + 604800)
+                date_str = dt_object.strftime("%Y/%m/%d - %H:%M")
 
-        for user in user_collection.find():
-            leaderboard.append(LeaderBoardPosition(user["_id"], user[currency.value], user["name"]))
+                user_ids = list(data["users"].keys())
+                user_msgs = []
+                for i in user_ids:
+                    user_msgs.append(data["users"][i]["messages"])
 
-        top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+                user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
 
-        leaderboard_embed = self.client.create_embed(
-            "Dreamworld Leaderboard",
-            f"The top {places} wealthiest people in all of Dreamworld!",
-            config.embed_info_color
-        )
+                for key, ele in user_collection.items():
+                    leaderboard.append(LeaderBoardPosition(key, ele))
 
-        for i in range(1, places + 1, 1):
-            try:
-                value_one = top[i - 1].id
-                value_two = top[i - 1].coins
-                value_three = top[i - 1].name
-                leaderboard_embed.add_field(
-                    name=f"{i}. {value_two} {emoji}",
-                    value=f"<@{value_one}> - {value_three}",
-                    inline=False
+                top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+
+                leaderboard_embed = self.client.create_embed(
+                    "Dreamworld Leaderboard",
+                    f"The top {places} chattiest people this week in Dreamworld!\nResets - {date_str}",
+                    config.embed_info_color
                 )
-            except IndexError:
-                leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
 
-        return await ctx.response.send_message(embed=leaderboard_embed)
+                for i in range(1, places + 1, 1):
+                    try:
+                        value_one = top[i - 1].id
+                        value_two = top[i - 1].coins
+                        leaderboard_embed.add_field(
+                            name=f"{i}. :thought_balloon:  {value_two}",
+                            value=f"<@{value_one}>",
+                            inline=False
+                        )
+                    except IndexError:
+                        leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+
+                return await ctx.response.send_message(embed=leaderboard_embed)
+
+            elif lb_type.value == "monthly":
+                class LeaderBoardPosition:
+                    def __init__(self, id, coins):
+                        self.id = id
+                        self.coins = coins
+
+                leaderboard = []
+                collection = self.client.get_database_collection("data")
+                profile = collection.find_one({"_id": 0})
+                name_monthly = profile["monthly_time"]
+
+                with open("data/msg_monthly.json", "r") as file:
+                    data = json.load(file)
+                user_ids = list(data["users"].keys())
+                user_msgs = []
+                for i in user_ids:
+                    user_msgs.append(data["users"][i]["messages"])
+
+                user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
+
+                for key, ele in user_collection.items():
+                    leaderboard.append(LeaderBoardPosition(key, ele))
+
+                top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+
+                leaderboard_embed = self.client.create_embed(
+                    "Dreamworld Leaderboard",
+                    f"The top {places} chattiest people this {name_monthly} in Dreamworld!",
+                    config.embed_info_color
+                )
+
+                for i in range(1, places + 1, 1):
+                    try:
+                        value_one = top[i - 1].id
+                        value_two = top[i - 1].coins
+                        leaderboard_embed.add_field(
+                            name=f"{i}. :thought_balloon:  {value_two}",
+                            value=f"<@{value_one}>",
+                            inline=False
+                        )
+                    except IndexError:
+                        leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+
+                return await ctx.response.send_message(embed=leaderboard_embed)
+
+            elif lb_type.value == "yearly":
+                lb_type = "yearly_messages"
+
+
+        else:
+            emoji = config.emoji_field[lb_type.value]
+
+            class LeaderBoardPosition:
+                def __init__(self, id, coins, name):
+                    self.id = id
+                    self.coins = coins
+                    self.name = name
+
+            leaderboard = []
+
+            user_collection = self.client.get_database_collection("users")
+
+            for user in user_collection.find():
+                leaderboard.append(LeaderBoardPosition(user["_id"], user[lb_type.value], user["name"]))
+
+            top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+
+            leaderboard_embed = self.client.create_embed(
+                "Dreamworld Leaderboard",
+                f"The top {places} wealthiest people in all of Dreamworld!",
+                config.embed_info_color
+            )
+
+            for i in range(1, places + 1, 1):
+                try:
+                    value_one = top[i - 1].id
+                    value_two = top[i - 1].coins
+                    value_three = top[i - 1].name
+                    leaderboard_embed.add_field(
+                        name=f"{i}. {value_two} {emoji}",
+                        value=f"<@{value_one}> - {value_three}",
+                        inline=False
+                    )
+                except IndexError:
+                    leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+
+            return await ctx.response.send_message(embed=leaderboard_embed)
 
     @app_commands.command(
         name="shop",

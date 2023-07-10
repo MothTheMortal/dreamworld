@@ -395,105 +395,105 @@ class Miscellaneous(commands.Cog):
             return await dodged()
         print(shop_reply)
 
-    @app_commands.command(
-        name="msg_monthly"
-    )
-    async def monthlylb(self, ctx: discord.Interaction, places: int = 10):
-        class LeaderBoardPosition:
-            def __init__(self, id, coins):
-                self.id = id
-                self.coins = coins
-
-        leaderboard = []
-        collection = self.client.get_database_collection("data")
-        profile = collection.find_one({"_id": 0})
-        name_monthly = profile["monthly_time"]
-
-        with open("data/msg_monthly.json", "r") as file:
-            data = json.load(file)
-        user_ids = list(data["users"].keys())
-        user_msgs = []
-        for i in user_ids:
-            user_msgs.append(data["users"][i]["messages"])
-
-        user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
-
-        for key, ele in user_collection.items():
-            leaderboard.append(LeaderBoardPosition(key, ele))
-
-        top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
-
-        leaderboard_embed = self.client.create_embed(
-            "Dreamworld Leaderboard",
-            f"The top {places} chattiest people this {name_monthly} in Dreamworld!",
-            config.embed_info_color
-        )
-
-        for i in range(1, places + 1, 1):
-            try:
-                value_one = top[i - 1].id
-                value_two = top[i - 1].coins
-                leaderboard_embed.add_field(
-                    name=f"{i}. :thought_balloon:  {value_two}",
-                    value=f"<@{value_one}>",
-                    inline=False
-                )
-            except IndexError:
-                leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
-
-        return await ctx.response.send_message(embed=leaderboard_embed)
-
-    @app_commands.command(
-        name="msg_weekly"
-    )
-    async def weeklylb(self, ctx, places: int = 10):
-        class LeaderBoardPosition:
-            def __init__(self, id, coins):
-                self.id = id
-                self.coins = coins
-
-        leaderboard = []
-
-        with open("data/msg_weekly.json", "r") as file:
-            data = json.load(file)
-        collection = self.client.get_database_collection("data")
-        profile = collection.find_one({"_id": 0})
-
-        weekly = profile["weekly_time"]
-        dt_object = datetime.fromtimestamp(weekly + 604800)
-        date_str = dt_object.strftime("%Y/%m/%d - %H:%M")
-
-        user_ids = list(data["users"].keys())
-        user_msgs = []
-        for i in user_ids:
-            user_msgs.append(data["users"][i]["messages"])
-
-        user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
-
-        for key, ele in user_collection.items():
-            leaderboard.append(LeaderBoardPosition(key, ele))
-
-        top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
-
-        leaderboard_embed = self.client.create_embed(
-            "Dreamworld Leaderboard",
-            f"The top {places} chattiest people this week in Dreamworld!\nResets - {date_str}",
-            config.embed_info_color
-        )
-
-        for i in range(1, places + 1, 1):
-            try:
-                value_one = top[i - 1].id
-                value_two = top[i - 1].coins
-                leaderboard_embed.add_field(
-                    name=f"{i}. :thought_balloon:  {value_two}",
-                    value=f"<@{value_one}>",
-                    inline=False
-                )
-            except IndexError:
-                leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
-
-        return await ctx.response.send_message(embed=leaderboard_embed)
+    # @app_commands.command(
+    #     name="msg_monthly"
+    # )
+    # async def monthlylb(self, ctx: discord.Interaction, places: int = 10):
+    #     class LeaderBoardPosition:
+    #         def __init__(self, id, coins):
+    #             self.id = id
+    #             self.coins = coins
+    #
+    #     leaderboard = []
+    #     collection = self.client.get_database_collection("data")
+    #     profile = collection.find_one({"_id": 0})
+    #     name_monthly = profile["monthly_time"]
+    #
+    #     with open("data/msg_monthly.json", "r") as file:
+    #         data = json.load(file)
+    #     user_ids = list(data["users"].keys())
+    #     user_msgs = []
+    #     for i in user_ids:
+    #         user_msgs.append(data["users"][i]["messages"])
+    #
+    #     user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
+    #
+    #     for key, ele in user_collection.items():
+    #         leaderboard.append(LeaderBoardPosition(key, ele))
+    #
+    #     top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+    #
+    #     leaderboard_embed = self.client.create_embed(
+    #         "Dreamworld Leaderboard",
+    #         f"The top {places} chattiest people this {name_monthly} in Dreamworld!",
+    #         config.embed_info_color
+    #     )
+    #
+    #     for i in range(1, places + 1, 1):
+    #         try:
+    #             value_one = top[i - 1].id
+    #             value_two = top[i - 1].coins
+    #             leaderboard_embed.add_field(
+    #                 name=f"{i}. :thought_balloon:  {value_two}",
+    #                 value=f"<@{value_one}>",
+    #                 inline=False
+    #             )
+    #         except IndexError:
+    #             leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+    #
+    #     return await ctx.response.send_message(embed=leaderboard_embed)
+    #
+    # @app_commands.command(
+    #     name="msg_weekly"
+    # )
+    # async def weeklylb(self, ctx, places: int = 10):
+    #     class LeaderBoardPosition:
+    #         def __init__(self, id, coins):
+    #             self.id = id
+    #             self.coins = coins
+    #
+    #     leaderboard = []
+    #
+    #     with open("data/msg_weekly.json", "r") as file:
+    #         data = json.load(file)
+    #     collection = self.client.get_database_collection("data")
+    #     profile = collection.find_one({"_id": 0})
+    #
+    #     weekly = profile["weekly_time"]
+    #     dt_object = datetime.fromtimestamp(weekly + 604800)
+    #     date_str = dt_object.strftime("%Y/%m/%d - %H:%M")
+    #
+    #     user_ids = list(data["users"].keys())
+    #     user_msgs = []
+    #     for i in user_ids:
+    #         user_msgs.append(data["users"][i]["messages"])
+    #
+    #     user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
+    #
+    #     for key, ele in user_collection.items():
+    #         leaderboard.append(LeaderBoardPosition(key, ele))
+    #
+    #     top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+    #
+    #     leaderboard_embed = self.client.create_embed(
+    #         "Dreamworld Leaderboard",
+    #         f"The top {places} chattiest people this week in Dreamworld!\nResets - {date_str}",
+    #         config.embed_info_color
+    #     )
+    #
+    #     for i in range(1, places + 1, 1):
+    #         try:
+    #             value_one = top[i - 1].id
+    #             value_two = top[i - 1].coins
+    #             leaderboard_embed.add_field(
+    #                 name=f"{i}. :thought_balloon:  {value_two}",
+    #                 value=f"<@{value_one}>",
+    #                 inline=False
+    #             )
+    #         except IndexError:
+    #             leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+    #
+    #     return await ctx.response.send_message(embed=leaderboard_embed)
 
     @snowball.error
     async def on_error(self, ctx: discord.Interaction, error: app_commands.AppCommandError):
