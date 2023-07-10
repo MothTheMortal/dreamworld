@@ -870,6 +870,19 @@ class Miscellaneous(commands.Cog):
             with open("data/msg_weekly.json", "w") as file:
                 json.dump(data, file, indent=4)
 
+        with open("data/msg_yearly.json", "r") as file:
+            data = json.load(file)
+
+        if userid in data["users"].keys():
+            data["users"][userid]["messages"] += 1
+            with open("data/msg_yearly.json", "w") as file:
+                json.dump(data, file, indent=4)
+        else:
+            data["users"][userid] = dict()
+            data["users"][userid]["messages"] = 1
+            with open("data/msg_yearly.json", "w") as file:
+                json.dump(data, file, indent=4)
+
     @commands.Cog.listener()
     async def on_ready(self):
 

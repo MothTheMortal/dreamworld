@@ -190,7 +190,53 @@ class Currency(commands.Cog):
                 return await ctx.response.send_message(embed=leaderboard_embed)
 
             elif lb_type.value == "yearly":
-                lb_type = "yearly_messages"
+                class LeaderBoardPosition:
+                    def __init__(self, id, coins):
+                        self.id = id
+                        self.coins = coins
+
+                leaderboard = []
+
+                with open("data/msg_yearly.json", "r") as file:
+                    data = json.load(file)
+                collection = self.client.get_database_collection("data")
+                profile = collection.find_one({"_id": 0})
+
+                weekly = profile["yearly_time"]
+                dt_object = datetime.fromtimestamp(weekly + 3.156e+7)
+                date_str = dt_object.strftime("%Y/%m/%d - %H:%M")
+
+                user_ids = list(data["users"].keys())
+                user_msgs = []
+                for i in user_ids:
+                    user_msgs.append(data["users"][i]["messages"])
+
+                user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
+
+                for key, ele in user_collection.items():
+                    leaderboard.append(LeaderBoardPosition(key, ele))
+
+                top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+
+                leaderboard_embed = self.client.create_embed(
+                    "Dreamworld Leaderboard",
+                    f"The top {places} chattiest people this year in Dreamworld!\nResets - {date_str}",
+                    config.embed_info_color
+                )
+
+                for i in range(1, places + 1, 1):
+                    try:
+                        value_one = top[i - 1].id
+                        value_two = top[i - 1].coins
+                        leaderboard_embed.add_field(
+                            name=f"{i}. :thought_balloon:  {value_two}",
+                            value=f"<@{value_one}>",
+                            inline=False
+                        )
+                    except IndexError:
+                        leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+
+                return await ctx.response.send_message(embed=leaderboard_embed)
 
 
         else:
