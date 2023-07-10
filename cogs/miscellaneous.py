@@ -651,7 +651,7 @@ class Miscellaneous(commands.Cog):
         profile = collection.find_one({"_id": 0})
         name_monthly = profile["monthly_time"]
         time_weekly = profile["weekly_time"]
-
+        time_yearly = profile["yearly_time"]
         current_time = int(time.time())
 
         dt_object = datetime.fromtimestamp(time.time())
@@ -770,6 +770,66 @@ class Miscellaneous(commands.Cog):
             await self.update_safe(data)
 
             with open("data/msg_weekly.json", "w") as file:
+                data = dict()
+                data["users"] = dict()
+                json.dump(data, file, indent=4)
+
+        if (time_yearly + 3.156e+7) < current_time:
+            places = 10
+
+            class LeaderBoardPosition:
+                def __init__(self, id, coins):
+                    self.id = id
+                    self.coins = coins
+
+            leaderboard = []
+
+            with open("data/msg_yearly.json", "r") as file:
+                data = json.load(file)
+
+            collection = self.client.get_database_collection("data")
+            profile = collection.find_one({"_id": 0})
+
+            yearly = profile["yearly_time"]
+            dt_object = datetime.fromtimestamp(yearly + 3.156e+7)
+            date_str = dt_object.strftime("%Y/%m/%d - %H:%M")
+
+            user_ids = list(data["users"].keys())
+            user_msgs = []
+            for i in user_ids:
+                user_msgs.append(data["users"][i]["messages"])
+
+            user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
+
+            for key, ele in user_collection.items():
+                leaderboard.append(LeaderBoardPosition(key, ele))
+
+            top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+
+            leaderboard_embed = self.client.create_embed(
+                "Dreamworld Yearly Activity Leaderboard",
+                f"The top {places} most active people this year in Dreamworld!\n{datetime.fromtimestamp(time_yearly).strftime('%Y/%m/%d - %H:%M')} -> {datetime.fromtimestamp(time_yearly + 3.156e+7).strftime('%Y/%m/%d - %H:%M')}",
+                config.embed_info_color
+            )
+
+            for i in range(1, places + 1, 1):
+                try:
+                    value_one = top[i - 1].id
+                    value_two = top[i - 1].coins
+
+                    leaderboard_embed.add_field(
+                        name=f"{i}. :thought_balloon:  {value_two}",
+                        value=f"<@!{value_one}>",
+                        inline=False
+                    )
+                except IndexError:
+                    leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+
+            record = await self.client.fetch_channel(1021391202756595712)
+            await record.send(embed=leaderboard_embed)
+            collection.update_one({"_id": 0}, {"$set": {"yearly_time": time.time()}})
+
+            with open("data/msg_yearly.json", "w") as file:
                 data = dict()
                 data["users"] = dict()
                 json.dump(data, file, indent=4)
