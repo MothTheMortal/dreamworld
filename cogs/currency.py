@@ -4,6 +4,7 @@ import config
 import json
 from time import time
 from discord import app_commands
+from datetime import datetime
 
 
 class Currency(commands.Cog):
