@@ -53,8 +53,7 @@ class Cog_Manager(commands.Cog):
             if message.reference:
                 msgs.append(message)
 
-        for msg in msgs:
-            await msg.delete()
+        await channel.delete_messages(msgs)
         await ctx.edit_original_response(content="Moth is so cool")
 
 
