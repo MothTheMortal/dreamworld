@@ -477,7 +477,7 @@ class Miscellaneous(commands.Cog):
 
         leaderboard_embed = self.client.create_embed(
             "Dreamworld Leaderboard",
-            f"The top {places} chattiest people this week in Dreamworld!\nResets - {date_str}",
+            f"The top {places} chattiest people this week in Dreamworld!\nResets - <t:{weekly + 604800}>",
             config.embed_info_color
         )
 
