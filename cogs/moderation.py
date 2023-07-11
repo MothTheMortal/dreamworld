@@ -53,16 +53,15 @@ class Moderation(commands.Cog):
         user_collection = self.client.get_database_collection("users")
         user_profile = user_collection.find_one({"_id": ctx.user.id})
         count = user_profile["warning"]
+        count += 1
         print(user.name, count)
         if count == 3:
             user_collection.update_one({"_id": ctx.user.id}, {"$set": {"warning": 0}})
-            count += 1
             print("Warnign reset to 0")
 
         else:
             user_collection.update_one({"_id": ctx.user.id}, {"$inc": {"warning": 1}})
             print("Warnign increased by 1")
-            count += 1
 
         if count < 3:
             warn_embed = self.client.create_embed(
@@ -82,12 +81,25 @@ class Moderation(commands.Cog):
             )
 
             await channel.send(embed=warn_embed)
+            log_channel = self.client.get_channel(1021391202756595712)
 
+            log_embed = self.client.create_embed(
+                f"Warning.",
+                f"{user.mention} has been warned",
+                0xFFFFFF
+
+            )
+
+            log_embed.add_field(name="Warning Count:", value=count, inline=True)
+            log_embed.add_field(name="Reason: ", value=reason, inline=True)
+            log_embed.add_field(name="Warned by:", value=ctx.user.mention, inline=True)
+
+            await log_channel.send(embed=log_embed)
 
         else:
             warn_embed = self.client.create_embed(
-                f"Warning for {user.name}",
-                f"{user.mention} has been warned, they have reached the maximum warning limit. Action will be taken with the deserved punishment.",
+                f"Maximum Warning {user.name}",
+                f"{user.mention} have reached the maximum warning limit. Staff will take action with the deserved punishment.",
                 0xFFFFFF
 
             )
@@ -98,22 +110,22 @@ class Moderation(commands.Cog):
             )
 
             await channel.send(embed=warn_embed)
+            log_channel = self.client.get_channel(1021391202756595712)
 
+            log_embed = self.client.create_embed(
+                f"Maximum Warning.",
+                f"{user.mention} has been warned for the third time.\nStaff please take action.",
+                0xFFFFFF
+
+            )
+
+            log_embed.add_field(name="Warning Count:", value=count, inline=True)
+            log_embed.add_field(name="Reason: ", value=reason, inline=True)
+            log_embed.add_field(name="Warned by:", value=ctx.user.mention, inline=True)
+
+            await log_channel.send(embed=log_embed)
         await ctx.response.send_message("Warning has been sent.")
-        log_channel = self.client.get_channel(1021391202756595712)
 
-        log_embed = self.client.create_embed(
-            f"Warning.",
-            f"{user.mention} has been warned",
-            0xFFFFFF
-
-        )
-
-        log_embed.add_field(name="Warning Count:", value=count, inline=True)
-        log_embed.add_field(name="Reason: ", value=reason, inline=True)
-        log_embed.add_field(name="Warned by:", value=ctx.user.mention, inline=True)
-
-        await log_channel.send(embed=log_embed)
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, message):
