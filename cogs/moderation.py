@@ -64,6 +64,22 @@ class Moderation(commands.Cog):
             print("Warnign increased by 1")
 
         if count < 3:
+            try:
+                dm_channel = await user.create_dm()
+                warn2_embed = self.client.create_embed(
+                    f"Warning for {user.name}",
+                    f"You hav been warned. {3 - count} more warnings till direct action will be taken.",
+                    0xFFFFFF
+                )
+                warn2_embed.add_field(
+                    name="Reason:",
+                    value=reason,
+                    inline=True
+                )
+                await dm_channel.send(embed=warn2_embed)
+            except Exception as er:
+                print(er)
+
             warn_embed = self.client.create_embed(
                 f"Warning for {user.name}",
                 f"{user.mention} has been warned. {3 - count} more warnings till direct action will be taken.",
@@ -97,6 +113,23 @@ class Moderation(commands.Cog):
             await log_channel.send(embed=log_embed)
 
         else:
+
+            try:
+                dm_channel = await user.create_dm()
+                warn2_embed = self.client.create_embed(
+                    f"Warning for {user.name}",
+                    f"You have reached the maximum warning.",
+                    0xFFFFFF
+                )
+                warn2_embed.add_field(
+                    name="Reason:",
+                    value=reason,
+                    inline=True
+                )
+                await dm_channel.send(embed=warn2_embed)
+            except Exception as er:
+                print(er)
+
             warn_embed = self.client.create_embed(
                 f"Maximum Warning {user.name}",
                 f"{user.mention} have reached the maximum warning limit. Staff will take action with the deserved punishment.",
@@ -119,12 +152,11 @@ class Moderation(commands.Cog):
 
             )
 
-            log_embed.add_field(name="Warning Count:", value=count, inline=True)
             log_embed.add_field(name="Reason: ", value=reason, inline=True)
             log_embed.add_field(name="Warned by:", value=ctx.user.mention, inline=True)
 
             await log_channel.send(embed=log_embed)
-        await ctx.response.send_message("Warning has been sent.")
+        await ctx.response.send_message("Warning has been sent.", ephemeral=True)
 
 
     @commands.Cog.listener()
