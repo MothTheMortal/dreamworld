@@ -53,11 +53,15 @@ class Moderation(commands.Cog):
         user_collection = self.client.get_database_collection("users")
         user_profile = user_collection.find_one({"_id": ctx.user.id})
         count = user_profile["warning"]
+        print(user.name, count)
         if count == 3:
             user_collection.update_one({"_id": ctx.user.id}, {"$set": {"warning": 0}})
             count += 1
+            print("Warnign reset to 0")
+
         else:
             user_collection.update_one({"_id": ctx.user.id}, {"$inc": {"warning": 1}})
+            print("Warnign increased by 1")
             count += 1
 
         if count < 3:
