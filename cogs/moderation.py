@@ -65,8 +65,8 @@ class Moderation(commands.Cog):
                 dm_channel = await user.create_dm()
                 warn2_embed = self.client.create_embed(
                     f"Warning for {user.name}",
-                    f"You hav been warned. {3 - count} more warnings till direct action will be taken.",
-                    0xFFFFFF
+                    f"You have been warned. {3 - count} more warnings till direct action will be taken.",
+                    discord.Color.red()
                 )
                 warn2_embed.add_field(
                     name="Reason:",
@@ -80,7 +80,7 @@ class Moderation(commands.Cog):
             warn_embed = self.client.create_embed(
                 f"Warning for {user.name}",
                 f"{user.mention} has been warned. {3 - count} more warnings till direct action will be taken.",
-                0xFFFFFF
+                discord.Color.red()
             )
             warn_embed.add_field(
                 name="Warning Count:",
@@ -99,7 +99,7 @@ class Moderation(commands.Cog):
             log_embed = self.client.create_embed(
                 f"Warning.",
                 f"{user.mention} has been warned",
-                0xFFFFFF
+                discord.Color.red()
 
             )
 
@@ -116,7 +116,7 @@ class Moderation(commands.Cog):
                 warn2_embed = self.client.create_embed(
                     f"Warning for {user.name}",
                     f"You have reached the maximum warning.",
-                    0xFFFFFF
+                    discord.Color.red()
                 )
                 warn2_embed.add_field(
                     name="Reason:",
@@ -130,7 +130,7 @@ class Moderation(commands.Cog):
             warn_embed = self.client.create_embed(
                 f"Maximum Warning {user.name}",
                 f"{user.mention} have reached the maximum warning limit. Staff will take action with the deserved punishment.",
-                0xFFFFFF
+                discord.Color.red()
 
             )
             warn_embed.add_field(
@@ -145,7 +145,7 @@ class Moderation(commands.Cog):
             log_embed = self.client.create_embed(
                 f"Maximum Warning.",
                 f"{user.mention} has been warned for the third time.\nStaff please take action.",
-                0xFFFFFF
+                discord.Color.red()
 
             )
 
