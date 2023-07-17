@@ -130,7 +130,7 @@ class Currency(commands.Cog):
                 leaderboard_embed.add_field(name="~" * 15, value="", inline=False)
                 index = 0
                 for i in range(len(lb_data)):
-                    if lb_type[i][0] == str(user.id):
+                    if lb_data[i][0] == str(user.id):
                         index = i
                         break
                 if index > 9:
