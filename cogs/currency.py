@@ -108,7 +108,7 @@ class Currency(commands.Cog):
                 dt_object = datetime.fromtimestamp(weekly + 604800)
                 date_str = dt_object.strftime("%Y/%m/%d - %H:%M")
 
-                lb_data = sorted(data.items(), key=lambda x: x[1], reverse=True)
+                lb_data = sorted(data["users"].items(), key=lambda x: x[1], reverse=True)
 
                 leaderboard_embed = self.client.create_embed(
                     "Dreamworld Leaderboard",
@@ -119,7 +119,6 @@ class Currency(commands.Cog):
                 for i in range(places):
                     try:
                         user_id, count = lb_data[i]
-                        print(lb_data[i])
                         leaderboard_embed.add_field(
                             name=f"{i+1}. :thought_balloon:  {count}",
                             value=f"<@{user_id}>",
