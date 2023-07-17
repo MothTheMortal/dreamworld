@@ -119,13 +119,14 @@ class Currency(commands.Cog):
                 for i in range(places):
                     try:
                         user_id, count = lb_data[i]
+                        print(lb_data[i])
                         leaderboard_embed.add_field(
                             name=f"{i+1}. :thought_balloon:  {count}",
                             value=f"<@{user_id}>",
                             inline=False
                         )
                     except IndexError:
-                        leaderboard_embed.add_field(name=f"**<< {i+1    } >>**", value="N/A | NaN", inline=False)
+                        leaderboard_embed.add_field(name=f"**<< {i+1} >>**", value="N/A | NaN", inline=False)
 
                 return await ctx.response.send_message(embed=leaderboard_embed)
 
