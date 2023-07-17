@@ -140,12 +140,14 @@ class Currency(commands.Cog):
                     leaderboard_embed.add_field(name="-" * 5 + " Your position " + "-" * 5, value="", inline=False)
                     for i in range(1, -2, -1):
                         user_id, count = lb_data[index-i][0], lb_data[index-i][1]["messages"]
-                        leaderboard_embed.add_field(
-                            name=f"{index-i+1}. :thought_balloon:  {count}",
-                            value=f"<@{user_id}>      <<<<" if i == 0 else f"<@{user_id}>",
-                            inline=False
-                        )
-
+                        try:
+                            leaderboard_embed.add_field(
+                                name=f"{index-i+1}. :thought_balloon:  {count}",
+                                value=f"<@{user_id}>      <<<<" if i == 0 else f"<@{user_id}>",
+                                inline=False
+                            )
+                        except IndexError:
+                            leaderboard_embed.add_field(name=f"**<< {index-i+1} >>**", value="N/A | NaN", inline=False)
 
                 return await ctx.response.send_message(embed=leaderboard_embed)
 
