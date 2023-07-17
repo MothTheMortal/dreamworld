@@ -93,19 +93,14 @@ class Currency(commands.Cog):
                                    app_commands.Choice(name="Monthly Messages", value="monthly"),
                                    app_commands.Choice(name="Yearly Messages", value="yearly")]
                           )
-    async def lb(self, ctx: discord.Interaction, lb_type: app_commands.Choice[str], places: int = 10):
-
+    async def lb(self, ctx: discord.Interaction, lb_type: app_commands.Choice[str]):
+        places = 10
+        user = ctx.user
         if lb_type.value in ["weekly", "monthly", "yearly"]:
             if lb_type.value == "weekly":
-                class LeaderBoardPosition:
-                    def __init__(self, id, coins):
-                        self.id = id
-                        self.coins = coins
-
-                leaderboard = []
 
                 with open("data/msg_weekly.json", "r") as file:
-                    data = json.load(file)
+                    data: dict = json.load(file)
                 collection = self.client.get_database_collection("data")
                 profile = collection.find_one({"_id": 0})
 
@@ -113,17 +108,7 @@ class Currency(commands.Cog):
                 dt_object = datetime.fromtimestamp(weekly + 604800)
                 date_str = dt_object.strftime("%Y/%m/%d - %H:%M")
 
-                user_ids = list(data["users"].keys())
-                user_msgs = []
-                for i in user_ids:
-                    user_msgs.append(data["users"][i]["messages"])
-
-                user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
-
-                for key, ele in user_collection.items():
-                    leaderboard.append(LeaderBoardPosition(key, ele))
-
-                top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+                lb_data = sorted(data.items(), key=lambda x: x[1], reverse=True)
 
                 leaderboard_embed = self.client.create_embed(
                     "Dreamworld Leaderboard",
@@ -131,17 +116,16 @@ class Currency(commands.Cog):
                     config.embed_info_color
                 )
 
-                for i in range(1, places + 1, 1):
+                for i in range(places):
                     try:
-                        value_one = top[i - 1].id
-                        value_two = top[i - 1].coins
+                        user_id, count = lb_data[i]
                         leaderboard_embed.add_field(
-                            name=f"{i}. :thought_balloon:  {value_two}",
-                            value=f"<@{value_one}>",
+                            name=f"{i+1}. :thought_balloon:  {count}",
+                            value=f"<@{user_id}>",
                             inline=False
                         )
                     except IndexError:
-                        leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+                        leaderboard_embed.add_field(name=f"**<< {i+1    } >>**", value="N/A | NaN", inline=False)
 
                 return await ctx.response.send_message(embed=leaderboard_embed)
 
