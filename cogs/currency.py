@@ -141,7 +141,7 @@ class Currency(commands.Cog):
                     for i in range(3, -4, -1):
                         user_id, count = lb_data[index-i][0], lb_data[index-i][1]["messages"]
                         leaderboard_embed.add_field(
-                            name=f"{index + 1}. :thought_balloon:  {count}",
+                            name=f"{index-i+1}. :thought_balloon:  {count}",
                             value=f"<@{user_id}>      <<<<" if i == 0 else f"<@{user_id}>",
                             inline=False
                         )
