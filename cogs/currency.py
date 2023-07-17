@@ -127,6 +127,22 @@ class Currency(commands.Cog):
                     except IndexError:
                         leaderboard_embed.add_field(name=f"**<< {i+1} >>**", value="N/A | NaN", inline=False)
 
+                leaderboard_embed.add_field(name="~" * 15, value="", inline=False)
+                index = 0
+                for i in range(lb_data):
+                    if lb_type[i][0] == str(user.id):
+                        index = i
+                        break
+                if index > 9:
+                    for i in range(3, -4, -1):
+                        user_id, count = lb_data[index-i][0], lb_data[index-i][1]["messages"]
+                        leaderboard_embed.add_field(
+                            name=f"{index + 1}. :thought_balloon:  {count}",
+                            value=f"<@{user_id}>",
+                            inline=False
+                        )
+
+
                 return await ctx.response.send_message(embed=leaderboard_embed)
 
             elif lb_type.value == "monthly":
