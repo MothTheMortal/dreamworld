@@ -152,29 +152,14 @@ class Currency(commands.Cog):
                 return await ctx.response.send_message(embed=leaderboard_embed)
 
             elif lb_type.value == "monthly":
-                class LeaderBoardPosition:
-                    def __init__(self, id, coins):
-                        self.id = id
-                        self.coins = coins
-
-                leaderboard = []
                 collection = self.client.get_database_collection("data")
                 profile = collection.find_one({"_id": 0})
                 name_monthly = profile["monthly_time"]
 
                 with open("data/msg_monthly.json", "r") as file:
                     data = json.load(file)
-                user_ids = list(data["users"].keys())
-                user_msgs = []
-                for i in user_ids:
-                    user_msgs.append(data["users"][i]["messages"])
 
-                user_collection = {user_ids[i]: user_msgs[i] for i in range(len(user_ids))}
-
-                for key, ele in user_collection.items():
-                    leaderboard.append(LeaderBoardPosition(key, ele))
-
-                top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
+                lb_data = sorted(data["users"].items(), key=lambda x: x[1]["messages"], reverse=True)
 
                 leaderboard_embed = self.client.create_embed(
                     "Dreamworld Leaderboard",
@@ -182,17 +167,37 @@ class Currency(commands.Cog):
                     config.embed_info_color
                 )
 
-                for i in range(1, places + 1, 1):
+                index = 0
+                for i in range(len(lb_data)):
+                    if lb_data[i][0] == str(user.id):
+                        index = i
+                        break
+
+                for i in range(places):
                     try:
-                        value_one = top[i - 1].id
-                        value_two = top[i - 1].coins
+
+                        user_id, count = lb_data[i][0], lb_data[i][1]["messages"]
                         leaderboard_embed.add_field(
-                            name=f"{i}. :thought_balloon:  {value_two}",
-                            value=f"<@{value_one}>",
+                            name=f"{i + 1}. :thought_balloon:  {count}",
+                            value=f"<@{user_id}>      <<<<" if index == i else f"<@{user_id}>",
                             inline=False
                         )
+
                     except IndexError:
-                        leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
+                        leaderboard_embed.add_field(name=f"**<< {i + 1} >>**", value="N/A | NaN", inline=False)
+
+                if index > 9:
+                    leaderboard_embed.add_field(name="-" * 5 + " Your position " + "-" * 5, value="", inline=False)
+                    for i in range(1, -2, -1):
+                        user_id, count = lb_data[index-i][0], lb_data[index-i][1]["messages"]
+                        try:
+                            leaderboard_embed.add_field(
+                                name=f"{index-i+1}. :thought_balloon:  {count}",
+                                value=f"<@{user_id}>      <<<<" if i == 0 else f"<@{user_id}>",
+                                inline=False
+                            )
+                        except IndexError:
+                            leaderboard_embed.add_field(name=f"**<< {index-i+1} >>**", value="N/A | NaN", inline=False)
 
                 return await ctx.response.send_message(embed=leaderboard_embed)
 
