@@ -115,31 +115,34 @@ class Currency(commands.Cog):
                     f"The top {places} chattiest people this week in Dreamworld!\nResets - {date_str}",
                     config.embed_info_color
                 )
-
-                for i in range(places):
-                    try:
-                        user_id, count = lb_data[i][0], lb_data[i][1]["messages"]
-                        leaderboard_embed.add_field(
-                            name=f"{i+1}. :thought_balloon:  {count}",
-                            value=f"<@{user_id}>",
-                            inline=False
-                        )
-                    except IndexError:
-                        leaderboard_embed.add_field(name=f"**<< {i+1} >>**", value="N/A | NaN", inline=False)
-
-
                 index = 0
                 for i in range(len(lb_data)):
                     if lb_data[i][0] == str(user.id):
                         index = i
                         break
+
+                for i in range(places):
+                    try:
+
+                        user_id, count = lb_data[i][0], lb_data[i][1]["messages"]
+                        leaderboard_embed.add_field(
+                            name=f"{i+1}. :thought_balloon:  {count}",
+                            value=f"<@{user_id}>      <<<<" if index == i else f"<@{user_id}>",
+                            inline=False
+                        )
+
+                    except IndexError:
+                        leaderboard_embed.add_field(name=f"**<< {i+1} >>**", value="N/A | NaN", inline=False)
+
+
+
                 if index > 9:
                     leaderboard_embed.add_field(name="-" * 5 + " Your position " + "-" * 5, value="", inline=False)
                     for i in range(3, -4, -1):
                         user_id, count = lb_data[index-i][0], lb_data[index-i][1]["messages"]
                         leaderboard_embed.add_field(
                             name=f"{index + 1}. :thought_balloon:  {count}",
-                            value=f"<@{user_id}>",
+                            value=f"<@{user_id}>      <<<<" if i == 0 else f"<@{user_id}>",
                             inline=False
                         )
 
