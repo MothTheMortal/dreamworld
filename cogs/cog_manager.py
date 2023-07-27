@@ -417,7 +417,7 @@ class Cog_Manager(commands.Cog):
                 embed.add_field(name="Spell", value=spell, inline=True)
                 await ctx.response.edit_message(embed=embed, view=view)
 
-            view = ui.View(timeout=86400)
+            view = ui.View()
 
             hero = await self.random_hero()
             spell = await self.random_spell()
