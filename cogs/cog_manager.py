@@ -259,12 +259,11 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(embed=embed, view=view)
 
         async def start_handle(ctx, embed, size):
-            global team_count, teams, user_skills, users_data, users, xd
+            global teams, user_skills, users_data, users, xd
             users_data = data['participants']
             users = [f"<@{ID[0]}>" for ID in users_data]
             shuffle(users)
             no_teams = len(users) // size
-            team_count = dict(history=[])
             user_skills = dict()
             teams = []
 
@@ -275,43 +274,45 @@ class Cog_Manager(commands.Cog):
                     team.append(users_copy.pop(0))
                 teams.append(team)
 
-            async def show_teams(ctx: discord.Interaction):
-                global team_count
-                em2 = self.client.create_embed(f"Tournament Teams - {size}v{size}", "", discord.Colour.green())
-                for i in range(len(teams)):
-                    team_count[teams[i][0]] = i + 1
-                    txt = ", ".join(teams[i])
-
-                    em2.add_field(name=f"Team {i + 1}", value=txt, inline=False)
-
-                await ctx.channel.send(embed=em2)
-
             async def assign_details(ctx: discord.Interaction, embed: discord.Embed):
-                await show_teams(ctx)
                 await get_teams(ctx, embed)
 
             async def get_teams(ctx: discord.Interaction, embed: discord.Embed):
                 global teams, xd
+
+                em2 = self.client.create_embed(f"Tournament Teams - {size}v{size}", "", discord.Colour.green())
+                team_counter = {repr(teams[i]): str(i + 1) for i in range(len(teams))}
+
+                def team_number(team: list[list]) -> str:
+                    return "Team " + team_counter[repr(team)]
+
+                [em2.add_field(name={team_number(i)}, value=', '.join(i), inline=False) for i in teams]
+
+                await ctx.channel.send(embed=em2)
+
+
                 shuffle(teams)
                 matches = []
                 match_counter = 0
+
 
                 async def get_winner(ctx, embed: discord.Embed, team1, team2):
                     async def callback(ctx: discord.Interaction):
                         await ctx.response.defer()
                         await ctx.channel.send(
-                            f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
+                            f"{team_number(team1)} vs {team_number(team2)} -> {team_number(data[int(select.values[0])])} won!")
                         team_count["history"].append(
                             f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
 
                     data = [team1, team2]
                     embed.clear_fields()
                     embed.title = f"Match {match_counter} - Tournament Handler"
-                    embed.description = f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]}\n{', '.join(team1)} vs {', '.join(team2)}"
-                    view = ui.View(timeout=86400)
+                    embed.description = f"{team_number(team1)} vs {team_number(team2)}\n{', '.join(team1)} vs {', '.join(team2)}"
+                    view = ui.View(timeout=None)
+                    self.client.add_view(view)
                     select = ui.Select(placeholder="Who won?", min_values=1, max_values=1,
-                                       options=[discord.SelectOption(label=f"Team {team_count[team1[0]]}", value="0"),
-                                                discord.SelectOption(label=f"Team {team_count[team2[0]]}", value="1")])
+                                       options=[discord.SelectOption(label=team_number(team1), value="0"),
+                                                discord.SelectOption(label=team_number(team2), value="1")], custom_id="selectwinner")
                     select.callback = callback
                     view.add_item(select)
                     await ctx.edit_original_response(content="", embed=embed, view=view)
@@ -321,7 +322,7 @@ class Cog_Manager(commands.Cog):
 
                     interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                     return data[int(select.values[0])]
-                print(repr(teams))
+
                 while True:
                     for i in range(0, len(teams), 2):
                         matches.append(teams[i:i + 2])
@@ -333,11 +334,11 @@ class Cog_Manager(commands.Cog):
                             x.extend(matches[i][1])
                             x = copy.deepcopy(x)
                             x = [i[2:-1] for i in x]
-                            await ctx.channel.send(
-                                f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
+                            await ctx.channel.send(f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
                             matches[i] = matches[i][0]
+
                     if len(matches) == 1:
                         winner = matches[0]
                         break
@@ -345,9 +346,9 @@ class Cog_Manager(commands.Cog):
                     matches = []
                     teams = teams[::-1]
 
-                embed.title = f"Team {team_count[winner[0]]} won the Tournament!"
+                embed.title = f"{team_number(winner)} won the Tournament!"
                 embed.description = ""
-                embed.add_field(name=f"Team {team_count[winner[0]]}", value=", ".join(winner), inline=False)
+                embed.add_field(name=f"Team {team_number(winner)}", value=", ".join(winner), inline=False)
                 await ctx.edit_original_response(embed=embed, view=None)
 
             await assign_details(ctx, embed)
