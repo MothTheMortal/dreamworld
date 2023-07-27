@@ -289,12 +289,9 @@ class Cog_Manager(commands.Cog):
                 for i in teams:
                     d = []
                     for z in i:
-                        try:
-                            x = z[2:-1]
-                            user = self.client.get_user(x)
-                            d.append(user.display_name)
-                        except:
-                            continue
+                        x = int(z[2:-1])
+                        user = self.client.get_user(x)
+                        d.append(user.display_name)
 
                     em2.add_field(name=team_number(i), value=', '.join(d), inline=False)
 
