@@ -279,7 +279,7 @@ class Cog_Manager(commands.Cog):
                 global team_count
                 em2 = self.client.create_embed(f"Tournament Teams - {size}v{size}", "", discord.Colour.green())
                 for i in range(len(teams)):
-                    team_count[repr(teams[i])] = i + 1
+                    team_count[teams[i][0]] = i + 1
                     txt = ", ".join(teams[i])
 
                     em2.add_field(name=f"Team {i + 1}", value=txt, inline=False)
@@ -295,7 +295,6 @@ class Cog_Manager(commands.Cog):
                 shuffle(teams)
                 matches = []
                 match_counter = 0
-                channel = self.client.get_channel(1122963025721303060)
 
                 async def get_winner(ctx, embed: discord.Embed, team1, team2):
                     async def callback(ctx: discord.Interaction):
@@ -323,7 +322,6 @@ class Cog_Manager(commands.Cog):
                     interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                     return data[int(select.values[0])]
 
-                games = []
                 while True:
                     for i in range(0, len(teams), 2):
                         matches.append(teams[i:i + 2])
@@ -335,16 +333,11 @@ class Cog_Manager(commands.Cog):
                             x.extend(matches[i][1])
                             x = copy.deepcopy(x)
                             x = [i[2:-1] for i in x]
-                            s = f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```"
-
-                            game_msg = f"Match {match_counter} - Team {team_count[repr(matches[i][0])]} vs Team {team_count[repr(matches[i][1][0])]}\n{s}"
-                            await channel.send(game_msg)
-                            matches[i] = [f"<@Winner of Match {match_counter}>"]
-
+                            await ctx.channel.send(
+                                f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
+                            matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
-
                             matches[i] = matches[i][0]
-
                     if len(matches) == 1:
                         winner = matches[0]
                         break
@@ -352,7 +345,7 @@ class Cog_Manager(commands.Cog):
                     matches = []
                     teams = teams[::-1]
 
-                embed.title = f"{winner[0]} won the Tournament!"
+                embed.title = f"Team {team_count[winner[0]]} won the Tournament!"
                 embed.description = ""
                 embed.add_field(name=f"Team {team_count[winner[0]]}", value=", ".join(winner), inline=False)
                 await ctx.edit_original_response(embed=embed, view=None)
