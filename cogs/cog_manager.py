@@ -265,7 +265,7 @@ class Cog_Manager(commands.Cog):
             id_history = dict()
             for ID in users_data:
                 user = self.client.get_user(int(ID[0]))
-                id_history[user.display_name] = ID[0]
+                id_history[user.display_name] = str(ID[0])
                 users.append(user.display_name)
 
             shuffle(users)
@@ -294,8 +294,17 @@ class Cog_Manager(commands.Cog):
 
                 for i in teams:
                     em2.add_field(name=team_number(i), value=', '.join(i), inline=False)
+                v = ui.View(timeout=None)
 
-                await ctx.channel.send(embed=em2)
+                async def callback(ctx: discord.Interaction):
+                    await ctx.response.send_message("Forwarded to <#1013897177942196265>")
+                    an_channel = ctx.guild.get_channel(1013897177942196265)
+                    await an_channel.send(embed=em2)
+
+                button = ui.Button(label="Send to Announcement", style=discord.ButtonStyle.grey)
+                button.callback = callback
+                v.add_item(button)
+                await ctx.channel.send(embed=em2, view=v)
 
 
                 shuffle(teams)
