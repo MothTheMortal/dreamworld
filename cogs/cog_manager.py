@@ -330,9 +330,8 @@ class Cog_Manager(commands.Cog):
                     for i in range(len(matches)):
                         if len(matches[i]) == 2:
                             match_counter += 1
-                            x = matches[i][0]
+                            x = copy.deepcopy(matches[i][0])
                             x.extend(matches[i][1])
-                            x = copy.deepcopy(x)
                             x = [i[2:-1] for i in x]
                             await ctx.channel.send(f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
