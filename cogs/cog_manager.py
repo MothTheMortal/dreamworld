@@ -261,7 +261,11 @@ class Cog_Manager(commands.Cog):
         async def start_handle(ctx, embed, size):
             global teams, user_skills, users_data, users, xd
             users_data = data['participants']
-            users = [f"<@{ID[0]}>" for ID in users_data]
+            users = []
+            for ID in users_data:
+                user = self.client.get_user(ID)
+                users.append(user.display_name)
+
             shuffle(users)
             no_teams = len(users) // size
             user_skills = dict()
@@ -287,13 +291,7 @@ class Cog_Manager(commands.Cog):
                     return "Team " + team_counter[repr(team)]
 
                 for i in teams:
-                    d = []
-                    for z in i:
-                        x = int(z[2:-1])
-                        user = self.client.get_user(x)
-                        d.append(user.display_name)
-
-                    em2.add_field(name=team_number(i), value=', '.join(d), inline=False)
+                    em2.add_field(name=team_number(i), value=', '.join(i), inline=False)
 
                 await ctx.channel.send(embed=em2)
 
@@ -337,7 +335,6 @@ class Cog_Manager(commands.Cog):
                             match_counter += 1
                             x = copy.deepcopy(matches[i][0])
                             x.extend(matches[i][1])
-                            x = [i[2:-1] for i in x]
                             await ctx.channel.send(f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
