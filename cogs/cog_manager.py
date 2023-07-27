@@ -259,11 +259,13 @@ class Cog_Manager(commands.Cog):
                 await ctx.edit_original_response(embed=embed, view=view)
 
         async def start_handle(ctx, embed, size):
-            global teams, user_skills, users_data, users, xd
+            global teams, user_skills, users_data, users, xd, id_history
             users_data = data['participants']
             users = []
+            id_history = dict()
             for ID in users_data:
                 user = self.client.get_user(int(ID[0]))
+                id_history[user.display_name] = ID[0]
                 users.append(user.display_name)
 
             shuffle(users)
@@ -335,6 +337,7 @@ class Cog_Manager(commands.Cog):
                             match_counter += 1
                             x = copy.deepcopy(matches[i][0])
                             x.extend(matches[i][1])
+                            x = [id_history[z] for z in x]
                             await ctx.channel.send(f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
