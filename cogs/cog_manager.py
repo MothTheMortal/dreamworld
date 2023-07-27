@@ -286,7 +286,7 @@ class Cog_Manager(commands.Cog):
                 def team_number(team: list[list]) -> str:
                     return "Team " + team_counter[repr(team)]
 
-                [em2.add_field(name={team_number(i)}, value=', '.join(i), inline=False) for i in teams]
+                [em2.add_field(name=team_number(i), value=', '.join(i), inline=False) for i in teams]
 
                 await ctx.channel.send(embed=em2)
 
@@ -299,10 +299,8 @@ class Cog_Manager(commands.Cog):
                 async def get_winner(ctx, embed: discord.Embed, team1, team2):
                     async def callback(ctx: discord.Interaction):
                         await ctx.response.defer()
-                        await ctx.channel.send(
-                            f"{team_number(team1)} vs {team_number(team2)} -> {team_number(data[int(select.values[0])])} won!")
-                        team_count["history"].append(
-                            f"{team_number(team1)} vs {team_number(team2)} -> {team_number(data[int(select.values[0])])} won!")
+                        await ctx.channel.send(f"{team_number(team1)} vs {team_number(team2)} -> {team_number(data[int(select.values[0])])} won!")
+
 
                     data = [team1, team2]
                     embed.clear_fields()
