@@ -347,7 +347,7 @@ class Cog_Manager(commands.Cog):
                             x = copy.deepcopy(matches[i][0])
                             x.extend(matches[i][1])
                             x = [id_history[z] for z in x]
-                            await ctx.channel.send(f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
+                            await ctx.channel.send(f"{team_number(matches[i][0])} vs {team_number(matches[i][1])} </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```")
                             matches[i] = await get_winner(ctx, embed, matches[i][0], matches[i][1])
                         else:
                             matches[i] = matches[i][0]
@@ -358,11 +358,19 @@ class Cog_Manager(commands.Cog):
                     teams = matches
                     matches = []
                     teams = teams[::-1]
+                embed = self.client.create_embed(f"{team_number(winner)} won the Tournament!", "", color=discord.Color.red())
+                embed.add_field(name=f"{team_number(winner)}", value=", ".join(winner), inline=False)
+                v = ui.View(timeout=None)
 
-                embed.title = f"{team_number(winner)} won the Tournament!"
-                embed.description = ""
-                embed.add_field(name=f"Team {team_number(winner)}", value=", ".join(winner), inline=False)
-                await ctx.edit_original_response(embed=embed, view=None)
+                async def callback(ctx: discord.Interaction):
+                    await ctx.response.send_message("Forwarded to <#1013897177942196265>")
+                    an_channel = ctx.guild.get_channel(1013897177942196265)
+                    await an_channel.send(embed=em2)
+
+                button = ui.Button(label="Send to Announcement", style=discord.ButtonStyle.grey)
+                button.callback = callback
+                v.add_item(button)
+                await ctx.channel.send(embed=embed, view=v)
 
             await assign_details(ctx, embed)
 
