@@ -263,7 +263,7 @@ class Cog_Manager(commands.Cog):
             users_data = data['participants']
             users = []
             for ID in users_data:
-                user = self.client.get_user(ID)
+                user = self.client.get_user(int(ID[0]))
                 users.append(user.display_name)
 
             shuffle(users)
