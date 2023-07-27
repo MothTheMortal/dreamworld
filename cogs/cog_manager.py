@@ -279,7 +279,7 @@ class Cog_Manager(commands.Cog):
                 global team_count
                 em2 = self.client.create_embed(f"Tournament Teams - {size}v{size}", "", discord.Colour.green())
                 for i in range(len(teams)):
-                    team_count[teams[i]] = i + 1
+                    team_count[repr(teams[i])] = i + 1
                     txt = ", ".join(teams[i])
 
                     em2.add_field(name=f"Team {i + 1}", value=txt, inline=False)
@@ -337,7 +337,7 @@ class Cog_Manager(commands.Cog):
                             x = [i[2:-1] for i in x]
                             s = f"run </random-hero-spell:1123896551182434414> with ```{' '.join(x)}```"
 
-                            game_msg = f"Match {match_counter} - Team {team_count[matches[i][0][0]]} vs Team {team_count[matches[i][1][0]]}\n{s}"
+                            game_msg = f"Match {match_counter} - Team {team_count[repr(matches[i][0])]} vs Team {team_count[repr(matches[i][1][0])]}\n{s}"
                             await channel.send(game_msg)
                             matches[i] = [f"<@Winner of Match {match_counter}>"]
 
