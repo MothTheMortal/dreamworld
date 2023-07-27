@@ -581,9 +581,12 @@ class Cog_Manager(commands.Cog):
         em = self.client.create_embed("Tournament Participants", f"{len(users)} Participants", discord.Color.blue())
         count = 0
         for data in users:
-            count += 1
-            member = self.client.get_user(data[0])
-            em.add_field(name="", value=f"**{count}.** {member.mention} - {data[1]}", inline=False)
+            try:
+                count += 1
+                member = self.client.get_user(data[0])
+                em.add_field(name="", value=f"**{count}.** {member.mention} - {data[1]}", inline=False)
+            except:
+                continue
 
         await ctx.response.send_message(embed=em)
 
