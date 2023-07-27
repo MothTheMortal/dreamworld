@@ -321,7 +321,7 @@ class Cog_Manager(commands.Cog):
 
                     interaction: discord.Interaction = await self.client.wait_for("message", check=check)
                     return data[int(select.values[0])]
-
+                print(repr(teams))
                 while True:
                     for i in range(0, len(teams), 2):
                         matches.append(teams[i:i + 2])
