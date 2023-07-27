@@ -302,7 +302,7 @@ class Cog_Manager(commands.Cog):
                         await ctx.channel.send(
                             f"{team_number(team1)} vs {team_number(team2)} -> {team_number(data[int(select.values[0])])} won!")
                         team_count["history"].append(
-                            f"Team {team_count[team1[0]]} vs Team {team_count[team2[0]]} -> Team {team_count[data[int(select.values[0])][0]]} won!")
+                            f"{team_number(team1)} vs {team_number(team2)} -> {team_number(data[int(select.values[0])])} won!")
 
                     data = [team1, team2]
                     embed.clear_fields()
