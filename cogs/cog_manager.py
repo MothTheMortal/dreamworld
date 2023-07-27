@@ -286,7 +286,17 @@ class Cog_Manager(commands.Cog):
                 def team_number(team: list[list]) -> str:
                     return "Team " + team_counter[repr(team)]
 
-                [em2.add_field(name=team_number(i), value=', '.join(i), inline=False) for i in teams]
+                for i in teams:
+                    d = []
+                    for z in i:
+                        try:
+                            x = z[2:-1]
+                            user = self.client.get_user(x)
+                            d.append(user.display_name)
+                        except:
+                            continue
+
+                    em2.add_field(name=team_number(i), value=', '.join(d), inline=False)
 
                 await ctx.channel.send(embed=em2)
 
