@@ -404,7 +404,18 @@ class Cog_Manager(commands.Cog):
                         embed2.add_field(name="Hero", value=user_skills[i][0], inline=True)
                         embed2.add_field(name="Spell", value=user_skills[i][1], inline=True)
 
-                    await ctx.edit_original_response(content="", embed=embed2, view=None)
+                    v = ui.View(timeout=None)
+
+                    async def callback(ctx: discord.Interaction):
+                        await ctx.response.send_message("Forwarded to <#1013897177942196265>")
+                        an_channel = ctx.guild.get_channel(1013897177942196265)
+                        await an_channel.send(embed=em2)
+
+                    button = ui.Button(label="Send to Announcement", style=discord.ButtonStyle.grey)
+                    button.callback = callback
+                    v.add_item(button)
+
+                    await ctx.edit_original_response(content="", embed=embed2, view=v)
                 else:
                     await get_skills(ctx, embed)
 
