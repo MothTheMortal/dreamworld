@@ -365,7 +365,7 @@ class Cog_Manager(commands.Cog):
                 async def callback(ctx: discord.Interaction):
                     await ctx.response.send_message("Forwarded to <#1013897177942196265>")
                     an_channel = ctx.guild.get_channel(1013897177942196265)
-                    await an_channel.send(embed=em2)
+                    await an_channel.send(embed=embed)
 
                 button = ui.Button(label="Send to Announcement", style=discord.ButtonStyle.grey)
                 button.callback = callback
@@ -409,7 +409,7 @@ class Cog_Manager(commands.Cog):
                     async def callback(ctx: discord.Interaction):
                         await ctx.response.send_message("Forwarded to <#1013897177942196265>")
                         an_channel = ctx.guild.get_channel(1013897177942196265)
-                        await an_channel.send(embed=em2)
+                        await an_channel.send(embed=embed2)
 
                     button = ui.Button(label="Send to Announcement", style=discord.ButtonStyle.grey)
                     button.callback = callback
