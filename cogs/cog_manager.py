@@ -294,17 +294,11 @@ class Cog_Manager(commands.Cog):
 
                 for i in teams:
                     em2.add_field(name=team_number(i), value=', '.join(i), inline=False)
-                v = ui.View(timeout=None)
 
-                async def callback(ctx: discord.Interaction):
-                    await ctx.response.send_message("Forwarded to <#1013897177942196265>")
-                    an_channel = ctx.guild.get_channel(1013897177942196265)
-                    await an_channel.send(embed=em2)
 
-                button = ui.Button(label="Send to Announcement", style=discord.ButtonStyle.grey)
-                button.callback = callback
-                v.add_item(button)
-                await ctx.channel.send(embed=em2, view=v)
+                await ctx.channel.send(embed=em2)
+                an_channel = ctx.guild.get_channel(1013897177942196265)
+                await an_channel.send(embed=em2)
 
 
                 shuffle(teams)
