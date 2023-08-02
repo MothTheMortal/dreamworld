@@ -143,9 +143,11 @@ class DreamBot(commands.Bot):
 
 
 class DreamBot_Embed(discord.Embed):
-    def __init__(self, title, description, color):
+    def __init__(self, title, description, color, name=None, icon=None):
         super().__init__(title=title, description=description, color=color)
-        self.set_author(name=config.name,
-                        icon_url=config.profile_picture)
+        if name is None:
+            self.set_author(name=config.name, icon_url=config.profile_picture)
+        else:
+            self.set_author(name=name, icon_url=icon)
         self.set_thumbnail(
             url=config.thumbnail)
