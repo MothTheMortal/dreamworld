@@ -323,7 +323,7 @@ class Cog_Manager(commands.Cog):
                                                 discord.SelectOption(label=team_number(team2), value="1")], custom_id="selectwinner")
                     select.callback = callback
                     view.add_item(select)
-                    await ctx.edit_original_response(content="", embed=embed, view=view)
+                    await ctx.channel.send(content="", embed=embed, view=view)
 
                     def check(rctx):
                         return rctx.channel == ctx.channel and rctx.author.id == 1035103134441287762
