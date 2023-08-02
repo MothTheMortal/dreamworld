@@ -33,7 +33,7 @@ class Miscellaneous(commands.Cog):
             text = f'{ctx.user.name} LIKES SELF-HARM.'
         else:
             text = f'{ctx.user.name} BRUTALLY SLAPS {user.name}!'
-        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em: discord.Embed = self.client.create_embed("", "", discord.Color.pink(), text, ctx.user.avatar.url)
         em.set_thumbnail(url=None)
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
@@ -48,7 +48,7 @@ class Miscellaneous(commands.Cog):
             text = f'{ctx.user.name} LIKES SELF-HARM.'
         else:
             text = f'{ctx.user.name} PUNCHES {user.name}!'
-        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em: discord.Embed = self.client.create_embed("", "", discord.Color.pink(), text, ctx.user.avatar.url)
         em.set_thumbnail(url=None)
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
@@ -63,7 +63,7 @@ class Miscellaneous(commands.Cog):
             text = f'{ctx.user.name} NEEDS LOVE.'
         else:
             text = f'{ctx.user.name} HUGS {user.name}!'
-        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em: discord.Embed = self.client.create_embed("", "", discord.Color.pink(), text, ctx.user.avatar.url)
         em.set_thumbnail(url=None)
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
@@ -78,7 +78,7 @@ class Miscellaneous(commands.Cog):
             text = f'{ctx.user.name} LIKES SELF-HARM.'
         else:
             text = f'{ctx.user.name} TICKLES {user.name}!'
-        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em: discord.Embed = self.client.create_embed("", "", discord.Color.pink(), text, ctx.user.avatar.url)
         em.set_thumbnail(url=None)
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
@@ -93,7 +93,7 @@ class Miscellaneous(commands.Cog):
             text = f'{ctx.user.name} LIKES WETNESS.'
         else:
             text = f'{ctx.user.name} LICKS {user.name}!'
-        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em: discord.Embed = self.client.create_embed("", "", discord.Color.pink(), text, ctx.user.avatar.url)
         em.set_thumbnail(url=None)
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
@@ -108,7 +108,7 @@ class Miscellaneous(commands.Cog):
             text = f'{ctx.user.name} NEEDS A PARTNER.'
         else:
             text = f'{ctx.user.name} KISSES {user.name}!'
-        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em: discord.Embed = self.client.create_embed("", "", discord.Color.pink(), text, ctx.user.avatar.url)
         em.set_thumbnail(url=None)
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
@@ -120,7 +120,7 @@ class Miscellaneous(commands.Cog):
         json_data = json.loads(response.text)
         gif_url = json_data["url"]
         text = f'{ctx.user.name} IS DEPRESSED.'
-        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em: discord.Embed = self.client.create_embed("", "", discord.Color.pink(), text, ctx.user.avatar.url)
         em.set_thumbnail(url=None)
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
