@@ -21,6 +21,110 @@ class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+
+    @app_commands.command(name="slap", description="Slaps someone!")
+    async def slap(self, ctx: discord.Interaction, user: discord.Member):
+
+        URL = "https://api.otakugifs.xyz/gif?reaction=slap"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        if ctx.user == user:
+            text = f'{ctx.user.name} LIKES SELF-HARM.'
+        else:
+            text = f'{ctx.user.name} BRUTALLY SLAPS {user.name}!'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="punch", description="Punchs someone!")
+    async def punch(self, ctx: discord.Interaction, user: discord.Member):
+        URL = "https://api.otakugifs.xyz/gif?reaction=punch"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        if ctx.user == user:
+            text = f'{ctx.user.name} LIKES SELF-HARM.'
+        else:
+            text = f'{ctx.user.name} PUNCHES {user.name}!'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="hug", description="Hugs someone!")
+    async def hug(self, ctx: discord.Interaction, user: discord.Member):
+        URL = "https://api.otakugifs.xyz/gif?reaction=hug"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        if ctx.user == user:
+            text = f'{ctx.user.name} NEEDS LOVE.'
+        else:
+            text = f'{ctx.user.name} HUGS {user.name}!'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="tickle", description="Tickles someone!")
+    async def tickle(self, ctx: discord.Interaction, user: discord.Member):
+        URL = "https://api.otakugifs.xyz/gif?reaction=tickle"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        if ctx.user == user:
+            text = f'{ctx.user.name} LIKES SELF-HARM.'
+        else:
+            text = f'{ctx.user.name} TICKLES {user.name}!'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="lick", description="Licks someone!")
+    async def lick(self, ctx: discord.Interaction, user: discord.Member):
+        URL = "https://api.otakugifs.xyz/gif?reaction=lick"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        if ctx.user == user:
+            text = f'{ctx.user.name} LIKES WETNESS.'
+        else:
+            text = f'{ctx.user.name} LICKS {user.name}!'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="kiss", description="Kisses someone!")
+    async def kiss(self, ctx: discord.Interaction, user: discord.Member):
+        URL = "https://api.otakugifs.xyz/gif?reaction=kiss"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        if ctx.user == user:
+            text = f'{ctx.user.name} NEEDS A PARTNER.'
+        else:
+            text = f'{ctx.user.name} KISSES {user.name}!'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="cry", description="cry")
+    async def cry(self, ctx: discord.Interaction):
+        URL = "https://api.otakugifs.xyz/gif?reaction=cry"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        text = f'{ctx.user.name} IS DEPRESSED.'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_color, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
     @app_commands.command(name="work", description="Add your attendance for today.")
     async def work(self, ctx: discord.Interaction, hours: int):
         data_collection = self.client.get_database_collection("data")
