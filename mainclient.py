@@ -138,8 +138,13 @@ class DreamBot(commands.Bot):
             return True
 
     @staticmethod
-    def create_embed(title, description, color) -> discord.Embed:
-        return DreamBot_Embed(title, description, color)
+    def create_embed(title, description, color, name=None, icon=None) -> discord.Embed:
+        if name is None:
+            x = DreamBot_Embed(title, description, color)
+        else:
+            x = DreamBot_Embed(title, description, color, name, icon)
+
+        return x
 
 
 class DreamBot_Embed(discord.Embed):
