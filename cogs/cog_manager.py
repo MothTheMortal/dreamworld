@@ -297,7 +297,7 @@ class Cog_Manager(commands.Cog):
 
 
                 await ctx.channel.send(embed=em2)
-                an_channel = ctx.guild.get_channel(1013897177942196265)
+                an_channel = ctx.guild.get_channel(1122963025721303060)
                 await an_channel.send(embed=em2)
 
 
