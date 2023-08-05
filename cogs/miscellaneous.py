@@ -113,7 +113,19 @@ class Miscellaneous(commands.Cog):
         em.set_image(url=gif_url)
         await ctx.response.send_message(embed=em)
 
-    @app_commands.command(name="cry", description="cry")
+    @app_commands.command(name="dance", description="Just Dance!")
+    async def dance(self, ctx: discord.Interaction):
+        URL = "https://api.otakugifs.xyz/gif?reaction=dance"
+        response = get(URL)
+        json_data = json.loads(response.text)
+        gif_url = json_data["url"]
+        text = f'{ctx.user.name} IS EXCITED.'
+        em: discord.Embed = self.client.create_embed("", "", config.embed_purple, text, ctx.user.avatar.url)
+        em.set_thumbnail(url=None)
+        em.set_image(url=gif_url)
+        await ctx.response.send_message(embed=em)
+
+    @app_commands.command(name="cry", description="cri :(")
     async def cry(self, ctx: discord.Interaction):
         URL = "https://api.otakugifs.xyz/gif?reaction=cry"
         response = get(URL)
