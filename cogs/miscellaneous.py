@@ -20,7 +20,24 @@ import copy
 class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.reminderMessage.start()
 
+
+
+    @tasks.loop(60*60)
+    async def reminderMessage(self):
+
+        lf_channel = self.client.get_channel(1099065897454415945)
+        cf_channel = self.client.get_channel(1044927789284982814)
+        general_channel = self.client.get_channel(987352212017676410)
+
+        em1 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to look for teammates is **/teamfinder!**\n*You can also ping<@&1128330154935070750>*", discord.Colour.pink())
+        em2 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to confess is /confess!", discord.Colour.pink())
+        em3 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nPlease ping <@&1137679375022686228> If there's a raid, negative member, dead chat or if you're experiencing issues in Dreamworld.", discord.Colour.red())
+
+        await lf_channel.send(embed=em1)
+        await cf_channel.send(embed=em2)
+        await general_channel.send(embed=em3)
 
     @app_commands.command(name="slap", description="Slaps someone!")
     async def slap(self, ctx: discord.Interaction, user: discord.Member):
