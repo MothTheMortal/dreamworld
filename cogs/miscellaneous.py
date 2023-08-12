@@ -31,9 +31,9 @@ class Miscellaneous(commands.Cog):
         cf_channel = self.client.get_channel(1044927789284982814)
         general_channel = self.client.get_channel(987352212017676410)
 
-        em1 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to look for teammates is **/teamfinder!**\n*You can also ping<@&1128330154935070750>*", discord.Colour.pink())
+        em1 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to look for teammates is **/teamfinder!**\n*You can also ping<@&1128330154935070750>*", config.embed_purple)
         em2 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to confess is /confess!", config.embed_purple)
-        em3 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nPlease ping <@&1137679375022686228> If there's a raid, negative member, dead chat or if you're experiencing issues in Dreamworld.", discord.Colour.red())
+        em3 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nPlease ping <@&1137679375022686228> If there's a raid, negative member, dead chat or if you're experiencing issues in Dreamworld.", config.embed_purple)
 
         await lf_channel.send(embed=em1)
         await cf_channel.send(embed=em2)
