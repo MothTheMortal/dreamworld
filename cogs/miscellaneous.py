@@ -20,7 +20,7 @@ import copy
 class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.reminderMessage.start()
+
 
 
 
@@ -1078,7 +1078,7 @@ class Miscellaneous(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-
+        self.reminderMessage.start()
         self.check_inactive_channel.start()
         self.msg_task.start()
         Channel = self.client.get_channel(1022186110828429432)
