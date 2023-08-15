@@ -21,7 +21,7 @@ class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @tasks.loop(hours=24)
+    @tasks.loop(hours=12)
     async def reminderMessage(self):
 
         lf_channel = self.client.get_channel(1099065897454415945)
