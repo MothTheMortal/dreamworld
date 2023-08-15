@@ -633,7 +633,7 @@ class Cog_Manager(commands.Cog):
             users = []
 
             nobles = guild.get_role(996191436406018098)
-            traveler = guild.get_role(1023914137895587970)
+            traveler = guild.get_role(1065976137739669574)
             treason = guild.get_role(1090184365566333009)
             safe = guild.get_role(1090185036688531466)
 
@@ -643,11 +643,11 @@ class Cog_Manager(commands.Cog):
                         pass
                     else:
                         if nobles in user.roles:
-                            [users.append(user.id) for _ in range(3)]
+                            [users.append(user.id) for _ in range(9)]
                         elif traveler in user.roles:
-                            [users.append(user.id) for _ in range(2)]
+                            [users.append(user.id) for _ in range(6)]
                         else:
-                            [users.append(user.id) for _ in range(1)]
+                            [users.append(user.id) for _ in range(5)]
                 except Exception:
                     pass
 

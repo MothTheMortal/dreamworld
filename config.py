@@ -104,6 +104,7 @@ embed_red = 0xFF0000
 profile_picture = "https://cdn.discordapp.com/attachments/1022541233383559209/1035879359266947142/Screenshot_1147.png"
 thumbnail = "https://cdn.discordapp.com/attachments/1022541233383559209/1035879359266947142/Screenshot_1147.png"
 
+
 heroes = ["Novaria", "Arlott", "Joy", 'Aamon', 'Akai', 'Aldous', 'Alice', 'Alpha', 'Alucard', 'Angela', 'Argus',
           'Atlas', 'Aurora', 'Aulus', 'Badang', 'Balmond', 'Bane', 'Barats', 'Baxia', 'Beatrix', 'Belerick',
           'Benedetta', 'Brody', 'Bruno', 'Carmilla', 'Cecilion', "Chang'e", 'Chou', 'Claude', 'Clint', 'Cyclops',
@@ -180,7 +181,16 @@ emoji_field = {
     'snow': "<:A1_Snow_Shards:1081247899544989796>",
     'dstar': "<:A1_Dream_Star:1081265844119679006>",
     'dcandy': "<:A1_Estrella_Candy:1081274689416081518>",
-    'dsnow': "<:A1_Snow_Shards:1081247899544989796>"
+    'dsnow': "<:A1_Snow_Shards:1081247899544989796>",
+    "MM": "<:mythicalimmortal:1139171499798966333>",
+    "MG": "<:mythicalglory:1139171561216159755>",
+    "MH": "<:mythicalhonor:1139171459110027314>",
+    "M": "<:Mythic:1139122253464883210>",
+    "L": "<:Legend:1139119689952411679>",
+    "E": "<:epic:1139119666346852473>",
+    "GM": "<:Grandmaster:1139119641256529960>",
+    "m": "<:Master:1139119618691190835>",
+    "e": "<:Elite:1139119378173018184>"
 }
 
 emoji_ids = {

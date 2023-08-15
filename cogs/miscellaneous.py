@@ -21,9 +21,6 @@ class Miscellaneous(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-
-
-
     @tasks.loop(hours=24)
     async def reminderMessage(self):
 
@@ -31,9 +28,15 @@ class Miscellaneous(commands.Cog):
         cf_channel = self.client.get_channel(1044927789284982814)
         general_channel = self.client.get_channel(987352212017676410)
 
-        em1 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to look for teammates is **/teamfinder!**\n*You can also ping<@&1128330154935070750>*", config.embed_purple)
-        em2 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to confess is /confess!", config.embed_purple)
-        em3 = self.client.create_embed("", "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nPlease ping <@&1137679375022686228> If there's a raid, negative member, dead chat or if you're experiencing issues in Dreamworld.", config.embed_purple)
+        em1 = self.client.create_embed("",
+                                       "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to look for teammates is **/teamfinder!**\n*You can also ping<@&1128330154935070750>*",
+                                       config.embed_purple)
+        em2 = self.client.create_embed("",
+                                       "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nThe command to confess is /confess!",
+                                       config.embed_purple)
+        em3 = self.client.create_embed("",
+                                       "Hello I'm Seraphina! A robot for Dreamworld, the Empress' Assistant.\nPlease ping <@&1137679375022686228> If there's a raid, negative member, dead chat or if you're experiencing issues in Dreamworld.",
+                                       config.embed_purple)
 
         await lf_channel.send(embed=em1)
         await cf_channel.send(embed=em2)
@@ -162,7 +165,9 @@ class Miscellaneous(commands.Cog):
         ID = str(ctx.user.id)
 
         if hours < 1:
-            embed = self.client.create_embed(title=f"Error - Invalid Work Duration", description="You cannot work for less than 1 hour.", color=config.embed_red)
+            embed = self.client.create_embed(title=f"Error - Invalid Work Duration",
+                                             description="You cannot work for less than 1 hour.",
+                                             color=config.embed_red)
             return await ctx.response.send_message(embed=embed)
 
         if ID not in doc.keys():
@@ -171,10 +176,10 @@ class Miscellaneous(commands.Cog):
 
         data_collection.update_one({"_id": 0}, {"$set": {"attendance": doc}})
 
-
         await ctx.response.send_message(f"Attendance added for {hours} hours.", ephemeral=True)
         channel = self.client.get_channel(config.channel_ids["attendance"])
-        embed = self.client.create_embed(title=f"{ctx.user.name} will work for {hours} hours.", description="", color=config.embed_purple)
+        embed = self.client.create_embed(title=f"{ctx.user.name} will work for {hours} hours.", description="",
+                                         color=config.embed_purple)
         await channel.send(embed=embed)
 
     @app_commands.command(name="attendance", description="Shows your attendance.")
@@ -194,17 +199,18 @@ class Miscellaneous(commands.Cog):
         data, highestStreak = config.getHighestStreak(data)
         currentStreak = config.getCurrentStreak(data)
 
-
         embed = self.client.create_embed(title=f"{user.name}'s Attendance",
                                          description=f"Total Attendance: {len(data.keys())}\nHighest Streak: {highestStreak}\nCurrent Streak: {currentStreak}\nTotal hours worked: {sum(data.values())}",
                                          color=config.embed_purple)
         try:
             for key in data.keys():
                 unix_seconds = int(key)
-                date = datetime.fromtimestamp(int(key)+8*3600, tz=timezone.utc)
+                date = datetime.fromtimestamp(int(key) + 8 * 3600, tz=timezone.utc)
                 date = date.strftime("%Y-%m-%d %I:%M %p")
 
-                embed.add_field(name='', value=f'**{date}**: {"Missed" if int(data[key]) == 0 else f"{data[key]} hours"}', inline=False)
+                embed.add_field(name='',
+                                value=f'**{date}**: {"Missed" if int(data[key]) == 0 else f"{data[key]} hours"}',
+                                inline=False)
         except Exception as err:
             print(err)
 
@@ -733,11 +739,12 @@ class Miscellaneous(commands.Cog):
 
     @app_commands.command(name="teamfinder", description="Looking for a team.")
     @app_commands.choices(
-        current_rank=[app_commands.Choice(name="Mythical Glory", value="MG"),
+        current_rank=[app_commands.Choice(name="Mythical Immortal", value="MM"),
+                      app_commands.Choice(name="Mythical Glory", value="MG"),
                       app_commands.Choice(name="Mythical Honor", value="MH"),
                       app_commands.Choice(name="Mythic", value="M"), app_commands.Choice(name="Legend", value="L"),
                       app_commands.Choice(name="Epic", value="E"), app_commands.Choice(name="Grandmaster", value="GM"),
-                      app_commands.Choice(name="Masterr", value="m"), app_commands.Choice(name="Elite", value="e")],
+                      app_commands.Choice(name="Master", value="m"), app_commands.Choice(name="Elite", value="e")],
         teamsize=[app_commands.Choice(name="Duo", value=2), app_commands.Choice(name="Trio", value=3),
                   app_commands.Choice(name="5-men", value=5)],
         gamemode=[app_commands.Choice(name="Ranked", value="ranked"),
@@ -761,7 +768,7 @@ class Miscellaneous(commands.Cog):
             em.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
         except Exception:
             pass
-        em.add_field(name="User's Rank:", value=current_rank.name, inline=True)
+        em.add_field(name="User's Rank:", value=config.emoji_field[current_rank.value], inline=True)
         em.add_field(name="Server:", value=country, inline=True)
         em.set_footer(text="Dm this person to join.")
         await channel.send(embed=em)
@@ -1016,7 +1023,7 @@ class Miscellaneous(commands.Cog):
         user_ids = data["users"].keys()
         for user in guild.members:
             try:
-                if str(user.id) in user_ids:  # Spoke in chat in the past week.
+                if data["users"][str(user.id)]["messages"] >= 20:  # Spoke in chat in the past week with at least 20 messages
                     if treason in user.roles:
                         await user.remove_roles(treason)
                     if not safe in user.roles:
@@ -1027,7 +1034,7 @@ class Miscellaneous(commands.Cog):
                     if not treason in user.roles:
                         await user.add_roles(treason)
             except Exception as e:
-                print(e)
+                pass
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
@@ -1037,6 +1044,10 @@ class Miscellaneous(commands.Cog):
                 return
         except:
             pass
+
+        if message.channel.category.id == 987783395755044925:
+            return
+
         with open("data/msg_monthly.json", "r") as file:
             data = json.load(file)
 
