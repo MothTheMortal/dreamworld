@@ -768,7 +768,7 @@ class Miscellaneous(commands.Cog):
             em.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
         except Exception:
             pass
-        em.add_field(name="User's Rank:", value=config.emoji_field[current_rank.value], inline=True)
+        em.add_field(name="User's Rank:", value=f"{current_rank.name} {config.emoji_field[current_rank.value]}", inline=True)
         em.add_field(name="Server:", value=country, inline=True)
         em.set_footer(text="Dm this person to join.")
         await channel.send(embed=em)
