@@ -1044,9 +1044,12 @@ class Miscellaneous(commands.Cog):
                 return
         except:
             pass
-
+        
+        if message.channel.guild is None:
+            return
         if message.channel.category.id == 987783395755044925:
             return
+
 
         with open("data/msg_monthly.json", "r") as file:
             data = json.load(file)

@@ -15,6 +15,7 @@ from discord import Embed, ui
 from datetime import datetime, timedelta
 
 
+
 class Cog_Manager(commands.Cog):
     with open("data/command_details.json", "r") as json_file:
         command_details = load(json_file)
@@ -154,6 +155,7 @@ class Cog_Manager(commands.Cog):
     @app_commands.command(name="start-tournament", description="Starts the ongoing Tournament.")
     @app_commands.default_permissions(administrator=True)
     async def start_tournament(self, ctx: discord.Interaction):
+
         data_collection = self.client.get_database_collection("data")
         doc = data_collection.find_one({"_id": 0})
         data = doc["tournament"]
@@ -828,7 +830,7 @@ class Cog_Manager(commands.Cog):
         await ctx.response.send_message("Re-rolled!", ephemeral=True)
 
     @commands.Cog.listener()
-    async def on_message(self, ctx):
+    async def on_message(self, ctx: discord.Message):
         if ctx.guild is not None:
             role = ctx.guild.get_role(987389964486578236)
         if ctx.channel.id == 1013919292489744435:
