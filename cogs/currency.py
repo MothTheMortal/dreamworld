@@ -37,26 +37,10 @@ class Currency(commands.Cog):
 
 
 
-    @app_commands.command(name="add-tears", description="Add Empress Tears.")
-    @app_commands.describe(
-        members="Input the User IDs with space separating them."
-    )
-    async def add_tears(self, ctx: discord.Interaction, members: str, amount: int):
-
-        emoji = config.emoji_field["tear"]
-        member_ids = list(map(int, members.split(" ")))
-        user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {"snow": amount}})
-        description = ""''
-        for i in member_ids:
-            description += f"<@!{i}>: {amount} {emoji}\n"
-        em = self.client.create_embed(f"Tears Added by {ctx.user.name}", description, config.embed_success_color)
-        await ctx.response.send_message(embed=em)
-
-
 
 
     @app_commands.command(name="add-currency")
-    @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
+    @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Tears", value="snow")])
     @app_commands.describe(
         members="Input the User IDs with space separating them."
     )
@@ -110,7 +94,7 @@ class Currency(commands.Cog):
             inline=True
         )
         profile_embed.add_field(
-            name="Snow", value=f"{user_profile['snow']} {snow}",
+            name="Tears", value=f"{user_profile['snow']} {snow}",
             inline=True
         )
         return await ctx.response.send_message(embed=profile_embed)
@@ -119,7 +103,7 @@ class Currency(commands.Cog):
     @app_commands.command(name="leaderboard", description="Shows the leaderboard for something!")
     @app_commands.choices(lb_type=[app_commands.Choice(name="Star", value="star"),
                                    app_commands.Choice(name="Candy", value="candy"),
-                                   app_commands.Choice(name="Snow", value="snow"),
+                                   app_commands.Choice(name="Tears", value="snow"),
                                    app_commands.Choice(name="Weekly Messages", value="weekly"),
                                    app_commands.Choice(name="Monthly Messages", value="monthly"),
                                    app_commands.Choice(name="Yearly Messages", value="yearly")]
