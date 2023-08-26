@@ -24,6 +24,31 @@ class Currency(commands.Cog):
         self.client = client
         
 
+
+
+
+    @app_commands.command(name="total-tears", description="")
+    async def total_tears(self, ctx: discord.Interaction):
+        collection = self.client.get_database_collection("data")
+        tears = collection["tear_count"]
+        em = self.client.create_embed("Total Empress Tears", "", color=config.embed_purple)
+        em.add_field(name="Tears:", value=tears)
+        await ctx.response.send_message(embed=em)
+
+
+
+    @app_commands.command(name="add-tears", description="")
+    async def add_tears(self, ctx: discord.Interaction, amount: int):
+        collection = self.client.get_database_collection("data")
+        old_tears = collection["tear_count"]
+        collection.update_one({"_id": 0}, {"tear_count", amount})
+        new_tears = old_tears + amount
+
+        await ctx.response.send_message(f"Added {amount} to {old_tears} tears\nTotal tears: {new_tears}")
+
+
+
+
     @app_commands.command(name="add-currency")
     @app_commands.choices(currency=[app_commands.Choice(name="Star", value="star"), app_commands.Choice(name="Candy", value="candy"), app_commands.Choice(name="Snow", value="snow")])
     @app_commands.describe(
