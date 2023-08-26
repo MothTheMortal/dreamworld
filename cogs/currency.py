@@ -43,7 +43,7 @@ class Currency(commands.Cog):
         collection = self.client.get_database_collection("data")
         data = collection.find_one({"_id": 0})
         old_tears = data["tear_count"]
-        collection.update_one({"_id": 0}, {"tear_count", amount})
+        collection.update_one({"_id": 0}, {"$inc": {"tear_count", amount}})
         new_tears = old_tears + amount
 
         await ctx.response.send_message(f"Added {amount} to {old_tears} tears\nTotal tears: {new_tears}")
