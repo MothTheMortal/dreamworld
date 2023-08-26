@@ -29,7 +29,7 @@ class Currency(commands.Cog):
 
     @app_commands.command(name="total-tears", description="View the total amount of Empress Tears.")
     async def total_tears(self, ctx: discord.Interaction):
-        collection = self.client.get_database_collection("user")
+        collection = self.client.get_database_collection("users")
         tears = sum([user["snow"] for user in collection.find()])
         em = self.client.create_embed("Total Empress Tears", "", color=config.embed_purple)
         em.add_field(name="Tears:", value=tears)
