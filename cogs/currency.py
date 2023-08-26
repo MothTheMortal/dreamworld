@@ -39,13 +39,25 @@ class Currency(commands.Cog):
 
 
     @app_commands.command(name="add-tears", description="Add Empress Tears.")
-    async def add_tears(self, ctx: discord.Interaction, amount: int):
-        collection = self.client.get_database_collection("data")
-        collection.update_one({'_id': 0}, {"$inc": {"tear_count": amount}})
-        doc = collection.find_one({"_id": 0})
-        new_tears = doc["tear_count"]
+    @app_commands.describe(
+        members="Input the User IDs with space separating them."
+    )
+    async def add_tears(self, ctx: discord.Interaction, members: str, amount: int):
 
-        await ctx.response.send_message(f"Added {amount} tears\nTotal tears: {new_tears}")
+
+
+        user_collection = self.client.get_database_collection("users")
+        user_collection.update_many({}, {"$set": {"snow": 0}})
+        # emoji = config.emoji_field["tear"]
+        # member_ids = list(map(int, members.split(" ")))
+        # user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {"snow": amount}})
+        # description = ""''
+        # for i in member_ids:
+        #     description += f"<@!{i}>: {amount} {emoji}\n"
+        # em = self.client.create_embed(f"Currency Added by {ctx.user.name}", description, config.embed_success_color)
+        # await ctx.response.send_message(embed=em)
+        #
+        # await ctx.response.send_message(f"Added {amount} tears\nTotal tears: {new_tears}")
 
 
 
@@ -60,7 +72,7 @@ class Currency(commands.Cog):
         emoji = config.emoji_field[currency.value]
         member_ids = list(map(int, members.split(" ")))
         user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {currency.value: amount}})
-        description = ""
+        description = ""''
         for i in member_ids:
             description += f"<@!{i}>: {amount} {emoji}\n"
         em = self.client.create_embed(f"Currency Added by {ctx.user.name}", description, config.embed_success_color)
