@@ -41,12 +41,11 @@ class Currency(commands.Cog):
     @app_commands.command(name="add-tears", description="Add Empress Tears.")
     async def add_tears(self, ctx: discord.Interaction, amount: int):
         collection = self.client.get_database_collection("data")
-        data = collection.find_one({"_id": 0})
-        old_tears = data["tear_count"]
-        collection.update_one({"_id": 0}, {"$inc": {"tear_count", amount}})
-        new_tears = old_tears + amount
+        collection.update_one({'_id': 0}, {"$inc": {"tear_count": amount}})
+        doc = collection.find_one({"_id": 0})
+        new_tears = doc["tear_count"]
 
-        await ctx.response.send_message(f"Added {amount} to {old_tears} tears\nTotal tears: {new_tears}")
+        await ctx.response.send_message(f"Added {amount} tears\nTotal tears: {new_tears}")
 
 
 
