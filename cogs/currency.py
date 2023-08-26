@@ -27,7 +27,7 @@ class Currency(commands.Cog):
 
 
 
-    @app_commands.command(name="total-tears", description="")
+    @app_commands.command(name="total-tears", description="View the total amount of Empress Tears.")
     async def total_tears(self, ctx: discord.Interaction):
         collection = self.client.get_database_collection("data")
         tears = collection["tear_count"]
@@ -37,7 +37,7 @@ class Currency(commands.Cog):
 
 
 
-    @app_commands.command(name="add-tears", description="")
+    @app_commands.command(name="add-tears", description="Add Empress Tears.")
     async def add_tears(self, ctx: discord.Interaction, amount: int):
         collection = self.client.get_database_collection("data")
         old_tears = collection["tear_count"]
