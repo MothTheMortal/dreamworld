@@ -30,7 +30,8 @@ class Currency(commands.Cog):
     @app_commands.command(name="total-tears", description="View the total amount of Empress Tears.")
     async def total_tears(self, ctx: discord.Interaction):
         collection = self.client.get_database_collection("data")
-        tears = collection["tear_count"]
+        data = collection.find_one({"_id": 1})
+        tears = data["tear_count"]
         em = self.client.create_embed("Total Empress Tears", "", color=config.embed_purple)
         em.add_field(name="Tears:", value=tears)
         await ctx.response.send_message(embed=em)
@@ -40,7 +41,8 @@ class Currency(commands.Cog):
     @app_commands.command(name="add-tears", description="Add Empress Tears.")
     async def add_tears(self, ctx: discord.Interaction, amount: int):
         collection = self.client.get_database_collection("data")
-        old_tears = collection["tear_count"]
+        data = collection.find_one({"_id": 1})
+        old_tears = data["tear_count"]
         collection.update_one({"_id": 0}, {"tear_count", amount})
         new_tears = old_tears + amount
 
