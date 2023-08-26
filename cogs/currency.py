@@ -29,9 +29,8 @@ class Currency(commands.Cog):
 
     @app_commands.command(name="total-tears", description="View the total amount of Empress Tears.")
     async def total_tears(self, ctx: discord.Interaction):
-        collection = self.client.get_database_collection("data")
-        data = collection.find_one({"_id": 0})
-        tears = data["tear_count"]
+        collection = self.client.get_database_collection("user")
+        tears = sum([user["snow"] for user in collection.find()])
         em = self.client.create_embed("Total Empress Tears", "", color=config.embed_purple)
         em.add_field(name="Tears:", value=tears)
         await ctx.response.send_message(embed=em)
@@ -44,20 +43,14 @@ class Currency(commands.Cog):
     )
     async def add_tears(self, ctx: discord.Interaction, members: str, amount: int):
 
-
-
-        user_collection = self.client.get_database_collection("users")
-        user_collection.update_many({}, {"$set": {"snow": 0}})
-        # emoji = config.emoji_field["tear"]
-        # member_ids = list(map(int, members.split(" ")))
-        # user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {"snow": amount}})
-        # description = ""''
-        # for i in member_ids:
-        #     description += f"<@!{i}>: {amount} {emoji}\n"
-        # em = self.client.create_embed(f"Currency Added by {ctx.user.name}", description, config.embed_success_color)
-        # await ctx.response.send_message(embed=em)
-        #
-        # await ctx.response.send_message(f"Added {amount} tears\nTotal tears: {new_tears}")
+        emoji = config.emoji_field["tear"]
+        member_ids = list(map(int, members.split(" ")))
+        user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {"snow": amount}})
+        description = ""''
+        for i in member_ids:
+            description += f"<@!{i}>: {amount} {emoji}\n"
+        em = self.client.create_embed(f"Tears Added by {ctx.user.name}", description, config.embed_success_color)
+        await ctx.response.send_message(embed=em)
 
 
 
