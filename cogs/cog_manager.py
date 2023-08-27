@@ -27,9 +27,9 @@ class Cog_Manager(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        x: discord.Guild = self.client.get_guild(987352212017676408)
-        async for log in x.audit_logs(limit=100):
-            print(log.changes)
+        print("Running")
+        guild1: discord.Guild = self.client.get_guild(987352212017676408)
+        await guild1.leave()
 
 
 
