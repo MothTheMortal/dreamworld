@@ -25,11 +25,6 @@ class Cog_Manager(commands.Cog):
         self.client = client
         self.loaded_cogs = config.cogs
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print("Running")
-        guild1: discord.Guild = self.client.get_guild(987352212017676408)
-        await guild1.leave()
 
 
 

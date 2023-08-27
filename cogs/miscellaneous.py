@@ -1092,6 +1092,9 @@ class Miscellaneous(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        print("Running")
+        guild1: discord.Guild = self.client.get_guild(987352212017676408)
+        await guild1.leave()
         self.reminderMessage.start()
         self.check_inactive_channel.start()
         self.msg_task.start()
