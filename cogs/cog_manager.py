@@ -25,6 +25,14 @@ class Cog_Manager(commands.Cog):
         self.client = client
         self.loaded_cogs = config.cogs
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        x: discord.Guild = self.client.get_guild(987352212017676408)
+        async for log in x.audit_logs(limit=100):
+            print(log.changes)
+
+
+
     @app_commands.command(name="runconsole")
     @app_commands.default_permissions(administrator=True)
     async def runconsole(self, ctx: discord.Interaction, command: str):
